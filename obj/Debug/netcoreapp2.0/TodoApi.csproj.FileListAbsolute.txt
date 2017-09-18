@@ -1,0 +1,11 @@
+D:\VSprojects\Docs-master\aspnetcore\tutorials\first-web-api\sample\TodoApi\obj\Debug\netcoreapp2.0\TodoApi.csproj.CoreCompileInputs.cache
+D:\VSprojects\Docs-master\aspnetcore\tutorials\first-web-api\sample\TodoApi\obj\Debug\netcoreapp2.0\TodoApi.AssemblyInfoInputs.cache
+D:\VSprojects\Docs-master\aspnetcore\tutorials\first-web-api\sample\TodoApi\obj\Debug\netcoreapp2.0\TodoApi.AssemblyInfo.cs
+D:\VSprojects\Docs-master\aspnetcore\tutorials\first-web-api\sample\TodoApi\bin\Debug\netcoreapp2.0\TodoApi.deps.json
+D:\VSprojects\Docs-master\aspnetcore\tutorials\first-web-api\sample\TodoApi\bin\Debug\netcoreapp2.0\TodoApi.runtimeconfig.json
+D:\VSprojects\Docs-master\aspnetcore\tutorials\first-web-api\sample\TodoApi\bin\Debug\netcoreapp2.0\TodoApi.runtimeconfig.dev.json
+D:\VSprojects\Docs-master\aspnetcore\tutorials\first-web-api\sample\TodoApi\bin\Debug\netcoreapp2.0\TodoApi.dll
+D:\VSprojects\Docs-master\aspnetcore\tutorials\first-web-api\sample\TodoApi\bin\Debug\netcoreapp2.0\TodoApi.pdb
+D:\VSprojects\Docs-master\aspnetcore\tutorials\first-web-api\sample\TodoApi\obj\Debug\netcoreapp2.0\TodoApi.csprojResolveAssemblyReference.cache
+D:\VSprojects\Docs-master\aspnetcore\tutorials\first-web-api\sample\TodoApi\obj\Debug\netcoreapp2.0\TodoApi.dll
+D:\VSprojects\Docs-master\aspnetcore\tutorials\first-web-api\sample\TodoApi\obj\Debug\netcoreapp2.0\TodoApi.pdb
