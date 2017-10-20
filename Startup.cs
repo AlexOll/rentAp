@@ -1,21 +1,53 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using TodoApi.Models;
+using Microsoft.Extensions.Logging;
+using RentApp.Models;
+using System;
+using System.Reflection;
 
-namespace TodoApi
+namespace RentApp
 {
     public class Startup
-    {       
-        public void ConfigureServices(IServiceCollection services)
+    {
+        internal static IContainer Container { get; private set; }
+
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("TodoList"));
+            var connection = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\VSprojects\rentAp\localDB\RentApLocalDb.mdf;Integrated Security=True;Connect Timeout=30";
+            services.AddDbContext<DataContext>(opt => opt.UseSqlServer(connection));
             services.AddMvc();
+            
+            var builder = new ContainerBuilder();
+            builder.RegisterAssemblyModules(GetType().GetTypeInfo().Assembly);
+            builder.Populate(services);
+
+            Container = builder.Build();
+
+            var serviceProvider = Container.Resolve<IServiceProvider>();
+            return serviceProvider;
+
         }
 
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseMvc();
+            loggerFactory.AddConsole();
+
+            var DefaultFile = new DefaultFilesOptions();
+            DefaultFile.DefaultFileNames.Clear();
+            DefaultFile.DefaultFileNames.Add("index.html");
+            app.UseDefaultFiles(DefaultFile);
+            app.UseStaticFiles();
+
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
         }
+
     }
 }

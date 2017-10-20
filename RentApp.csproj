@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\login.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="localDB\" />
+    <Folder Include="wwwroot\js\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.6.2" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\components\version\interpolate-filter.js" />
+    <None Include="wwwroot\components\version\interpolate-filter_test.js" />
+    <None Include="wwwroot\components\version\version-directive.js" />
+    <None Include="wwwroot\components\version\version-directive_test.js" />
+    <None Include="wwwroot\components\version\version.js" />
+    <None Include="wwwroot\components\version\version_test.js" />
+    <None Include="wwwroot\index.html" />
+    <None Include="wwwroot\view1\view1.js" />
+    <None Include="wwwroot\view2\view2.js" />
+  </ItemGroup>
+
+</Project>
