@@ -10,6 +10,8 @@ namespace RentApp.Models
         public string Login { get; set; }
         public string Password { get; set; }
         public bool IsAlive { get; set; }
+        public DateTime CreateDate { get; set; }
+
     }
 
 }

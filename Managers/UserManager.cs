@@ -30,6 +30,7 @@ namespace RentApp.Managers
         internal async Task<Guid> Create(User item)
         {
             item.Id = Guid.NewGuid();
+            item.CreateDate = DateTime.Now;
             await Task.Factory.StartNew(() => _userRepository.Create(item));
             return item.Id;
         }

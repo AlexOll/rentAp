@@ -11,9 +11,8 @@ namespace RentApp.Controllers
     [Route("api/[controller]")]
     public class UserController : ApiController
     {
-        private readonly DataContext _context;
-        private readonly UserManager _userManager;
 
+        private readonly UserManager _userManager;
 
         public UserController(UserManager userManager)
         {

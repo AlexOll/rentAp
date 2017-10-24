@@ -10,6 +10,7 @@ namespace RentApp.Repositories
     public class UserRepository
     {
         private readonly DataContext _context;
+
         public UserRepository(DataContext context)
         {
             _context = context;
@@ -27,7 +28,7 @@ namespace RentApp.Repositories
         {
             using (_context)
             {
-                return _context.Users.FirstOrDefault(f => f.Id == guid);
+                return _context.Users.Where(w => w.IsAlive).FirstOrDefault(f => f.Id == guid);
             }
         }
 

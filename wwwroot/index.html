@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html lang="en" ng-app="myApp" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>My AngularJS App</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="lib/angular/angular.min.js"></script>
+    <script src="lib/angular-route/angular-route.min.js"></script>
+    <script src="lib/angular-cookies/angular-cookies.min.js"></script>
+    <script src="app.js"></script>
+    <script src="component.bundle.min.js"></script>
+    <script src="service.bundle.min.js"></script>
+</head>
+<body>
+    <ul class="menu">
+        <li><a href="#!/view1">view1</a></li>
+        <li><a href="#!/view2">view2</a></li>
+        <li><a href="#!/view3">view3</a></li>
+    </ul>
+    <div ng-view></div>
+    <div>Angular seed app: <span app-version></span></div>
+
+</body>
+</html>
