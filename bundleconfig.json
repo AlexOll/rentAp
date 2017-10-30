@@ -1,22 +1,12 @@
 ﻿// Configure bundling and minification for the project.
 // More info at https://go.microsoft.com/fwlink/?LinkId=808241
 [
-  {
-    "outputFileName": "wwwroot/service.bundle.js",
+    {
+    "outputFileName": "wwwroot/bundle.js",
     "inputFiles": [
       "wwwroot/services/MyService1.service.js",
       "wwwroot/services/MyService2.service.js",
-      "wwwroot/services/service.module.js"
-    ],
-    "minify": {
-      "enabled": true,
-      "renameLocals": true
-    },
-    "sourceMap": false
-  },
-  {
-    "outputFileName": "wwwroot/component.bundle.js",
-    "inputFiles": [
+      "wwwroot/services/service.module.js",
       "wwwroot/components/version/version-directive.js",
       "wwwroot/components/version/interpolate-filter.js",
       "wwwroot/components/version/version.js",
@@ -24,12 +14,10 @@
       "wwwroot/components/view2/view2.js",
       "wwwroot/components/view3/view3.js"
     ],
-    // Optionally specify minification options
     "minify": {
       "enabled": true,
       "renameLocals": true
     },
-    // Optionally generate .map file
     "sourceMap": false
   }
 ]
