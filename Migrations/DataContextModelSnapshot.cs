@@ -20,12 +20,18 @@ namespace RentApp.Migrations
                 .HasAnnotation("ProductVersion", "2.0.0-rtm-26452")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("RentApp.Models.User", b =>
+            modelBuilder.Entity("RentApp.Models.DbModels.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("CreateDate");
+
+                    b.Property<string>("FirstName");
+
                     b.Property<bool>("IsAlive");
+
+                    b.Property<string>("LastName");
 
                     b.Property<string>("Login");
 

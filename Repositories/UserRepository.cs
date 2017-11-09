@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using RentApp.Models;
 using Microsoft.EntityFrameworkCore;
+using RentApp.Models.DbModels;
 
 namespace RentApp.Repositories
 {
@@ -48,6 +49,14 @@ namespace RentApp.Repositories
                 _context.Users.Attach(user);
                 _context.Entry(user).State = EntityState.Modified;
                 _context.SaveChanges();
+            }
+        }
+
+        internal User GetByLogin(string login)
+        {
+            using (_context)
+            {
+                return _context.Users.Where(w => w.IsAlive).FirstOrDefault(f => f.Login == login);
             }
         }
     }

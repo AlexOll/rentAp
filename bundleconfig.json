@@ -3,17 +3,22 @@
 [
     {
     "outputFileName": "wwwroot/bundle.js",
-    "inputFiles": [
-      "wwwroot/services/MyService1.service.js",
-      "wwwroot/services/MyService2.service.js",
-      "wwwroot/services/service.module.js",
-      "wwwroot/components/version/version-directive.js",
-      "wwwroot/components/version/interpolate-filter.js",
-      "wwwroot/components/version/version.js",
-      "wwwroot/components/view1/view1.js",
-      "wwwroot/components/view2/view2.js",
-      "wwwroot/components/view3/view3.js"
-    ],
+      "inputFiles": [
+        "wwwroot/services/MyService1.service.js",
+        "wwwroot/services/MyService2.service.js",
+        "wwwroot/services/User.service.js",
+        "wwwroot/services/Authentication.service.js",
+        "wwwroot/services/service.module.js",
+        "wwwroot/components/version/version-directive.js",
+        "wwwroot/components/version/interpolate-filter.js",
+        "wwwroot/components/version/version.js",
+        "wwwroot/components/login/login.js",
+        "wwwroot/components/register/register.js",
+        "wwwroot/components/register/register.js",
+        "wwwroot/components/view1/view1.js",
+        "wwwroot/components/view2/view2.js",
+        "wwwroot/components/view3/view3.js"
+      ],
     "minify": {
       "enabled": true,
       "renameLocals": true

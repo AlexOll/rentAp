@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RentApp.Models.DbModels;
 
 namespace RentApp.Models
 {

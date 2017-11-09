@@ -2,11 +2,14 @@
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RentApp.Models;
 using System;
+using System.IO;
+using System.Net;
 using System.Reflection;
 
 namespace RentApp
@@ -41,8 +44,22 @@ namespace RentApp
             DefaultFile.DefaultFileNames.Clear();
             DefaultFile.DefaultFileNames.Add("index.html");
             app.UseDefaultFiles(DefaultFile);
-            app.UseStaticFiles();
 
+            app.Use(async (context, next) =>
+            {
+                await next();
+
+                if (context.Response.StatusCode == 404
+                    && !Path.HasExtension(context.Request.Path.Value))
+                {
+                    context.Request.Path = "/index.html";
+                    context.Response.StatusCode = 200;
+                    await next();
+                }
+            });
+
+            app.UseStaticFiles();
+          
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

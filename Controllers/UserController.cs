@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using RentApp.Models;
-using System.Linq;
+using RentApp.Models.DbModels;
 using System;
 using RentApp.Managers;
 using System.Threading.Tasks;
