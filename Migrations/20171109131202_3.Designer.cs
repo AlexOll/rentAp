@@ -11,9 +11,10 @@ using System;
 namespace RentApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20171109131202_3")]
+    partial class _3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,8 +27,6 @@ namespace RentApp.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("CreateDate");
-
-                    b.Property<string>("Email");
 
                     b.Property<string>("FirstName");
 

@@ -1,17 +1,15 @@
 ﻿class AuthenticationService {
-    constructor($http, $cookies, $rootScope, $timeout, UserService) {
+    constructor($http, $cookies, $rootScope) {
 
         this.$http = $http;
         this.$cookies = $cookies;
         this.$rootScope = $rootScope;
-        this.$timeout = $timeout;
-        this.UserService = UserService;
         this.keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
     }
 
     Login(username, password, callback) {
 
-        this.$http.post('/api/authentication', { Login: username, Password: password })
+        this.$http.post('/api/authentication', { Username: username, Password: password })
             .then(res => callback(res));
     }
 

@@ -21,7 +21,7 @@ namespace RentApp.Repositories
         {
             using (_context)
             {
-                return _context.Users.Where(w=>w.IsAlive).ToList();
+                return _context.Users.Where(w => w.IsAlive).ToList();
             }
         }
 
@@ -52,11 +52,22 @@ namespace RentApp.Repositories
             }
         }
 
+        internal bool IsEmailExist(string email)
+        {
+            return _context.Users.Any(w => w.IsAlive && w.Email == email);
+        }
+
+        internal bool IsUserNameExist(string username)
+        {
+
+            return _context.Users.Any(w => w.IsAlive && w.Username == username);
+        }
+
         internal User GetByLogin(string login)
         {
             using (_context)
             {
-                return _context.Users.Where(w => w.IsAlive).FirstOrDefault(f => f.Login == login);
+                return _context.Users.Where(w => w.IsAlive).FirstOrDefault(f => f.Username == login);
             }
         }
     }

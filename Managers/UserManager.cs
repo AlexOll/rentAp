@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using RentApp.Models.DbModels;
 using RentApp.Models.RequestModels;
 using RentApp.Models.ResponseModels;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace RentApp.Managers
 {
@@ -28,18 +30,32 @@ namespace RentApp.Managers
             return await Task.Factory.StartNew(() => _userRepository.GetById(id));
         }
 
-        internal async Task<Guid> Create(User item)
+        internal async Task<BaseResponse> Create(User item)
         {
             item.Id = Guid.NewGuid();
             item.CreateDate = DateTime.Now;
-            await Task.Factory.StartNew(() => _userRepository.Create(item));
-            return item.Id;
+            var isEmailExist = await Task.Factory.StartNew(() => _userRepository.IsEmailExist(item.Email));
+            if (isEmailExist)
+            {
+                return new BaseResponse("Email exists");
+            }
+
+            bool isUserNameExist = await Task.Factory.StartNew(() => _userRepository.IsUserNameExist(item.Username));
+            if (isUserNameExist)
+            {
+                return new BaseResponse("Username exists");
+            }
+            else
+            {
+                await Task.Factory.StartNew(() => _userRepository.Create(item));
+                return new BaseResponse();
+            }
         }
 
         internal async Task<AuthenticationResponse> Authentificate(AuthenticationRequest inputUser)
         {
-            var foundUser = await Task.Factory.StartNew(() => _userRepository.GetByLogin(inputUser.Login));
-            if(foundUser!=null && foundUser.Password == inputUser.Password)
+            var foundUser = await Task.Factory.StartNew(() => _userRepository.GetByLogin(inputUser.Username));
+            if (foundUser != null && foundUser.Password == inputUser.Password)
             {
                 return (AuthenticationResponse)foundUser;
             }

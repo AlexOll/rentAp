@@ -13,60 +13,33 @@ class MyService2 {
 class UserService {
     constructor($http) {
         this.$http = $http;
-        }
-
-    GetAll() {
-        return $http.get('/api/users').then(handleSuccess, handleError('Error getting all users'));
     }
 
-    GetById(id) {
-        return $http.get('/api/users/' + id).then(handleSuccess, handleError('Error getting user by id'));
-    }
-
-    GetByUsername(username) {
-        return $http.get('/api/users/' + username).then(handleSuccess, handleError('Error getting user by username'));
-    }
-
-    Create(user) {
-        return $http.post('/api/users', user).then(handleSuccess, handleError('Error creating user'));
-    }
-
-    Update(user) {
-        return $http.put('/api/users/' + user.id, user).then(handleSuccess, handleError('Error updating user'));
-    }
-
-    Delete(id) {
-        return $http.delete('/api/users/' + id).then(handleSuccess, handleError('Error deleting user'));
-    }
-
-    // private functions
-
-    handleSuccess(res) {
-        return res.data;
-    }
-
-    handleError(error) {
-        return function () {
-            return { success: false, message: error };
-        };
+    Create(user, callback) {
+        return this.$http.post('/api/user', {
+            "Username": user.username,
+            "FirstName": user.firstName,
+            "LastName": user.lastName,
+            "Password": user.password,
+            "Email": user.email
+        })
+            .then(res => callback(res));
     }
 }
 
 
 class AuthenticationService {
-    constructor($http, $cookies, $rootScope, $timeout, UserService) {
+    constructor($http, $cookies, $rootScope) {
 
         this.$http = $http;
         this.$cookies = $cookies;
         this.$rootScope = $rootScope;
-        this.$timeout = $timeout;
-        this.UserService = UserService;
         this.keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
     }
 
     Login(username, password, callback) {
 
-        this.$http.post('/api/authentication', { Login: username, Password: password })
+        this.$http.post('/api/authentication', { Username: username, Password: password })
             .then(res => callback(res));
     }
 
@@ -250,45 +223,101 @@ function LoginController($scope, $location, $mdDialog, AuthenticationService, to
 angular.module('myApp.register', ['ngRoute', 'services', 'toastr'])
     .controller('registerCtrl', RegisterController);
 
-RegisterController.$inject = ['$scope', 'UserService', '$location','toastr'];
+RegisterController.$inject = ['$scope', 'UserService', '$location', 'toastr'];
 function RegisterController($scope, UserService, $location, toastr) {
-
-    $scope.register = function() {
+    $scope.usernameCheck = function ()
+    {
         $scope.dataLoading = true;
-        UserService.Create($scope.user)
-            .then(function (response) {
-                if (response.status === 200) {
-                    FlashService.Success('Registration successful', true);
-                    $location.path('/login');
-                } else {
-                    console.log(response.message);
-                    vm.dataLoading = false;
+        console.log($scope.user.username.length);
+        if ($scope.user.username.length===6)
+        $scope.form.username.$setValidity("duplicate", false);
+        //UserService.UsernameCheck($scope.user.username), function (response) {
+        //    if (response.status === 200 && response.data.message !== null) {
+        //        toastr.warning(response.data.message, 'Warning');
+        //    }
+        //}
+        $scope.dataLoading = false;
+    }
+    $scope.register = function () {
+
+        $scope.dataLoading = true;
+        UserService.Create($scope.user, function (response) {
+            if (response.status === 200) {
+                if (response.data.message !== null) {
+                    toastr.warning(response.data.message, 'Warning');
                 }
-            });
+                else
+                {
+                    toastr.success('Registration succeeded', 'Check your e-mail for submition');
+                    $location.path('/');
+                }
+            }
+            else {
+                $mdDialog.show(
+                    $mdDialog.alert()
+                        .clickOutsideToClose(true)
+                        .title("You shall not pass")
+                        .textContent("Account doesn't exist!")
+                        .ok('Back')
+                        .targetEvent(ev)
+                );
+            }
+            $scope.dataLoading = false;
+        })
     }
 };
+
+
 'use strict';
 
 angular.module('myApp.register', ['ngRoute', 'services', 'toastr'])
     .controller('registerCtrl', RegisterController);
 
-RegisterController.$inject = ['$scope', 'UserService', '$location','toastr'];
+RegisterController.$inject = ['$scope', 'UserService', '$location', 'toastr'];
 function RegisterController($scope, UserService, $location, toastr) {
-
-    $scope.register = function() {
+    $scope.usernameCheck = function ()
+    {
         $scope.dataLoading = true;
-        UserService.Create($scope.user)
-            .then(function (response) {
-                if (response.status === 200) {
-                    FlashService.Success('Registration successful', true);
-                    $location.path('/login');
-                } else {
-                    console.log(response.message);
-                    vm.dataLoading = false;
+        console.log($scope.user.username.length);
+        if ($scope.user.username.length===6)
+        $scope.form.username.$setValidity("duplicate", false);
+        //UserService.UsernameCheck($scope.user.username), function (response) {
+        //    if (response.status === 200 && response.data.message !== null) {
+        //        toastr.warning(response.data.message, 'Warning');
+        //    }
+        //}
+        $scope.dataLoading = false;
+    }
+    $scope.register = function () {
+
+        $scope.dataLoading = true;
+        UserService.Create($scope.user, function (response) {
+            if (response.status === 200) {
+                if (response.data.message !== null) {
+                    toastr.warning(response.data.message, 'Warning');
                 }
-            });
+                else
+                {
+                    toastr.success('Registration succeeded', 'Check your e-mail for submition');
+                    $location.path('/');
+                }
+            }
+            else {
+                $mdDialog.show(
+                    $mdDialog.alert()
+                        .clickOutsideToClose(true)
+                        .title("You shall not pass")
+                        .textContent("Account doesn't exist!")
+                        .ok('Back')
+                        .targetEvent(ev)
+                );
+            }
+            $scope.dataLoading = false;
+        })
     }
 };
+
+
 'use strict';
 
 angular.module('myApp.view1', ['ngRoute'])

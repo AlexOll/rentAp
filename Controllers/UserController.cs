@@ -47,9 +47,9 @@ namespace RentApp.Controllers
                 return BadRequest();
             }
 
-            var newGuid = await _userManager.Create(item);
+            var result = await _userManager.Create(item);
 
-            return CreatedAtRoute("GetById", new { id = newGuid }, item);
+            return Ok(result);
         }
 
         [HttpPut("{id}")]
