@@ -20,7 +20,10 @@ namespace RentApp
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            var connection = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\VSprojects\rentAp\localDB\RentApLocalDb.mdf;Integrated Security=True;Connect Timeout=30";
+            string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            var fullPath = Path.GetFullPath(path + "..\\..\\..\\..\\..\\localDB\\RentApLocalDb.mdf");
+            var connection = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=" + fullPath + ";Integrated Security=True;Connect Timeout=30";
+
             services.AddDbContext<DataContext>(opt => opt.UseSqlServer(connection));
             services.AddMvc();
             
