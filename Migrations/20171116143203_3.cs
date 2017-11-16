@@ -4,21 +4,22 @@ using System.Collections.Generic;
 
 namespace RentApp.Migrations
 {
-    public partial class _4 : Migration
+    public partial class _3 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Email",
+            migrationBuilder.AddColumn<bool>(
+                name: "IsActivated",
                 table: "Users",
-                type: "nvarchar(max)",
-                nullable: true);
+                type: "bit",
+                nullable: false,
+                defaultValue: false);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Email",
+                name: "IsActivated",
                 table: "Users");
         }
     }

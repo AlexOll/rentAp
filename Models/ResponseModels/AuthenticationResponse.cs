@@ -3,7 +3,7 @@ using System;
 
 namespace RentApp.Models.ResponseModels
 {
-    public class AuthenticationResponse
+    public class AuthenticationResponse : BaseResponse
     {
         public Guid Id { get; set; }
         public string Username { get; set; }

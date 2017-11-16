@@ -25,11 +25,15 @@ namespace RentApp.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<Guid>("ActivationCode");
+
                     b.Property<DateTime>("CreateDate");
 
                     b.Property<string>("Email");
 
                     b.Property<string>("FirstName");
+
+                    b.Property<bool>("IsActivated");
 
                     b.Property<bool>("IsAlive");
 

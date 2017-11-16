@@ -13,7 +13,9 @@ namespace RentApp.Models.DbModels
         public string LastName { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
+        public Guid ActivationCode { get; set; }
         public bool IsAlive { get; set; }
+        public bool IsActivated { get; set; }
         public DateTime CreateDate { get; set; }
 
         public static explicit operator AuthenticationResponse(User model)

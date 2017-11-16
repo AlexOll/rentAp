@@ -9,19 +9,18 @@ function LoginController($scope, $location, $mdDialog, AuthenticationService, to
     $scope.login = function (ev) {
         $scope.dataLoading = true;
         AuthenticationService.Login($scope.username, $scope.password, function (response) {
-
-            if (response.status === 200) {
+            if (!response.data.message) {
                 AuthenticationService.SetCredentials($scope.username, $scope.password);
 
                 toastr.success('Authentication succeeded', 'Have fun!');
                 $location.path('/');
             }
-            else if (response.status === 204) {
+            else {
                 $mdDialog.show(
                     $mdDialog.alert()
                         .clickOutsideToClose(true)
                         .title("You shall not pass")
-                        .textContent("Account doesn't exist!")
+                        .textContent(response.data.message)
                         .ok('Back')
                         .targetEvent(ev)
                 );

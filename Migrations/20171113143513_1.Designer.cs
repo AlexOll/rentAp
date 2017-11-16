@@ -11,8 +11,8 @@ using System;
 namespace RentApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20171109145209_4")]
-    partial class _4
+    [Migration("20171113143513_1")]
+    partial class _1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

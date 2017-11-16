@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using RentApp.Models;
 using RentApp.Models.DbModels;
 using System;
 using RentApp.Managers;
@@ -19,24 +18,21 @@ namespace RentApp.Controllers
             _userManager = userManager;
         }
 
-        [HttpGet]
-        [ProducesResponseType(typeof(List<User>), 200)]
-        public async Task<IActionResult> GetAll()
+        [HttpGet, Route("usernamecheck")]
+        [ProducesResponseType(typeof(bool), 200)]
+        public async Task<IActionResult> CheckUsername([FromQuery]string value)
         {
-            var result = await _userManager.GetAll();
+            bool result = await Task.Factory.StartNew(() => _userManager.CheckUsername(value));
+
             return Ok(result);
         }
-
-        [HttpGet("{id}", Name = "GetById")]
-        [ProducesResponseType(typeof(User), 200)]
-        public async Task<IActionResult> GetById(Guid id)
+        [HttpGet, Route("emailcheck")]
+        [ProducesResponseType(typeof(bool), 200)]
+        public async Task<IActionResult> CheckEmail([FromQuery]string value)
         {
-            var user = await _userManager.GetById(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return new ObjectResult(user);
+            bool result = await Task.Factory.StartNew(() => _userManager.CheckEmailAsync(value));
+
+            return Ok(result);
         }
 
         [HttpPost]
@@ -47,7 +43,7 @@ namespace RentApp.Controllers
                 return BadRequest();
             }
 
-            var result = await _userManager.Create(item);
+            var result = await Task.Factory.StartNew(() => _userManager.Create(item));
 
             return Ok(result);
         }
@@ -60,25 +56,27 @@ namespace RentApp.Controllers
                 return BadRequest();
             }
 
-            var user = await _userManager.GetById(id);
+            //var user = _userManager.GetById(id);
+            User user = null;
             if (user == null)
             {
                 return NotFound();
             }
 
-            await _userManager.Update(item);
+            //await _userManager.Update(item);
             return new NoContentResult();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var user = await _userManager.GetById(id);
+            //var user = _userManager.GetById(id);
+            User user = null;
             if (user == null)
             {
                 return NotFound();
             }
-            await _userManager.Delete(id);
+            //await _userManager.Delete(id);
             return new NoContentResult();
         }
     }

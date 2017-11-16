@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using RentApp.Models;
 using Microsoft.EntityFrameworkCore;
 using RentApp.Models.DbModels;
+using RentApp.Cache;
 
 namespace RentApp.Repositories
 {
@@ -17,19 +16,11 @@ namespace RentApp.Repositories
             _context = context;
         }
 
-        internal List<User> GetAll()
+        internal List<User> GetAllAlive()
         {
             using (_context)
             {
                 return _context.Users.Where(w => w.IsAlive).ToList();
-            }
-        }
-
-        internal User GetById(Guid guid)
-        {
-            using (_context)
-            {
-                return _context.Users.Where(w => w.IsAlive).FirstOrDefault(f => f.Id == guid);
             }
         }
 
@@ -40,6 +31,7 @@ namespace RentApp.Repositories
                 _context.Users.Add(user);
                 _context.SaveChanges();
             }
+            UserCache.AliveUsers.Add(user);
         }
 
         internal void Update(User user)
@@ -50,25 +42,7 @@ namespace RentApp.Repositories
                 _context.Entry(user).State = EntityState.Modified;
                 _context.SaveChanges();
             }
-        }
-
-        internal bool IsEmailExist(string email)
-        {
-            return _context.Users.Any(w => w.IsAlive && w.Email == email);
-        }
-
-        internal bool IsUserNameExist(string username)
-        {
-
-            return _context.Users.Any(w => w.IsAlive && w.Username == username);
-        }
-
-        internal User GetByLogin(string login)
-        {
-            using (_context)
-            {
-                return _context.Users.Where(w => w.IsAlive).FirstOrDefault(f => f.Username == login);
-            }
+            UserCache.Update(user);
         }
     }
 }

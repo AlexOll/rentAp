@@ -11,8 +11,8 @@ using System;
 namespace RentApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20171103130048_1")]
-    partial class _1
+    [Migration("20171116143203_3")]
+    partial class _3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,13 +26,23 @@ namespace RentApp.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<Guid>("ActivationCode");
+
                     b.Property<DateTime>("CreateDate");
+
+                    b.Property<string>("Email");
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<bool>("IsActivated");
 
                     b.Property<bool>("IsAlive");
 
-                    b.Property<string>("Login");
+                    b.Property<string>("LastName");
 
                     b.Property<string>("Password");
+
+                    b.Property<string>("Username");
 
                     b.HasKey("Id");
 

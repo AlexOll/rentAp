@@ -4,22 +4,22 @@ using System.Collections.Generic;
 
 namespace RentApp.Migrations
 {
-    public partial class _1 : Migration
+    public partial class _2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<DateTime>(
-                name: "CreateDate",
+            migrationBuilder.AddColumn<Guid>(
+                name: "ActivationCode",
                 table: "Users",
-                type: "datetime2",
+                type: "uniqueidentifier",
                 nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "CreateDate",
+                name: "ActivationCode",
                 table: "Users");
         }
     }

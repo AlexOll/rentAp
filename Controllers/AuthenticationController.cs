@@ -4,6 +4,7 @@ using RentApp.Managers;
 using System.Threading.Tasks;
 using RentApp.Models.DbModels;
 using RentApp.Models.RequestModels;
+using System;
 
 namespace RentApp.Controllers
 {
@@ -18,6 +19,15 @@ namespace RentApp.Controllers
             _userManager = userManager;
         }
 
+        [HttpGet, Route("{id}")]
+        [ProducesResponseType(typeof(bool), 200)]
+        public async Task<IActionResult> ActivateAccount([FromRoute]Guid id)
+        {
+            var result = await Task.Factory.StartNew(() => _userManager.ActivateAccountByGuid(id));
+
+            return Ok(result);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Authentificate([FromBody] AuthenticationRequest input)
         {
@@ -26,10 +36,10 @@ namespace RentApp.Controllers
                 return BadRequest();
             }
 
-            var result = await _userManager.Authentificate(input);
+            var result = await Task.Factory.StartNew(() => _userManager.Authenticate(input));
 
             return Ok(result);
-        }   
+        }
     }
 }
 
