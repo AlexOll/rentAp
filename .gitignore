@@ -1,3 +1,7 @@
+# Custom ignores
+obj/*
+localDB/*
+
 # User-specific files
 *.suo
 *.user

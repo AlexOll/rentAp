@@ -11,6 +11,7 @@ namespace RentApp.Models
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Flat> Flats { get; set; }
 
     }
 }
