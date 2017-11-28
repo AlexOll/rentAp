@@ -6,6 +6,7 @@
         [
             'ngRoute',
             'myApp.login', 
+            'myApp.forgotpassword',
             'myApp.register',
             'myApp.view1',
             'myApp.view2',
@@ -19,6 +20,10 @@
                 .when('/login', {
                     templateUrl: 'components/login/login.html',
                     controller: 'loginCtrl'
+                })
+                .when('/forgotpassword', {
+                    templateUrl: 'components/forgotpassword/forgotpassword.html',
+                    controller: 'forgotpasswordCtrl'
                 })
                 .when('/register', {
                     templateUrl: 'components/register/register.html',
@@ -42,6 +47,7 @@
         .run(run);
 
     run.$inject = ['$rootScope', '$location', '$cookies', '$http'];
+
     function run($rootScope, $location, $cookies, $http) {
         // keep user logged in after page refresh
         $rootScope.globals = $cookies.getObject('globals') || {};
@@ -51,13 +57,12 @@
 
         $rootScope.$on('$locationChangeStart', function (event, next, current) {
             // redirect to login page if not logged in and trying to access a restricted page
-            var restrictedPage = $.inArray($location.path(), ['/login', '/register']) === -1;
+            var restrictedPage = $.inArray($location.path(), ['/login', '/register', '/forgotpassword']) === -1;
             var loggedIn = $rootScope.globals.currentUser;
             if (restrictedPage && !loggedIn) {
                 $location.path('/login');
             }
         });
     }
-
-
+    
 })();

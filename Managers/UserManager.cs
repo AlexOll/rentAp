@@ -11,6 +11,7 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using RentApp.Cache;
 using System.Linq;
+using RentApp.Utilities;
 
 namespace RentApp.Managers
 {
@@ -73,12 +74,28 @@ namespace RentApp.Managers
 
             _userRepository.Create(item);
 
-            var request = new HttpContextAccessor();
-            var path = string.Format("{0}://{1}", request.HttpContext.Request.Scheme, request.HttpContext.Request.Host);
-
-            Task.Factory.StartNew(() => SendEmailAsync(item, path));
+            var emailManager = new EmailManager(item);
+            emailManager.SendActivationEmail();
 
             return new BaseResponse();
+        }
+
+        internal void RemindPasswordByEmail(string email)
+        {
+            var foundUser = UserCache.AliveUsers.FirstOrDefault(a => a.Email == email);
+
+            var response = ValidateUser(foundUser);
+
+            if (response is AuthenticationResponse)
+            {
+                var newPassword = PasswordManager.GenerateRandomPassword();
+                foundUser.Password = newPassword;
+
+                _userRepository.Update(foundUser);
+
+                var emailManager = new EmailManager(foundUser);
+                emailManager.SendNewPasswordForUser(newPassword);
+            }
         }
 
         internal bool CheckEmailAsync(string value)
@@ -98,14 +115,19 @@ namespace RentApp.Managers
                         a.Username == inputUser.Username &&
                         a.Password == inputUser.Password);
 
-            if (foundUser != null)
+            return ValidateUser(foundUser);
+        }
+
+        private BaseResponse ValidateUser(User user)
+        {
+            if (user != null)
             {
-                if (foundUser.IsActivated)
-                    return (AuthenticationResponse)foundUser;
+                if (user.IsActivated)
+                    return (AuthenticationResponse)user;
                 else
                     return new BaseResponse
                     {
-                        Message = "Account is not activated. Check your email - " + foundUser.Email
+                        Message = "Account is not activated. Check your email - " + user.Email
                     };
             }
             return new BaseResponse
@@ -114,34 +136,7 @@ namespace RentApp.Managers
             };
         }
 
-        private void SendEmailAsync(User user, string baseUrlPath)
-        {
-            var sb = new StringBuilder();
-            sb.AppendFormat("Hello {0} {1},", user.FirstName, user.LastName);
-            sb.Append("<br /><br />Please click the following link to activate your account");
-            sb.AppendFormat(
-                "<br /><a href = '{0}{1}{2}'>Click here to activate your account.</a>",
-                baseUrlPath,
-                @"/api/authentication/",
-                user.ActivationCode);
-            sb.Append("<br /><br />Thanks");
-
-            var emailMessage = new MimeMessage();
-            emailMessage.From.Add(new MailboxAddress("Rent App", "renty.application@gmail.com"));
-            emailMessage.To.Add(new MailboxAddress(user.Username, user.Email));
-            emailMessage.Subject = "RentApp activation link";
-            emailMessage.Body = new TextPart("html") { Text = sb.ToString() };
-
-            using (var client = new SmtpClient())
-            {
-                client.ServerCertificateValidationCallback = (s, c, h, e) => true;
-                client.Connect("smtp.gmail.com", 465, SecureSocketOptions.SslOnConnect);
-                client.AuthenticationMechanisms.Remove("XOAUTH2");
-                client.Authenticate("renty.application@gmail.com", "renty.Pass");
-                client.Send(emailMessage);
-                client.Disconnect(true);
-            }
-        }
+        
 
     }
 }

@@ -13,11 +13,12 @@
         "wwwroot/components/version/interpolate-filter.js",
         "wwwroot/components/version/version.js",
         "wwwroot/components/login/login.js",
-        "wwwroot/components/register/register.js",
+        "wwwroot/components/forgotpassword/forgotpassword.js",
         "wwwroot/components/register/register.js",
         "wwwroot/components/view1/view1.js",
         "wwwroot/components/view2/view2.js",
-        "wwwroot/components/view3/view3.js"
+        "wwwroot/components/view3/view3.js",
+        "wwwroot/components/directive/directive.js"
       ],
     "minify": {
       "enabled": true,

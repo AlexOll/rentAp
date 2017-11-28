@@ -13,6 +13,12 @@
             .then(res => callback(res));
     }
 
+    ForgotPass(email, callback) {
+        debugger;
+        this.$http.get('/api/authentication/forgotpassword/'+ email )
+            .then(res => callback(res));
+    }
+
     SetCredentials(username, password) {
         var input = username + ':' + password;
         var authdata = this.Base64Encode(input);

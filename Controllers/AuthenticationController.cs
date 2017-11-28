@@ -40,6 +40,19 @@ namespace RentApp.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet, Route("forgotpassword/{email}")]
+        public async Task<IActionResult> ForgotPassword([FromRoute]string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest();
+            }
+
+            await Task.Factory.StartNew(() => _userManager.RemindPasswordByEmail(email));
+
+            return NoContent();
+        }
     }
 }
 
