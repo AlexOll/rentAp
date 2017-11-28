@@ -15,7 +15,7 @@
         "wwwroot/components/login/login.js",
         "wwwroot/components/forgotpassword/forgotpassword.js",
         "wwwroot/components/register/register.js",
-        "wwwroot/components/view1/view1.js",
+        "wwwroot/components/home/home.js",
         "wwwroot/components/view2/view2.js",
         "wwwroot/components/view3/view3.js",
         "wwwroot/components/directive/directive.js"

@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="bundleconfig.json" />
     <Content Remove="wwwroot\login.js" />
   </ItemGroup>
 
@@ -16,7 +17,6 @@
     <PackageReference Include="Autofac" Version="4.6.2" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
     <PackageReference Include="Bower" Version="1.3.11" />
-    <PackageReference Include="BuildBundlerMinifier" Version="2.6.362" />
     <PackageReference Include="MailKit" Version="1.20.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.0" />
@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="bundleconfig.json" />
     <None Include="wwwroot\components\version\interpolate-filter.js" />
     <None Include="wwwroot\components\version\interpolate-filter_test.js" />
     <None Include="wwwroot\components\version\version-directive.js" />
@@ -37,7 +38,6 @@
     <None Include="wwwroot\components\version\version.js" />
     <None Include="wwwroot\components\version\version_test.js" />
     <None Include="wwwroot\index.html" />
-    <None Include="wwwroot\components\view1\view1.js" />
     <None Include="wwwroot\components\view2\view2.js" />
   </ItemGroup>
 

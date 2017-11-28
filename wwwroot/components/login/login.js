@@ -16,14 +16,15 @@ function LoginController($scope, $location, $mdDialog, AuthenticationService, to
                 $location.path('/');
             }
             else {
-                $mdDialog.show(
-                    $mdDialog.alert()
-                        .clickOutsideToClose(true)
-                        .title("You shall not pass")
-                        .textContent(response.data.message)
-                        .ok('Back')
-                        .targetEvent(ev)
-                );
+                alert = $mdDialog.alert({
+                    title: "You shall not pass",
+                    textContent: response.data.message,
+                    ok: 'Close',
+                    clickOutsideToClose: true,
+                    targetEvent: ev
+                });
+                $mdDialog.show(alert);
+
                 $scope.dataLoading = false;
             }
         });

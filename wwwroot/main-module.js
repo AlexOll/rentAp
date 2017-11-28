@@ -8,7 +8,7 @@
             'myApp.login', 
             'myApp.forgotpassword',
             'myApp.register',
-            'myApp.view1',
+            'myApp.home',
             'myApp.view2',
             'myApp.view3',
             'myApp.version'
@@ -17,6 +17,10 @@
             $locationProvider.html5Mode(true).hashPrefix('');
 
             $routeProvider
+                .when('/', {
+                    templateUrl: 'components/home/home.html',
+                    controller: 'homeCtrl'
+                })
                 .when('/login', {
                     templateUrl: 'components/login/login.html',
                     controller: 'loginCtrl'
@@ -29,10 +33,6 @@
                     templateUrl: 'components/register/register.html',
                     controller: 'registerCtrl'
                 })
-                .when('/view1', {
-                    templateUrl: 'components/view1/view1.html',
-                    controller: 'View1Ctrl'
-                })
                 .when('/view2', {
                     templateUrl: 'components/view2/view2.html',
                     controller: 'View2Ctrl'
@@ -41,8 +41,6 @@
                     templateUrl: 'components/view3/view3.html',
                     controller: 'View3Ctrl'
                 });
-
-
         }])
         .run(run);
 
@@ -60,7 +58,7 @@
             var restrictedPage = $.inArray($location.path(), ['/login', '/register', '/forgotpassword']) === -1;
             var loggedIn = $rootScope.globals.currentUser;
             if (restrictedPage && !loggedIn) {
-                $location.path('/login');
+                $location.path('/');
             }
         });
     }
