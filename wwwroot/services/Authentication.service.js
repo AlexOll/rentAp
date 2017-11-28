@@ -14,8 +14,16 @@
     }
 
     ForgotPass(email, callback) {
-        debugger;
         this.$http.get('/api/authentication/forgotpassword/'+ email )
+            .then(res => callback(res));
+    }
+
+    ResendActivationCode(email, callback) {
+        this.$http.get('/api/authentication/newactivationcode/' + email)
+            .then(res => callback(res));
+    }
+    CheckActivationCode(activationCode, callback) {
+        this.$http.get('/api/authentication/' + activationCode)
             .then(res => callback(res));
     }
 

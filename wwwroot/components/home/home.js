@@ -1,6 +1,6 @@
 'use strict';
 
 angular.module('myApp.home', ['ngRoute'])
-    .controller('homeCtrl', ['$scope', function HomeCtrl($scope) {
+    .controller('homeCtrl', ['$scope', '$routeParams', function HomeCtrl($scope, $routeParams) {
         $scope.title = "Angular test";
     }]);

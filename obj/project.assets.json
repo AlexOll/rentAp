@@ -36,6 +36,12 @@
           "Node.js": "0.10.28"
         }
       },
+      "BuildBundlerMinifier/2.6.362": {
+        "type": "package",
+        "build": {
+          "build/BuildBundlerMinifier.targets": {}
+        }
+      },
       "Libuv/1.10.0": {
         "type": "package",
         "dependencies": {
@@ -7150,6 +7156,25 @@
         "tools/bin_tools.ps1",
         "tools/install.ps1",
         "tools/uninstall.ps1"
+      ]
+    },
+    "BuildBundlerMinifier/2.6.362": {
+      "sha512": "J8vHrhvkvBAkzf5eA0zDu9Z4RbVlA8lYWGq0UyvWh98kKpqQZpzUe3yC89Rq9nQyiO0pdULrPPs9sSmx+xq8jA==",
+      "type": "package",
+      "path": "buildbundlerminifier/2.6.362",
+      "files": [
+        "build/BuildBundlerMinifier.targets",
+        "buildbundlerminifier.2.6.362.nupkg.sha512",
+        "buildbundlerminifier.nuspec",
+        "tools/net46/BundlerMinifier.dll",
+        "tools/net46/NUglify.dll",
+        "tools/net46/Newtonsoft.Json.dll",
+        "tools/netcoreapp2.0/BundlerMinifier.dll",
+        "tools/netcoreapp2.0/NUglify.dll",
+        "tools/netcoreapp2.0/Newtonsoft.Json.dll",
+        "tools/netstandard1.3/BundlerMinifier.dll",
+        "tools/netstandard1.3/NUglify.dll",
+        "tools/netstandard1.3/Newtonsoft.Json.dll"
       ]
     },
     "Libuv/1.10.0": {
@@ -15726,6 +15751,7 @@
       "Autofac >= 4.6.2",
       "Autofac.Extensions.DependencyInjection >= 4.2.0",
       "Bower >= 1.3.11",
+      "BuildBundlerMinifier >= 2.6.362",
       "MailKit >= 1.20.0",
       "Microsoft.AspNetCore.All >= 2.0.0",
       "Microsoft.EntityFrameworkCore.SqlServer >= 2.0.0",
@@ -15819,6 +15845,10 @@
           "Autofac": {
             "target": "Package",
             "version": "4.6.2"
+          },
+          "BuildBundlerMinifier": {
+            "target": "Package",
+            "version": "[2.6.362, )"
           }
         },
         "imports": [

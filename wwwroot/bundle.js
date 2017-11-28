@@ -44,8 +44,16 @@ class AuthenticationService {
     }
 
     ForgotPass(email, callback) {
-        debugger;
         this.$http.get('/api/authentication/forgotpassword/'+ email )
+            .then(res => callback(res));
+    }
+
+    ResendActivationCode(email, callback) {
+        this.$http.get('/api/authentication/newactivationcode/' + email)
+            .then(res => callback(res));
+    }
+    CheckActivationCode(activationCode, callback) {
+        this.$http.get('/api/authentication/' + activationCode)
             .then(res => callback(res));
     }
 
@@ -193,35 +201,51 @@ angular.module('myApp.version', [
 'use strict';
 
 angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
-    .controller('loginCtrl', LoginController);
+    .controller('loginCtrl', ['$scope', '$location', '$mdDialog', 'AuthenticationService', 'toastr',
+        function LoginController($scope, $location, $mdDialog, AuthenticationService, toastr) {
+            debugger;
+            var searchObject = $location.search().activationcode;
+            if (searchObject) {
+                AuthenticationService.CheckActivationCode(searchObject, function (response) {
+                    if (!response.data.message) {
 
-LoginController.$inject = ['$scope', '$location', '$mdDialog', 'AuthenticationService', 'toastr'];
-function LoginController($scope, $location, $mdDialog, AuthenticationService, toastr) {
-
-    $scope.login = function (ev) {
-        $scope.dataLoading = true;
-        AuthenticationService.Login($scope.username, $scope.password, function (response) {
-            if (!response.data.message) {
-                AuthenticationService.SetCredentials($scope.username, $scope.password);
-
-                toastr.success('Authentication succeeded', 'Have fun!');
-                $location.path('/');
+                        toastr.success('Activation code found', 'You may now login!');
+                        $location.path('/login');
+                    }
+                    else {
+                        toastr.error(response.data.message, "Error", {
+                            "timeOut": "0",
+                            "extendedTImeout": "0"
+                        });
+                    }
+                })
             }
-            else {
-                alert = $mdDialog.alert({
-                    title: "You shall not pass",
-                    textContent: response.data.message,
-                    ok: 'Close',
-                    clickOutsideToClose: true,
-                    targetEvent: ev
+
+            $scope.login = function (ev) {
+
+                $scope.dataLoading = true;
+                AuthenticationService.Login($scope.username, $scope.password, function (response) {
+                    if (!response.data.message) {
+                        AuthenticationService.SetCredentials($scope.username, $scope.password);
+
+                        toastr.success('Authentication succeeded', 'Have fun!');
+                        $location.path('/');
+                    }
+                    else {
+                        alert = $mdDialog.alert({
+                            title: "You shall not pass",
+                            textContent: response.data.message,
+                            ok: 'Close',
+                            clickOutsideToClose: true,
+                            targetEvent: ev
+                        });
+                        $mdDialog.show(alert);
+
+                        $scope.dataLoading = false;
+                    }
                 });
-                $mdDialog.show(alert);
-
-                $scope.dataLoading = false;
             }
-        });
-    }
-}
+        }]);
 
 
 'use strict';
@@ -231,27 +255,45 @@ angular.module('myApp.forgotpassword', ['ngRoute', 'ngMaterial', 'services', 'to
 
 ForgotPassController.$inject = ['$scope', '$location', '$mdDialog', 'AuthenticationService', 'toastr'];
 function ForgotPassController($scope, $location, $mdDialog, AuthenticationService, toastr) {
-    $scope.forgotpassword = function (ev) {
+    $scope.test = function (record) {
+        alert(record);
+    }
+    $scope.forgotPassword = function (ev) {
         $scope.dataLoading = true;
         AuthenticationService.ForgotPass($scope.email, function (response) {
-            if (!response.data.message) {
+            debugger;
+            if (response.status === 204) {
 
-                toastr.success('Authentication succeeded', 'Have fun!');
+                toastr.success('Your new Password was sent', 'Check email!');
                 $location.path('/');
             }
-            else {
-                $mdDialog.show(
-                    $mdDialog.alert()
-                        .clickOutsideToClose(true)
-                        .title("You shall not pass")
-                        .textContent(response.data.message)
-                        .ok('Back')
-                        .targetEvent(ev)
-                );
-                $scope.dataLoading = false;
+            else
+            {
+                toastr.error("Noooo oo oo ooooo!!!", "Title", {
+                    "timeOut": "0",
+                    "extendedTImeout": "0"
+                });
             }
         });
     }
+
+    $scope.resendActivationCode = function (ev) {
+        $scope.dataLoading = true;
+        AuthenticationService.ResendActivationCode($scope.email, function (response) {
+            if (response.status === 204) {
+
+                toastr.success('Your new Activation Code was sent', 'Check email!');
+                $location.path('/');
+            }
+            else {
+                toastr.error("Noooo oo oo ooooo!!!", "Title", {
+                    "timeOut": "0",
+                    "extendedTImeout": "0"
+                });
+            }
+        });
+    }
+
 }
 
 
@@ -295,7 +337,7 @@ function RegisterController($scope, UserService, $location, toastr) {
 'use strict';
 
 angular.module('myApp.home', ['ngRoute'])
-    .controller('homeCtrl', ['$scope', function HomeCtrl($scope) {
+    .controller('homeCtrl', ['$scope', '$routeParams', function HomeCtrl($scope, $routeParams) {
         $scope.title = "Angular test";
     }]);
 

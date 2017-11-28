@@ -8,6 +8,11 @@ body {
     padding-top: 54px;
 }
 
+.navbar {
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
 @media (min-width: 992px) {
     body {
         padding-top: 56px;
@@ -18,17 +23,18 @@ footer {
     background-color: #555;
     color: white;
     padding: 15px;
-    position: relative;
-    margin-top: 10px;
+    position: fixed;
+    bottom: 0px;
     width: 100%;
     opacity: 0.5;
 }
 
-.error-color {
+.error-span {
     color: #a94442
 }
 
-.cented-content {
+.center-content {
+    text-align:center;
     float: none;
     margin: 0 auto;
 }

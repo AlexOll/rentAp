@@ -30,6 +30,7 @@ namespace RentApp.Managers
         {
             var foundUser = UserCache.AliveUsers
                 .FirstOrDefault(f => f.ActivationCode == value && !f.IsActivated);
+
             if (foundUser != null)
             {
                 foundUser.IsActivated = true;
@@ -80,21 +81,34 @@ namespace RentApp.Managers
             return new BaseResponse();
         }
 
+        internal void ResendActivationCode(string email)
+        {
+            var foundUser = UserCache.AliveUsers.FirstOrDefault(a => a.Email == email && !a.IsActivated);
+
+            if (foundUser != null)
+            {
+                foundUser.ActivationCode = Guid.NewGuid();
+
+                var emailManager = new EmailManager(foundUser);
+                emailManager.SendActivationEmail();
+
+                _userRepository.Update(foundUser);
+            }
+        }
+
         internal void RemindPasswordByEmail(string email)
         {
             var foundUser = UserCache.AliveUsers.FirstOrDefault(a => a.Email == email);
 
-            var response = ValidateUser(foundUser);
-
-            if (response is AuthenticationResponse)
+            if (foundUser != null)
             {
                 var newPassword = PasswordManager.GenerateRandomPassword();
                 foundUser.Password = newPassword;
 
-                _userRepository.Update(foundUser);
-
                 var emailManager = new EmailManager(foundUser);
                 emailManager.SendNewPasswordForUser(newPassword);
+
+                _userRepository.Update(foundUser);
             }
         }
 
@@ -115,19 +129,14 @@ namespace RentApp.Managers
                         a.Username == inputUser.Username &&
                         a.Password == inputUser.Password);
 
-            return ValidateUser(foundUser);
-        }
-
-        private BaseResponse ValidateUser(User user)
-        {
-            if (user != null)
+            if (foundUser != null)
             {
-                if (user.IsActivated)
-                    return (AuthenticationResponse)user;
+                if (foundUser.IsActivated)
+                    return (AuthenticationResponse)foundUser;
                 else
                     return new BaseResponse
                     {
-                        Message = "Account is not activated. Check your email - " + user.Email
+                        Message = "Account is not activated. Check your email - " + foundUser.Email
                     };
             }
             return new BaseResponse
@@ -135,8 +144,5 @@ namespace RentApp.Managers
                 Message = "Account not exists"
             };
         }
-
-        
-
     }
 }

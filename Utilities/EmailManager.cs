@@ -12,6 +12,7 @@ namespace RentApp.Utilities
     {
         private User _user;
 
+
         public EmailManager(User user)
         {
             _user = user;
@@ -28,28 +29,28 @@ namespace RentApp.Utilities
             sb.AppendFormat(
                 "<br /><a href = '{0}{1}{2}'>Click here to activate your account.</a>",
                 path,
-                @"/api/authentication/",
+                @"/login?activationcode=",
                 _user.ActivationCode);
             sb.Append("<br /><br />Thanks");
 
-            SendMessage(sb.ToString());
+            SendMessage(sb.ToString(), "RentApp activation link");
         }
 
         internal void SendNewPasswordForUser(string newPassword)
         {
             var sb = new StringBuilder();
             sb.AppendFormat("Hello {0} {1},", _user.FirstName, _user.LastName);
-            sb.AppendFormat("<br /><br />Your temporary password is - {0}", newPassword);
+            sb.AppendFormat("<br /><br />Your new password is - {0}", newPassword);
 
-            SendMessage(sb.ToString());
+            SendMessage(sb.ToString(), "RentApp new password");
         }
 
-        private void SendMessage(string body)
+        private void SendMessage(string body, string subject)
         {
             var emailMessage = new MimeMessage();
             emailMessage.From.Add(new MailboxAddress("Rent App", "renty.application@gmail.com"));
             emailMessage.To.Add(new MailboxAddress(_user.Username, _user.Email));
-            emailMessage.Subject = "RentApp activation link";
+            emailMessage.Subject = subject;
             emailMessage.Body = new TextPart("html") { Text = body };
 
             using (var client = new SmtpClient())

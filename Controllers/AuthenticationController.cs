@@ -53,6 +53,19 @@ namespace RentApp.Controllers
 
             return NoContent();
         }
+
+        [HttpGet, Route("newactivationcode/{email}")]
+        public async Task<IActionResult> ResendActivationCode([FromRoute]string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest();
+            }
+
+            await Task.Factory.StartNew(() => _userManager.ResendActivationCode(email));
+
+            return NoContent();
+        }
     }
 }
 

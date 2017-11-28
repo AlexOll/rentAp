@@ -5,26 +5,44 @@ angular.module('myApp.forgotpassword', ['ngRoute', 'ngMaterial', 'services', 'to
 
 ForgotPassController.$inject = ['$scope', '$location', '$mdDialog', 'AuthenticationService', 'toastr'];
 function ForgotPassController($scope, $location, $mdDialog, AuthenticationService, toastr) {
-    $scope.forgotpassword = function (ev) {
+    $scope.test = function (record) {
+        alert(record);
+    }
+    $scope.forgotPassword = function (ev) {
         $scope.dataLoading = true;
         AuthenticationService.ForgotPass($scope.email, function (response) {
-            if (!response.data.message) {
+            debugger;
+            if (response.status === 204) {
 
-                toastr.success('Authentication succeeded', 'Have fun!');
+                toastr.success('Your new Password was sent', 'Check email!');
                 $location.path('/');
             }
-            else {
-                $mdDialog.show(
-                    $mdDialog.alert()
-                        .clickOutsideToClose(true)
-                        .title("You shall not pass")
-                        .textContent(response.data.message)
-                        .ok('Back')
-                        .targetEvent(ev)
-                );
-                $scope.dataLoading = false;
+            else
+            {
+                toastr.error("Noooo oo oo ooooo!!!", "Title", {
+                    "timeOut": "0",
+                    "extendedTImeout": "0"
+                });
             }
         });
     }
+
+    $scope.resendActivationCode = function (ev) {
+        $scope.dataLoading = true;
+        AuthenticationService.ResendActivationCode($scope.email, function (response) {
+            if (response.status === 204) {
+
+                toastr.success('Your new Activation Code was sent', 'Check email!');
+                $location.path('/');
+            }
+            else {
+                toastr.error("Noooo oo oo ooooo!!!", "Title", {
+                    "timeOut": "0",
+                    "extendedTImeout": "0"
+                });
+            }
+        });
+    }
+
 }
 
