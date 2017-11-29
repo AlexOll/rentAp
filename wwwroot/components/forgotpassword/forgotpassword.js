@@ -11,15 +11,15 @@ function ForgotPassController($scope, $location, $mdDialog, AuthenticationServic
     $scope.forgotPassword = function (ev) {
         $scope.dataLoading = true;
         AuthenticationService.ForgotPass($scope.email, function (response) {
-            debugger;
-            if (response.status === 204) {
+
+            if (response.data.responseCode === 200) {
 
                 toastr.success('Your new Password was sent', 'Check email!');
                 $location.path('/');
             }
             else
             {
-                toastr.error("Noooo oo oo ooooo!!!", "Title", {
+                toastr.error(response.data.message, "Title", {
                     "timeOut": "0",
                     "extendedTImeout": "0"
                 });

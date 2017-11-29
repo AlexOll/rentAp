@@ -27,13 +27,13 @@
             .then(res => callback(res));
     }
 
-    SetCredentials(username, password) {
-        var input = username + ':' + password;
+    SetCredentials(user) {
+        var input = user.username + ':' + user.id;
         var authdata = this.Base64Encode(input);
 
         this.$rootScope.globals = {
             currentUser: {
-                username: username,
+                username: user.username,
                 authdata: authdata
             }
         };

@@ -47,26 +47,7 @@ namespace RentApp.Controllers
 
             return Ok(result);
         }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] User item)
-        {
-            if (item == null || item.Id != id)
-            {
-                return BadRequest();
-            }
-
-            //var user = _userManager.GetById(id);
-            User user = null;
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            //await _userManager.Update(item);
-            return new NoContentResult();
-        }
-
+        
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {

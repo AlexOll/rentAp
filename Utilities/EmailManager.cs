@@ -24,7 +24,7 @@ namespace RentApp.Utilities
             var path = string.Format("{0}://{1}", request.HttpContext.Request.Scheme, request.HttpContext.Request.Host);
 
             var sb = new StringBuilder();
-            sb.AppendFormat("Hello {0} {1},", _user.FirstName, _user.LastName);
+            sb.AppendFormat("Hello {0} {1},", _user.Firstname, _user.Lastname);
             sb.Append("<br /><br />Please click the following link to activate your account");
             sb.AppendFormat(
                 "<br /><a href = '{0}{1}{2}'>Click here to activate your account.</a>",
@@ -39,7 +39,7 @@ namespace RentApp.Utilities
         internal void SendNewPasswordForUser(string newPassword)
         {
             var sb = new StringBuilder();
-            sb.AppendFormat("Hello {0} {1},", _user.FirstName, _user.LastName);
+            sb.AppendFormat("Hello {0} {1},", _user.Firstname, _user.Lastname);
             sb.AppendFormat("<br /><br />Your new password is - {0}", newPassword);
 
             SendMessage(sb.ToString(), "RentApp new password");

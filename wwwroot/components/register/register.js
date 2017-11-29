@@ -1,36 +1,30 @@
 'use strict';
 
 angular.module('myApp.register', ['ngRoute', 'services', 'toastr', 'directives'])
-    .controller('registerCtrl', RegisterController)
+    .controller('registerCtrl', ['$scope', 'UserService', '$location', 'toastr',
+        function RegisterController($scope, UserService, $location, toastr) {
 
-RegisterController.$inject = ['$scope', 'UserService', '$location', 'toastr'];
-function RegisterController($scope, UserService, $location, toastr) {
+            $scope.register = function () {
 
-    $scope.register = function () {
+                $scope.dataLoading = true;
+                UserService.Create($scope.user, function (response) {
 
-        $scope.dataLoading = true;
-        UserService.Create($scope.user, function (response) {
-            if (response.status === 200) {
-                if (response.data.message !== null) {
-                    toastr.warning(response.data.message, 'Warning');
-                }
-                else {
-                    toastr.success('Registration succeeded', 'Check your e-mail for submition');
-                    $location.path('/');
-                }
+                    if (response.data.responseCode === 200) {
+                        toastr.success('Check your e-mail for submition', 'Registration succeeded');
+                        $location.path('/');
+                    }
+                    else {
+                        alert = $mdDialog.alert({
+                            title: "Can't register you're account!",
+                            textContent: response.data.message,
+                            ok: 'Close',
+                            clickOutsideToClose: true,
+                            targetEvent: ev
+                        });
+                        $mdDialog.show(alert);
+                    }
+                })
+                $scope.dataLoading = false;
             }
-            else {
-                $mdDialog.show(
-                    $mdDialog.alert()
-                        .clickOutsideToClose(true)
-                        .title("You shall not pass")
-                        .textContent("Account doesn't exist!")
-                        .ok('Back')
-                        .targetEvent(ev)
-                );
-            }
-            $scope.dataLoading = false;
-        })
-    }
-};
+        }]);
 

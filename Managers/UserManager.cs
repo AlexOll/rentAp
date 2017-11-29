@@ -40,31 +40,32 @@ namespace RentApp.Managers
 
             return new BaseResponse
             {
-                Message = "Activation code failed"
+                Message = "Activation code failed",
+                ResponseCode = StatusCodes.Status406NotAcceptable
             };
         }
 
         internal BaseResponse Create(User item)
         {
-            var isEmailExist = UserCache.AliveUsers
-                .Any(a => a.Email == item.Email);
+            var isEmailExist = UserCache.AliveUsers.Any(a => a.Email == item.Email);
 
             if (isEmailExist)
             {
                 return new BaseResponse
                 {
-                    Message = "Email exists"
+                    Message = "Email exists",
+                    ResponseCode = StatusCodes.Status406NotAcceptable
                 };
             }
 
-            var isUserNameExist = UserCache.AliveUsers
-                .Any(a => a.Username == item.Username);
+            var isUserNameExist = UserCache.AliveUsers.Any(a => a.Username == item.Username);
 
             if (isUserNameExist)
             {
                 return new BaseResponse
                 {
-                    Message = "Username exists"
+                    Message = "Username exists",
+                    ResponseCode = StatusCodes.Status406NotAcceptable
                 };
             }
 
@@ -81,7 +82,7 @@ namespace RentApp.Managers
             return new BaseResponse();
         }
 
-        internal void ResendActivationCode(string email)
+        internal BaseResponse ResendActivationCode(string email)
         {
             var foundUser = UserCache.AliveUsers.FirstOrDefault(a => a.Email == email && !a.IsActivated);
 
@@ -93,6 +94,16 @@ namespace RentApp.Managers
                 emailManager.SendActivationEmail();
 
                 _userRepository.Update(foundUser);
+
+                return new BaseResponse();
+            }
+            else
+            {
+                return new BaseResponse
+                {
+                    Message = "Username not exists",
+                    ResponseCode = StatusCodes.Status406NotAcceptable
+                };
             }
         }
 
@@ -136,12 +147,14 @@ namespace RentApp.Managers
                 else
                     return new BaseResponse
                     {
-                        Message = "Account is not activated. Check your email - " + foundUser.Email
+                        Message = "Account is not activated. Check your email - " + foundUser.Email,
+                        ResponseCode = StatusCodes.Status406NotAcceptable
                     };
             }
             return new BaseResponse
             {
-                Message = "Account not exists"
+                Message = "Account not exists",
+                ResponseCode = StatusCodes.Status404NotFound
             };
         }
     }

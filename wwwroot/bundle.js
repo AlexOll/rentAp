@@ -57,13 +57,13 @@ class AuthenticationService {
             .then(res => callback(res));
     }
 
-    SetCredentials(username, password) {
-        var input = username + ':' + password;
+    SetCredentials(user) {
+        var input = user.username + ':' + user.id;
         var authdata = this.Base64Encode(input);
 
         this.$rootScope.globals = {
             currentUser: {
-                username: username,
+                username: user.username,
                 authdata: authdata
             }
         };
@@ -203,18 +203,20 @@ angular.module('myApp.version', [
 angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
     .controller('loginCtrl', ['$scope', '$location', '$mdDialog', 'AuthenticationService', 'toastr',
         function LoginController($scope, $location, $mdDialog, AuthenticationService, toastr) {
-            debugger;
+
             var searchObject = $location.search().activationcode;
             if (searchObject) {
-                AuthenticationService.CheckActivationCode(searchObject, function (response) {
-                    if (!response.data.message) {
 
-                        toastr.success('Activation code found', 'You may now login!');
-                        $location.path('/login');
+                AuthenticationService.CheckActivationCode(searchObject, function (response) {
+                    if (response.data.responseCode === 200) {
+
+                        AuthenticationService.SetCredentials(response.data);
+                        toastr.success('Activation code submitted', 'Have fun!');
+                        $location.url('/');
                     }
                     else {
                         toastr.error(response.data.message, "Error", {
-                            "timeOut": "0",
+                            "timeOut": "5000",
                             "extendedTImeout": "0"
                         });
                     }
@@ -222,12 +224,12 @@ angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
             }
 
             $scope.login = function (ev) {
-
                 $scope.dataLoading = true;
                 AuthenticationService.Login($scope.username, $scope.password, function (response) {
-                    if (!response.data.message) {
-                        AuthenticationService.SetCredentials($scope.username, $scope.password);
 
+                    if (response.data.responseCode === 200) {
+                        
+                        AuthenticationService.SetCredentials(response.data);
                         toastr.success('Authentication succeeded', 'Have fun!');
                         $location.path('/');
                     }
@@ -245,6 +247,7 @@ angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
                     }
                 });
             }
+
         }]);
 
 
@@ -261,15 +264,15 @@ function ForgotPassController($scope, $location, $mdDialog, AuthenticationServic
     $scope.forgotPassword = function (ev) {
         $scope.dataLoading = true;
         AuthenticationService.ForgotPass($scope.email, function (response) {
-            debugger;
-            if (response.status === 204) {
+
+            if (response.data.responseCode === 200) {
 
                 toastr.success('Your new Password was sent', 'Check email!');
                 $location.path('/');
             }
             else
             {
-                toastr.error("Noooo oo oo ooooo!!!", "Title", {
+                toastr.error(response.data.message, "Title", {
                     "timeOut": "0",
                     "extendedTImeout": "0"
                 });
@@ -300,38 +303,32 @@ function ForgotPassController($scope, $location, $mdDialog, AuthenticationServic
 'use strict';
 
 angular.module('myApp.register', ['ngRoute', 'services', 'toastr', 'directives'])
-    .controller('registerCtrl', RegisterController)
+    .controller('registerCtrl', ['$scope', 'UserService', '$location', 'toastr',
+        function RegisterController($scope, UserService, $location, toastr) {
 
-RegisterController.$inject = ['$scope', 'UserService', '$location', 'toastr'];
-function RegisterController($scope, UserService, $location, toastr) {
+            $scope.register = function () {
 
-    $scope.register = function () {
+                $scope.dataLoading = true;
+                UserService.Create($scope.user, function (response) {
 
-        $scope.dataLoading = true;
-        UserService.Create($scope.user, function (response) {
-            if (response.status === 200) {
-                if (response.data.message !== null) {
-                    toastr.warning(response.data.message, 'Warning');
-                }
-                else {
-                    toastr.success('Registration succeeded', 'Check your e-mail for submition');
-                    $location.path('/');
-                }
+                    if (response.data.responseCode === 200) {
+                        toastr.success('Check your e-mail for submition', 'Registration succeeded');
+                        $location.path('/');
+                    }
+                    else {
+                        alert = $mdDialog.alert({
+                            title: "Can't register you're account!",
+                            textContent: response.data.message,
+                            ok: 'Close',
+                            clickOutsideToClose: true,
+                            targetEvent: ev
+                        });
+                        $mdDialog.show(alert);
+                    }
+                })
+                $scope.dataLoading = false;
             }
-            else {
-                $mdDialog.show(
-                    $mdDialog.alert()
-                        .clickOutsideToClose(true)
-                        .title("You shall not pass")
-                        .textContent("Account doesn't exist!")
-                        .ok('Back')
-                        .targetEvent(ev)
-                );
-            }
-            $scope.dataLoading = false;
-        })
-    }
-};
+        }]);
 
 
 'use strict';
