@@ -11,8 +11,8 @@ using System;
 namespace RentApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20171116143203_3")]
-    partial class _3
+    [Migration("20171201181442_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,34 @@ namespace RentApp.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.0-rtm-26452")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("RentApp.Models.DbModels.Flat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<float>("Area");
+
+                    b.Property<float>("Cost");
+
+                    b.Property<DateTime>("CreateDate");
+
+                    b.Property<string>("Description");
+
+                    b.Property<bool>("IsAlive");
+
+                    b.Property<DateTime>("LastRepairDate");
+
+                    b.Property<DateTime>("ReleaseDate");
+
+                    b.Property<int>("RoomsCount");
+
+                    b.Property<DateTime>("UpdateDate");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Flats");
+                });
 
             modelBuilder.Entity("RentApp.Models.DbModels.User", b =>
                 {
@@ -32,13 +60,13 @@ namespace RentApp.Migrations
 
                     b.Property<string>("Email");
 
-                    b.Property<string>("FirstName");
+                    b.Property<string>("Firstname");
 
                     b.Property<bool>("IsActivated");
 
                     b.Property<bool>("IsAlive");
 
-                    b.Property<string>("LastName");
+                    b.Property<string>("Lastname");
 
                     b.Property<string>("Password");
 
