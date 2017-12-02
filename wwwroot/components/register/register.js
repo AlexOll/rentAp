@@ -10,7 +10,7 @@ angular.module('myApp.register', ['ngRoute', 'services', 'toastr', 'directives']
                 UserService.Create($scope.user, function (response) {
 
                     if (response.data.responseCode === 200) {
-                        toastr.success('Check your e-mail for submition', 'Registration succeeded');
+                        toastr.success('Check your e-mail for submission', 'Registration succeeded');
                         $location.path('/');
                     }
                     else {

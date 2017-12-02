@@ -1,4 +1,3 @@
-
 'use strict';
 
 angular
@@ -64,7 +63,6 @@ angular
                 }
             }
             $rootScope.logout = function () {
-                alert();
                 $rootScope.globals = {};
                 $cookies.remove('globals');
                 $http.defaults.headers.common.Authorization = 'Basic';

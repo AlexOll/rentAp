@@ -1,11 +1,26 @@
-/*!
- * Start Bootstrap - Shop Homepage (https://startbootstrap.com/template-overviews/shop-homepage)
- * Copyright 2013-2017 Start Bootstrap
- * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-shop-homepage/blob/master/LICENSE)
- */
+
+html {
+    min-height: 100%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background: #70bg32;
+    background-repeat: no-repeat;
+    background: -webkit-linear-gradient(90deg, #EC6F66 10%, #F3A183 90%) fixed; /* Chrome 10+, Saf5.1+ */
+    background: -moz-linear-gradient(90deg, #EC6F66 10%, #F3A183 90%) fixed; /* FF3.6+ */
+    background: -ms-linear-gradient(90deg, #EC6F66 10%, #F3A183 90%) fixed; /* IE10 */
+    background: -o-linear-gradient(90deg, #EC6F66 10%, #F3A183 90%); /* Opera 11.10+ */
+    background: linear-gradient(90deg, #EC6F66 10%, #F3A183 90%); /* W3C */
+}
 
 body {
     padding-top: 54px;
+    background-color: inherit;
+}
+
+h4, h5 {
+    color: #343a40 !important;
 }
 
 .navbar {
@@ -30,7 +45,7 @@ footer {
 }
 
 .error-span {
-    color: #a94442
+    color: yellow
 }
 
 .center-content {

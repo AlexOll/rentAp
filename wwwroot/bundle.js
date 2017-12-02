@@ -198,11 +198,10 @@ angular.module('myApp.version', [
 
 .value('version', '0.1');
 
-'use strict';
 
 angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
     .controller('loginCtrl', ['$scope', '$location', '$mdDialog', 'AuthenticationService', 'toastr',
-        function LoginController($scope, $location, $mdDialog, AuthenticationService, toastr) {
+        function ($scope, $location, $mdDialog, AuthenticationService, toastr) {
 
             var searchObject = $location.search().activationcode;
             if (searchObject) {
@@ -251,53 +250,47 @@ angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
         }]);
 
 
-'use strict';
 
 angular.module('myApp.forgotpassword', ['ngRoute', 'ngMaterial', 'services', 'toastr', 'directives'])
-    .controller('forgotpasswordCtrl', ForgotPassController);
+    .controller('forgotpasswordCtrl', ['$scope', '$location', '$mdDialog', 'AuthenticationService', 'toastr',
+        function ($scope, $location, $mdDialog, AuthenticationService, toastr) {
 
-ForgotPassController.$inject = ['$scope', '$location', '$mdDialog', 'AuthenticationService', 'toastr'];
-function ForgotPassController($scope, $location, $mdDialog, AuthenticationService, toastr) {
-    $scope.test = function (record) {
-        alert(record);
-    }
-    $scope.forgotPassword = function (ev) {
-        $scope.dataLoading = true;
-        AuthenticationService.ForgotPass($scope.email, function (response) {
+            $scope.forgotPassword = function (ev) {
+                $scope.dataLoading = true;
+                AuthenticationService.ForgotPass($scope.email, function (response) {
 
-            if (response.data.responseCode === 200) {
+                    if (response.data.responseCode === 200) {
 
-                toastr.success('Your new Password was sent', 'Check email!');
-                $location.path('/');
-            }
-            else
-            {
-                toastr.error(response.data.message, "Title", {
-                    "timeOut": "0",
-                    "extendedTImeout": "0"
+                        toastr.success('Your new Password was sent', 'Check email!');
+                        $location.path('/');
+                    }
+                    else {
+                        toastr.error(response.data.message, "Title", {
+                            "timeOut": "0",
+                            "extendedTImeout": "0"
+                        });
+                    }
                 });
             }
-        });
-    }
 
-    $scope.resendActivationCode = function (ev) {
-        $scope.dataLoading = true;
-        AuthenticationService.ResendActivationCode($scope.email, function (response) {
-            if (response.status === 204) {
+            $scope.resendActivationCode = function (ev) {
+                $scope.dataLoading = true;
+                AuthenticationService.ResendActivationCode($scope.email, function (response) {
+                    if (response.status === 204) {
 
-                toastr.success('Your new Activation Code was sent', 'Check email!');
-                $location.path('/');
-            }
-            else {
-                toastr.error("Noooo oo oo ooooo!!!", "Title", {
-                    "timeOut": "0",
-                    "extendedTImeout": "0"
+                        toastr.success('Your new Activation Code was sent', 'Check email!');
+                        $location.path('/');
+                    }
+                    else {
+                        toastr.error("Noooo oo oo ooooo!!!", "Title", {
+                            "timeOut": "0",
+                            "extendedTImeout": "0"
+                        });
+                    }
                 });
             }
-        });
-    }
 
-}
+        }]);
 
 
 'use strict';
@@ -312,7 +305,7 @@ angular.module('myApp.register', ['ngRoute', 'services', 'toastr', 'directives']
                 UserService.Create($scope.user, function (response) {
 
                     if (response.data.responseCode === 200) {
-                        toastr.success('Check your e-mail for submition', 'Registration succeeded');
+                        toastr.success('Check your e-mail for submission', 'Registration succeeded');
                         $location.path('/');
                     }
                     else {
@@ -331,11 +324,51 @@ angular.module('myApp.register', ['ngRoute', 'services', 'toastr', 'directives']
         }]);
 
 
-'use strict';
+angular.module('myApp.home', ['ngRoute', 'directives'])
+    .controller('homeCtrl', ['$scope', function ($scope) {
 
-angular.module('myApp.home', ['ngRoute'])
-    .controller('homeCtrl', ['$scope', '$routeParams', function HomeCtrl($scope, $routeParams) {
-        $scope.title = "Angular test";
+        $scope.city = null;
+        $scope.options = {
+            country: 'ukr',
+            types: '(cities)'
+        }; 
+
+        $scope.serviceType = {
+            model: 1,
+            availableOptions: [
+                { id: 1, name: 'Offer sale' },
+                { id: 2, name: 'Rental offer' },
+                { id: 3, name: 'Offer roommate' },
+                { id: 4, name: 'Sales demand' },
+                { id: 5, name: 'Demand rental' },
+                { id: 6, name: 'Demand for roommates' }
+            ]
+        };
+
+        $scope.propertyType = {
+            model: [],
+            availableOptions: [
+                { id: 1, name: 'Appartment' },
+                { id: 2, name: 'House' },
+                { id: 3, name: 'Land' },
+                { id: 4, name: 'Garage' },
+                { id: 5, name: 'Office' },
+                { id: 6, name: 'Commercial space' },
+                { id: 7, name: 'Other' }
+            ]
+        };
+
+        $scope.search = function () {
+
+            var e = angular.element(document.querySelector('#city'))[0];
+            $scope.placeId = e.attributes['placeid'].value;
+
+            alert('see console log');
+            console.log('placeId - ' + $scope.placeId);
+            console.log('propertyType - ' + $scope.propertyType.model);
+            console.log('serviceType - ' + $scope.serviceType.model);
+
+        }
     }]);
 
 'use strict';
@@ -361,45 +394,181 @@ angular.module('myApp.view3', ['ngRoute', 'ngCookies', 'services'])
     }]);
 
 
-'use strict';
-
 angular
     .module('directives', [])
-    .directive('uniqueField', uniqueDirective);
+    .directive('uniqueField', ['$http', function uniqueDirective($http) {
+        var toId;
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            link: function (scope, elem, attr, ctrl) {
+                scope.$watch(attr.ngModel, function (inputValue) {
 
-uniqueDirective.$inject = ['$http'];
-function uniqueDirective($http) {
-    var toId;
-    return {
-        restrict: 'A',
-        require: 'ngModel',
-        link: function (scope, elem, attr, ctrl) {
-            scope.$watch(attr.ngModel, function (inputValue) {
+                    if (toId) clearTimeout(toId);
 
-                if (toId) clearTimeout(toId);
+                    toId = setTimeout(function () {
+                        ctrl.$setValidity('duplicate', true);
+                        if (inputValue && !ctrl.$error.pattern) {
 
-                toId = setTimeout(function () {
-                    ctrl.$setValidity('duplicate', true);
-                    if (inputValue && !ctrl.$error.pattern) {
+                            var url = '';
+                            if (attr.id === "username")
+                                url = '/api/user/usernamecheck'
+                            else if (attr.id === "email")
+                                url = '/api/user/emailcheck'
 
-                        var url = '';
-                        if (attr.id === "username")
-                            url = '/api/user/usernamecheck'
-                        else if (attr.id === "email")
-                            url = '/api/user/emailcheck'
+                            $http.get(url, { params: { value: inputValue } })
+                                .then(function (response) {
+                                    if (response.data) {
+                                        ctrl.$setValidity('duplicate', false);
+                                    }
+                                    else {
+                                        ctrl.$setValidity('duplicate', true);
+                                    }
+                                });
+                        }
+                    }, 500);
+                })
+            }
+        }
+    }])
+    .directive('ngAutocomplete', function () {
+        return {
+            require: 'ngModel',
+            scope: {
+                ngModel: '=',
+                options: '=?',
+                details: '=?',
+                placeid: "=placeid"
+            },
 
-                        $http.get(url, { params: { value: inputValue } })
-                            .then(function (response) {
-                                if (response.data) {
-                                    ctrl.$setValidity('duplicate', false);
-                                }
-                                else {
-                                    ctrl.$setValidity('duplicate', true);
+            link: function (scope, element, attr, ctrl) {
+
+                //options for autocomplete
+                var opts
+                var watchEnter = false
+                //convert options provided to opts
+                var initOpts = function () {
+
+                    opts = {}
+                    if (scope.options) {
+
+                        if (scope.options.watchEnter !== true) {
+                            watchEnter = false
+                        } else {
+                            watchEnter = true
+                        }
+
+                        if (scope.options.types) {
+                            opts.types = []
+                            opts.types.push(scope.options.types)
+                            scope.gPlace.setTypes(opts.types)
+                        } else {
+                            scope.gPlace.setTypes([])
+                        }
+
+                        if (scope.options.bounds) {
+                            opts.bounds = scope.options.bounds
+                            scope.gPlace.setBounds(opts.bounds)
+                        } else {
+                            scope.gPlace.setBounds(null)
+                        }
+
+                        if (scope.options.country) {
+                            opts.componentRestrictions = {
+                                country: scope.options.country
+                            }
+                            scope.gPlace.setComponentRestrictions(opts.componentRestrictions)
+                        } else {
+                            scope.gPlace.setComponentRestrictions(null)
+                        }
+                    }
+                }
+
+                if (scope.gPlace == undefined) {
+                    scope.gPlace = new google.maps.places.Autocomplete(element[0], {});
+                }
+                google.maps.event.addListener(scope.gPlace, 'place_changed', function () {
+
+                    var result = scope.gPlace.getPlace();
+                    attr.$set('placeid', result.place_id);
+                    if (result !== undefined) {
+                        if (result.address_components !== undefined) {
+                            ctrl.$setValidity('notexists', false);
+
+                            scope.$apply(function () {
+
+                                scope.details = result;
+
+                                ctrl.$setViewValue(element.val());
+                            });
+                        }
+                        else {
+                            ctrl.$setValidity('notexists', true);
+                            if (watchEnter) {
+                                getPlace(result)
+                            }
+                        }
+                    }
+                })
+
+                //function to get retrieve the autocompletes first result using the AutocompleteService 
+                var getPlace = function (result) {
+                    var autocompleteService = new google.maps.places.AutocompleteService();
+                    if (result.name.length > 0) {
+                        autocompleteService.getPlacePredictions(
+                            {
+                                input: result.name,
+                                offset: result.name.length
+                            },
+                            function listentoresult(list, status) {
+                                if (list == null || list.length == 0) {
+
+                                    scope.$apply(function () {
+                                        scope.details = null;
+                                    });
+
+                                } else {
+                                    var placesService = new google.maps.places.PlacesService(element[0]);
+                                    placesService.getDetails(
+                                        { 'reference': list[0].reference },
+                                        function detailsresult(detailsResult, placesServiceStatus) {
+
+                                            if (placesServiceStatus == google.maps.GeocoderStatus.OK) {
+                                                scope.$apply(function () {
+
+                                                    ctrl.$setViewValue(detailsResult.formatted_address);
+                                                    element.val(detailsResult.formatted_address);
+
+                                                    scope.details = detailsResult;
+
+                                                    //on focusout the value reverts, need to set it again.
+                                                    var watchFocusOut = element.on('focusout', function (event) {
+                                                        element.val(detailsResult.formatted_address);
+                                                        element.unbind('focusout')
+                                                    })
+
+                                                });
+                                            }
+                                        }
+                                    );
                                 }
                             });
                     }
-                }, 500);
-            })
-        }
-    }
-}
+                }
+
+                ctrl.$render = function () {
+                    var location = ctrl.$viewValue;
+                    element.val(location);
+                };
+
+                //watch options provided to directive
+                scope.watchOptions = function () {
+                    return scope.options
+                };
+                scope.$watch(scope.watchOptions, function () {
+                    initOpts()
+                }, true);
+
+            }
+        };
+    });

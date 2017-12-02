@@ -1,0 +1,69 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway);
+
+.home-select-single {
+    font-family: 'Raleway', sans-serif;
+    font-size: 20px;
+    margin: 0 auto;
+    color: #EC6F66;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 0;
+    border: 0;
+    height: 40px;
+    text-indent: 1px;
+    padding: .5rem .75rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+    .home-select-single:hover {
+        background-color: transparent;
+        color: white;
+    }
+
+    .home-select-single option {
+        background-color: #343a40 !important;
+        height: 20px;
+        cursor: pointer;
+        color: white;
+    }
+
+
+.home-select-multiple {
+    font-family: 'Raleway', sans-serif;
+    font-size: 20px;
+    color: #EC6F66;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 0;
+    border: 0;
+    text-indent: 1px;
+    padding: .5rem .75rem;
+    overflow-y: hidden;
+    background-image: none;
+}
+
+    .home-select-multiple option {
+        color: #EC6F66;
+        height: 20px;
+        cursor: pointer;
+        margin: 2px
+    }
+
+        .home-select-multiple option:hover {
+            background-color: #343a40;
+            color: white;
+        }
+
+.home-input {
+    font-family: 'Raleway', sans-serif;
+    font-size: 20px;
+    margin: 0 auto;
+    color: #EC6F66;
+    width: 100%;
+    border-radius: 0;
+    border: 0;
+    height: 40px;
+    text-indent: 1px;
+    padding: .5rem .75rem;
+}

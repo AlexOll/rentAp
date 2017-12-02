@@ -1,10 +1,26 @@
-<div class="row" style="float: none; margin: 0 auto;" >
+﻿
+
+<div class="row" style="float: none; margin: 0 auto;">
     <div class="col-lg-3">
-        <h1 class="my-4">{{title}}</h1>
         <div class="list-group">
-            <a href="#" class="list-group-item">Category 1</a>
-            <a href="#" class="list-group-item">Category 2</a>
-            <a href="#" class="list-group-item">Category 3</a>
+            <form name="form" role="search" ng-submit="search()">
+                <h5 class="my-3">I'm searching for:</h5>
+                <select class="home-select-single" ng-model="serviceType.model"
+                        ng-options="opt.id as opt.name for opt in serviceType.availableOptions"></select>
+
+                <h5 class="my-3">Property type:</h5>
+                <select class="home-select-multiple" ng-model="propertyType.model" size="{{propertyType.availableOptions.length+1}}" style="height:auto"
+                        ng-options="opt.id as opt.name for opt in propertyType.availableOptions" multiple></select>
+
+                <h5 class="my-3">City, Country:</h5>
+                <input ng-required="form.city.$dirty" type="text" name="city" id="city" class="home-input form-control" ng-autocomplete ng-model="city" options="options" 
+                       placeid="" long="" lat=""
+                       placeholder="e.g. Kiev, Kyiv city, Ukraine" />
+                <span ng-show="form.city.$dirty && !form.city.$error.notexists" class="error-span">Location is not exist<br /></span>
+                <br />
+                <button type="submit" ng-disabled="!(form.city.$dirty && form.city.$error.notexists)" class="btn btn-primary">Search</button>
+
+            </form>
         </div>
     </div>
     <!-- /.col-lg-3 -->

@@ -1,8 +1,7 @@
-'use strict';
 
 angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
     .controller('loginCtrl', ['$scope', '$location', '$mdDialog', 'AuthenticationService', 'toastr',
-        function LoginController($scope, $location, $mdDialog, AuthenticationService, toastr) {
+        function ($scope, $location, $mdDialog, AuthenticationService, toastr) {
 
             var searchObject = $location.search().activationcode;
             if (searchObject) {
