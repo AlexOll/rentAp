@@ -13,7 +13,7 @@
                         ng-options="opt.id as opt.name for opt in propertyType.availableOptions" multiple></select>
 
                 <h5 class="my-3">City, Country:</h5>
-                <input ng-required="form.city.$dirty" type="text" name="city" id="city" class="home-input form-control" ng-autocomplete ng-model="city" options="options" 
+                <input ng-required="form.city.$dirty" type="text" name="city" id="city" class="home-input form-control" ng-autocomplete ng-model="city" options="options"
                        placeid="" long="" lat=""
                        placeholder="e.g. Kiev, Kyiv city, Ukraine" />
                 <span ng-show="form.city.$dirty && !form.city.$error.notexists" class="error-span">Location is not exist<br /></span>
@@ -51,7 +51,7 @@
                 <span class="sr-only">Next</span>
             </a>
         </div>
-        <div class="row">
+        <section class="row">
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card h-100">
                     <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
@@ -142,8 +142,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- /.row -->
     </div>
-    <!-- /.col-lg-9 -->
+    <!-- /.row -->
+</div>
+<!-- /.col-lg-9 -->
 </div>

@@ -4,13 +4,15 @@ angular
     .module('myApp',
     [
         'ngRoute',
+        'ngAnimate',
         'myApp.login',
         'myApp.forgotpassword',
         'myApp.register',
         'myApp.home',
-        'myApp.view2',
+        'myApp.profile',
         'myApp.view3',
-        'myApp.version'
+        'myApp.version',
+        'services'
     ])
     .config(['$locationProvider', '$routeProvider', function ($locationProvider, $routeProvider) {
         $locationProvider.html5Mode(true).hashPrefix('');
@@ -36,14 +38,15 @@ angular
                 templateUrl: 'components/register/register.html',
                 controller: 'registerCtrl'
             })
-            .when('/view2', {
-                templateUrl: 'components/view2/view2.html',
-                controller: 'View2Ctrl'
+            .when('/profile', {
+                templateUrl: 'components/profile/profile.html',
+                controller: 'profileCtrl'
             })
             .when('/view3', {
                 templateUrl: 'components/view3/view3.html',
                 controller: 'View3Ctrl'
-            });
+            })
+            .otherwise({ redirectTo: '/login' })
     }])
     .run(['$rootScope', '$location', '$cookies', '$http', function ($rootScope, $location, $cookies, $http) {
         // keep user logged in after page refresh
@@ -53,15 +56,17 @@ angular
         }
 
         $rootScope.$on('$locationChangeStart', function (event, next, current) {
-            // redirect to login page if not logged in and trying to access a restricted page
-            var restrictedPage = $.inArray($location.path(), ['/login', '/register', '/forgotpassword']) === -1;
+
             $rootScope.loggedIn = $rootScope.globals.currentUser;
-            if ($rootScope.loggedIn) {
+
+            $rootScope.currentPath = $location.path();
+            if ($rootScope.loggedIn)
                 $rootScope.username = $rootScope.globals.currentUser.username;
-                if (restrictedPage) {
-                    $location.path('/');
-                }
-            }
+
+            var isRestrictedPage = $.inArray($location.path(), ['/', '/login', '/register', '/forgotpassword']) >= 0;
+            if (!isRestrictedPage && !$rootScope.loggedIn)
+                $location.path('/login');
+
             $rootScope.logout = function () {
                 $rootScope.globals = {};
                 $cookies.remove('globals');
@@ -69,5 +74,24 @@ angular
 
                 $location.path('/login');
             }
+
+            $('.navbar-collapse').collapse('hide');
         });
     }])
+    .controller('mainCtrl', ['$scope', 'AnchorSmoothScrollService', '$location',
+        function ($scope, AnchorSmoothScrollService, $location) {
+            $scope.gotoElement = function (eID) {
+                AnchorSmoothScrollService.scrollTo(eID);
+                $('.navbar-collapse').collapse('hide');
+            };
+        }])
+    .animation('.reveal-animation', function () {
+        return {
+            enter: function (element, done) {
+                jQuery(element).hide().fadeIn(800, done);
+            },
+            leave: function (element, done) {
+                jQuery(element).fadeOut(800, done);
+            }
+        }
+    })

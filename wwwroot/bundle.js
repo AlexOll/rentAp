@@ -1,9 +1,56 @@
-class MyService1 {
-    sayHello() {
-        console.log('hello1');
-    }
-}
+class AnchorSmoothScrollService {
 
+    scrollTo(eID) {
+
+        // This scrolling function 
+        // is from http://www.itnewb.com/tutorial/Creating-the-Smooth-Scroll-Effect-with-JavaScript
+
+        var startY = currentYPosition();
+        var stopY = elmYPosition(eID);
+        var distance = stopY > startY ? stopY - startY : startY - stopY;
+        if (distance < 100) {
+            scrollTo(0, stopY); return;
+        }
+        var speed = Math.round(distance / 20);
+        if (speed >= 20) speed = 20;
+        var step = Math.round(distance / 25);
+        var leapY = stopY > startY ? startY + step : startY - step;
+        var timer = 0;
+        if (stopY > startY) {
+            for (var i = startY; i < stopY; i += step) {
+                setTimeout("window.scrollTo(0, " + leapY + ")", timer * speed);
+                leapY += step; if (leapY > stopY) leapY = stopY; timer++;
+            } return;
+        }
+        for (var i = startY; i > stopY; i -= step) {
+            setTimeout("window.scrollTo(0, " + leapY + ")", timer * speed);
+            leapY -= step; if (leapY < stopY) leapY = stopY; timer++;
+        }
+
+        function currentYPosition() {
+            // Firefox, Chrome, Opera, Safari
+            if (self.pageYOffset) return self.pageYOffset;
+            // Internet Explorer 6 - standards mode
+            if (document.documentElement && document.documentElement.scrollTop)
+                return document.documentElement.scrollTop;
+            // Internet Explorer 6, 7 and 8
+            if (document.body.scrollTop) return document.body.scrollTop;
+            return 0;
+        }
+
+        function elmYPosition(eID) {
+            var elm = document.getElementById(eID);
+            var y = elm.offsetTop;
+            var node = elm;
+            while (node.offsetParent && node.offsetParent != document.body) {
+                node = node.offsetParent;
+                y += node.offsetTop;
+            } return y;
+        }
+
+    };
+
+};
 class MyService2 {
     sayHello() {
         console.log('hello2');
@@ -163,10 +210,10 @@ class AuthenticationService {
 
 'use strict';
 angular.module('services', [])
-    .service('MyService1', MyService1)
     .service('MyService2', MyService2)
     .service('UserService', UserService)
-    .service('AuthenticationService', AuthenticationService);
+    .service('AuthenticationService', AuthenticationService)
+    .service('AnchorSmoothScrollService', AnchorSmoothScrollService)
 
 
 'use strict';
@@ -297,7 +344,7 @@ angular.module('myApp.forgotpassword', ['ngRoute', 'ngMaterial', 'services', 'to
 
 angular.module('myApp.register', ['ngRoute', 'services', 'toastr', 'directives'])
     .controller('registerCtrl', ['$scope', 'UserService', '$location', 'toastr',
-        function RegisterController($scope, UserService, $location, toastr) {
+        function ($scope, UserService, $location, toastr) {
 
             $scope.register = function () {
 
@@ -373,13 +420,13 @@ angular.module('myApp.home', ['ngRoute', 'directives'])
 
 'use strict';
 
-angular.module('myApp.view2', ['ngRoute'])
+angular.module('myApp.profile', ['ngRoute'])
+    .controller('profileCtrl', [
+        function () {
+        }])
 
 
 
-    .controller('View2Ctrl', [function () {
-
-    }]);
 'use strict';
 
 angular.module('myApp.view3', ['ngRoute', 'ngCookies', 'services'])

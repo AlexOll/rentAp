@@ -26,6 +26,7 @@ namespace RentApp.Controllers
 
             return Ok(result);
         }
+
         [HttpGet, Route("emailcheck")]
         [ProducesResponseType(typeof(bool), 200)]
         public async Task<IActionResult> CheckEmail([FromQuery]string value)
@@ -46,19 +47,6 @@ namespace RentApp.Controllers
             var result = await Task.Factory.StartNew(() => _userManager.Create(item));
 
             return Ok(result);
-        }
-        
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
-        {
-            //var user = _userManager.GetById(id);
-            User user = null;
-            if (user == null)
-            {
-                return NotFound();
-            }
-            //await _userManager.Delete(id);
-            return new NoContentResult();
         }
     }
 }

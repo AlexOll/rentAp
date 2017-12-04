@@ -22,7 +22,7 @@
     }
 
     .home-select-single option {
-        background-color: #343a40 !important;
+        background-color: #343a40;
         height: 20px;
         cursor: pointer;
         color: white;

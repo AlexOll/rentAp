@@ -4,11 +4,13 @@
     {
     "outputFileName": "wwwroot/bundle.js",
       "inputFiles": [
-        "wwwroot/services/MyService1.service.js",
+
+        "wwwroot/services/AnchorSmoothScroll.service.js",
         "wwwroot/services/MyService2.service.js",
         "wwwroot/services/User.service.js",
         "wwwroot/services/Authentication.service.js",
-        "wwwroot/services/service.module.js",
+        "wwwroot/services/_service.module.js",
+
         "wwwroot/components/version/version-directive.js",
         "wwwroot/components/version/interpolate-filter.js",
         "wwwroot/components/version/version.js",
@@ -16,9 +18,11 @@
         "wwwroot/components/forgotpassword/forgotpassword.js",
         "wwwroot/components/register/register.js",
         "wwwroot/components/home/home.js",
-        "wwwroot/components/view2/view2.js",
+        "wwwroot/components/profile/profile.js",
         "wwwroot/components/view3/view3.js",
         "wwwroot/components/directive/directive.js"
+
+
       ],
     "minify": {
       "enabled": true,

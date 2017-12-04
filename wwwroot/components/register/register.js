@@ -2,7 +2,7 @@
 
 angular.module('myApp.register', ['ngRoute', 'services', 'toastr', 'directives'])
     .controller('registerCtrl', ['$scope', 'UserService', '$location', 'toastr',
-        function RegisterController($scope, UserService, $location, toastr) {
+        function ($scope, UserService, $location, toastr) {
 
             $scope.register = function () {
 

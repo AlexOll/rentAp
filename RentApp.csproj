@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\components\view2\**" />
+    <Content Remove="wwwroot\components\view2\**" />
+    <EmbeddedResource Remove="wwwroot\components\view2\**" />
+    <None Remove="wwwroot\components\view2\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="wwwroot\login.js" />
   </ItemGroup>
 
@@ -37,7 +44,7 @@
     <None Include="wwwroot\components\version\version.js" />
     <None Include="wwwroot\components\version\version_test.js" />
     <None Include="wwwroot\index.html" />
-    <None Include="wwwroot\components\view2\view2.js" />
+    <None Include="wwwroot\components\profile\profile.js" />
   </ItemGroup>
 
 </Project>
