@@ -2,14 +2,13 @@
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using RentApp.Cache;
 using RentApp.Models;
 using System;
 using System.IO;
-using System.Net;
 using System.Reflection;
 
 namespace RentApp
@@ -24,7 +23,7 @@ namespace RentApp
 
             services.AddDbContext<DataContext>(opt => opt.UseSqlServer(connection));
             services.AddMvc();
-            
+
             var builder = new ContainerBuilder();
             builder.RegisterAssemblyModules(GetType().GetTypeInfo().Assembly);
             builder.Populate(services);
@@ -40,6 +39,7 @@ namespace RentApp
         {
             app.UseMvc();
             loggerFactory.AddConsole();
+            app.UseCacheWarmer();
 
             var DefaultFile = new DefaultFilesOptions();
             DefaultFile.DefaultFileNames.Clear();
@@ -60,12 +60,11 @@ namespace RentApp
             });
 
             app.UseStaticFiles();
-          
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
         }
-
     }
 }

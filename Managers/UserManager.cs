@@ -18,17 +18,15 @@ namespace RentApp.Managers
     public class UserManager
     {
         private UserRepository _userRepository;
-        private UserCache _userCache;
 
-        public UserManager(UserRepository userRepository, UserCache userCache)
+        public UserManager(UserRepository userRepository)
         {
             _userRepository = userRepository;
-            _userCache = userCache;
         }
 
         internal BaseResponse ActivateAccountByGuid(Guid value)
         {
-            var foundUser = UserCache.AliveUsers
+            var foundUser = UserCache.CachedItems.Values
                 .FirstOrDefault(f => f.ActivationCode == value && !f.IsActivated);
 
             if (foundUser != null)
@@ -47,7 +45,7 @@ namespace RentApp.Managers
 
         internal BaseResponse Create(User item)
         {
-            var isEmailExist = UserCache.AliveUsers.Any(a => a.Email == item.Email);
+            var isEmailExist = UserCache.CachedItems.Values.Any(a => a.Email == item.Email);
 
             if (isEmailExist)
             {
@@ -58,7 +56,7 @@ namespace RentApp.Managers
                 };
             }
 
-            var isUserNameExist = UserCache.AliveUsers.Any(a => a.Username == item.Username);
+            var isUserNameExist = UserCache.CachedItems.Values.Any(a => a.Username == item.Username);
 
             if (isUserNameExist)
             {
@@ -84,7 +82,7 @@ namespace RentApp.Managers
 
         internal BaseResponse ResendActivationCode(string email)
         {
-            var foundUser = UserCache.AliveUsers.FirstOrDefault(a => a.Email == email && !a.IsActivated);
+            var foundUser = UserCache.CachedItems.Values.FirstOrDefault(a => a.Email == email && !a.IsActivated);
 
             if (foundUser != null)
             {
@@ -109,7 +107,7 @@ namespace RentApp.Managers
 
         internal void RemindPasswordByEmail(string email)
         {
-            var foundUser = UserCache.AliveUsers.FirstOrDefault(a => a.Email == email);
+            var foundUser = UserCache.CachedItems.Values.FirstOrDefault(a => a.Email == email);
 
             if (foundUser != null)
             {
@@ -125,17 +123,17 @@ namespace RentApp.Managers
 
         internal bool CheckEmailAsync(string value)
         {
-            return UserCache.AliveUsers.Any(a => a.Email == value);
+            return UserCache.CachedItems.Values.Any(a => a.Email == value);
         }
 
         internal bool CheckUsername(string value)
         {
-            return UserCache.AliveUsers.Any(a => a.Username == value);
+            return UserCache.CachedItems.Values.Any(a => a.Username == value);
         }
 
         internal BaseResponse Authenticate(AuthenticationRequest inputUser)
         {
-            var foundUser = UserCache.AliveUsers
+            var foundUser = UserCache.CachedItems.Values
                     .FirstOrDefault(a =>
                         a.Username == inputUser.Username &&
                         a.Password == inputUser.Password);

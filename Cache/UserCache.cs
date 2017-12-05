@@ -1,38 +1,38 @@
 ﻿using RentApp.Models.DbModels;
 using RentApp.Repositories;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RentApp.Cache
 {
     public class UserCache
     {
-        private static List<User> _aliveUsers;
-        private static object locker = new object();
+        private static Dictionary<Guid, User> _aliveUsers;
 
-        public static List<User> AliveUsers
+        public static Dictionary<Guid, User> CachedItems
         {
             get
             {
-                if (_aliveUsers == null)
-                {
-                    lock(locker)
-                    {
-                        _aliveUsers = _userRepository.GetAllAlive();
-                    }
-                }
                 return _aliveUsers;
             }
         }
-        private static UserRepository _userRepository;
+
         public UserCache(UserRepository userRepository)
         {
-            _userRepository = userRepository;
+            _aliveUsers = userRepository.GetAllAlive().ToDictionary(x => x.Id, x => x);
         }
 
-        public static void Update(User user)
+        public static void AddOrUpdate(User user)
         {
-            int index = _aliveUsers.FindIndex(a => a.Id == user.Id);
-            _aliveUsers[index] = user;
+            if (_aliveUsers.ContainsKey(user.Id))
+            {
+                _aliveUsers[user.Id] = user;
+            }
+            else
+            {
+                _aliveUsers.Add(user.Id, user);
+            }
         }
     }
 }

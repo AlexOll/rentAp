@@ -18,9 +18,10 @@ namespace RentApp.Repositories
 
         internal List<User> GetAllAlive()
         {
-
-            return _context.Users.Where(w => w.IsAlive).ToList();
-
+            using (_context)
+            {
+                return _context.Users.Where(w => w.IsAlive).ToList();
+            }
         }
 
         internal void Create(User user)
@@ -30,7 +31,7 @@ namespace RentApp.Repositories
                 _context.Users.Add(user);
                 _context.SaveChanges();
             }
-            UserCache.AliveUsers.Add(user);
+            UserCache.AddOrUpdate(user);
         }
 
         internal void Update(User user)
@@ -41,7 +42,7 @@ namespace RentApp.Repositories
                 _context.Entry(user).State = EntityState.Modified;
                 _context.SaveChanges();
             }
-            UserCache.Update(user);
+            UserCache.AddOrUpdate(user);
         }
     }
 }
