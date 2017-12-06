@@ -1,22 +1,22 @@
-.table-message-header {
+.div-message-header {
     color: white;
     text-align: center;
     text-transform: uppercase;
 }
 
-.table-message-header ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #f3f3f3;
-}
+    .div-message-header ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #f3f3f3;
+    }
 
-    .table-message-header li {
+    .div-message-header li {
         float: left;
     }
 
-        .table-message-header li a {
+        .div-message-header li a {
             display: block;
             color: #666;
             text-align: center;
@@ -24,11 +24,11 @@
             text-decoration: none;
         }
 
-            .table-message-header li a:hover:not(.active) {
+            .div-message-header li a:hover:not(.active) {
                 background-color: #ddd;
             }
 
-            .table-message-header li a.active {
+            .div-message-header li a.active {
                 color: white;
                 background-color: #4CAF50;
             }
@@ -41,60 +41,61 @@
     width: 60px;
 }
 
-.table-users {
+.div-message {
     box-shadow: 10px 3px 0 rgba(0, 0, 0, 0.1);
     overflow: hidden;
     width: 100%;
+    border: none;
 }
 
-table {
+.table-message {
     width: 100%;
 }
 
-    table td, table th {
+    .table-message td, .table-message th {
         color: #2b686e;
         padding: 10px;
     }
 
-    table td {
+    .table-message td {
         text-align: center;
         vertical-align: middle;
     }
 
-        table td:last-child {
+        .table-message td:last-child {
             font-size: 0.95em;
             line-height: 1.4;
             text-align: left;
         }
 
-    table th {
+    .table-message th {
         background-color: #daeff1;
         font-weight: 300;
         text-align: center;
     }
 
-    table tr:nth-child(2n) {
-        background-color: white;
-    }
+.tr-new-message {
+    background-color: #edf7f8;
+}
 
-    table tr:nth-child(2n+1) {
-        background-color: #edf7f8;
-    }
+.tr-old-message {
+    background-color: white;
+}
 
 @media screen and (max-width: 700px) {
-    table, tr, td {
+    .div-message {
+        box-shadow: none;
+    }
+
+    .table-message, tr, td:nth-child(4) {
         display: block;
     }
 
-        td:first-child {
-            position: absolute;
-            top: 50%;
-            -webkit-transform: translateY(-50%);
-            transform: translateY(-50%);
-            width: 100px;
+        .table-message td:first-child {
+            display: none;
         }
 
-        td:not(:first-child) {
+        .table-message td:not(:first-child) {
             clear: both;
             margin-left: 100px;
             padding: 4px 20px 4px 90px;
@@ -102,7 +103,7 @@ table {
             text-align: left;
         }
 
-            td:not(:first-child):before {
+            .table-message td:not(:first-child):before {
                 color: #91ced4;
                 content: '';
                 display: block;
@@ -110,34 +111,31 @@ table {
                 position: absolute;
             }
 
-        td:nth-child(2):before {
-            content: 'Name:';
+        .table-message td:nth-child(2):before {
+            content: '';
         }
 
-        td:nth-child(3):before {
-            content: 'Email:';
+        .table-message td:nth-child(3):before {
+            content: '';
         }
 
-        td:nth-child(4):before {
-            content: 'Phone:';
+        .table-message td:nth-child(4):before {
+            content: 'Message:';
+            width: 100%;
         }
 
-        td:nth-child(5):before {
-            content: 'Comments:';
+        .table-message tr {
+            padding: 10px 0;
+            position: relative;
         }
 
-    tr {
-        padding: 10px 0;
-        position: relative;
-    }
-
-        tr:first-child {
-            display: none;
-        }
+            .table-message tr:first-child {
+                display: none;
+            }
 }
 
 @media screen and (max-width: 500px) {
-    .header {
+    .table-message-header {
         background-color: transparent;
         color: white;
         font-size: 2em;
@@ -146,53 +144,25 @@ table {
         text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
     }
 
-    img {
-        border: 3px solid;
-        border-color: #daeff1;
-        height: 100px;
-        margin: 0.5rem 0;
-        width: 100px;
-    }
 
-    td:first-child {
-        background-color: #c8e7ea;
-        border-bottom: 1px solid #91ced4;
-        border-radius: 10px 10px 0 0;
-        position: relative;
-        top: 0;
-        -webkit-transform: translateY(0);
-        transform: translateY(0);
-        width: 100%;
-    }
-
-    td:not(:first-child) {
+    .table-message td:not(:first-child) {
         margin: 0;
         padding: 5px 1em;
-        width: 100%;
     }
 
-        td:not(:first-child):before {
+        .table-message td:not(:first-child):before {
             font-size: .8em;
             padding-top: 0.3em;
             position: relative;
         }
 
-    td:last-child {
+    .table-message td:last-child {
         padding-bottom: 1rem !important;
     }
 
-    tr {
+    .table-message tr {
         background-color: white !important;
-        border: 1px solid #6cbec6;
-        border-radius: 10px;
-        box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
         margin: 0.5rem 0;
         padding: 0;
-    }
-
-    .table-users {
-        border: none;
-        box-shadow: none;
-        overflow: visible;
     }
 }

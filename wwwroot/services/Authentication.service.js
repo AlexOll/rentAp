@@ -46,9 +46,9 @@
     }
 
     ClearCredentials() {
-        $rootScope.globals = {};
-        $cookies.remove('globals');
-        $http.defaults.headers.common.Authorization = 'Basic';
+        this.$rootScope.globals = {};
+        this.$cookies.remove('globals');
+        this.$http.defaults.headers.common.Authorization = 'Basic';
     }
 
     Base64Encode(input) {

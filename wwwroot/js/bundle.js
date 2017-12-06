@@ -51,12 +51,6 @@ class AnchorSmoothScrollService {
     };
 
 };
-class MyService2 {
-    sayHello() {
-        console.log('hello2');
-    }
-}
-
 class UserService {
     constructor($http) {
         this.$http = $http;
@@ -123,9 +117,9 @@ class AuthenticationService {
     }
 
     ClearCredentials() {
-        $rootScope.globals = {};
-        $cookies.remove('globals');
-        $http.defaults.headers.common.Authorization = 'Basic';
+        this.$rootScope.globals = {};
+        this.$cookies.remove('globals');
+        this.$http.defaults.headers.common.Authorization = 'Basic';
     }
 
     Base64Encode(input) {
@@ -209,41 +203,12 @@ class AuthenticationService {
 
 
 'use strict';
-angular.module('services', [])
-    .service('MyService2', MyService2)
+﻿
+angular.module('services', ['ngRoute','ngCookies'])
     .service('UserService', UserService)
     .service('AuthenticationService', AuthenticationService)
     .service('AnchorSmoothScrollService', AnchorSmoothScrollService)
 
-
-'use strict';
-
-angular.module('myApp.version.version-directive', [])
-
-.directive('appVersion', ['version', function(version) {
-  return function(scope, elm, attrs) {
-    elm.text(version);
-  };
-}]);
-
-'use strict';
-
-angular.module('myApp.version.interpolate-filter', [])
-
-.filter('interpolate', ['version', function(version) {
-  return function(text) {
-    return String(text).replace(/\%VERSION\%/mg, version);
-  };
-}]);
-
-'use strict';
-
-angular.module('myApp.version', [
-  'myApp.version.interpolate-filter',
-  'myApp.version.version-directive'
-])
-
-.value('version', '0.1');
 
 
 angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
@@ -421,24 +386,8 @@ angular.module('myApp.home', ['ngRoute', 'directives'])
 'use strict';
 
 angular.module('myApp.profile', ['ngRoute'])
-    .controller('profileCtrl', [
-        function () {
-        }])
+    .controller('profileCtrl', ['$scope', function ($scope) { }])
 
-
-
-'use strict';
-
-angular.module('myApp.view3', ['ngRoute', 'ngCookies', 'services'])
-
-
-    .controller('View3Ctrl', ['$cookies', 'MyService1', 'MyService2', function ($cookies, MyService1, MyService2) {
-        // Retrieving a cookie
-        //var favoriteCookie = $cookies.put('myFavorite', 'oatmeal');
-        MyService1.sayHello();
-        MyService2.sayHello();
-        // Setting a cookie
-    }]);
 
 
 angular
@@ -618,4 +567,4 @@ angular
 
             }
         };
-    });
+    })
