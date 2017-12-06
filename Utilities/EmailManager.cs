@@ -3,7 +3,6 @@ using MailKit.Security;
 using MimeKit;
 using RentApp.Models.DbModels;
 using System.Text;
-using System;
 using Microsoft.AspNetCore.Http;
 
 namespace RentApp.Utilities

@@ -1,6 +1,6 @@
 ﻿'use strict';
-angular.module('services', [])
-    .service('MyService2', MyService2)
+﻿
+angular.module('services', ['ngRoute','ngCookies'])
     .service('UserService', UserService)
     .service('AuthenticationService', AuthenticationService)
     .service('AnchorSmoothScrollService', AnchorSmoothScrollService)

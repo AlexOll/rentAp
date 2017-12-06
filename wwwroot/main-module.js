@@ -5,13 +5,12 @@ angular
     [
         'ngRoute',
         'ngAnimate',
+        'ngCookies',
         'myApp.login',
         'myApp.forgotpassword',
         'myApp.register',
         'myApp.home',
         'myApp.profile',
-        'myApp.view3',
-        'myApp.version',
         'services'
     ])
     .config(['$locationProvider', '$routeProvider', function ($locationProvider, $routeProvider) {
@@ -26,10 +25,6 @@ angular
                 templateUrl: 'components/login/login.html',
                 controller: 'loginCtrl'
             })
-            .when('/logout', {
-                templateUrl: '',
-                controller: 'loginCtrl'
-            })
             .when('/forgotpassword', {
                 templateUrl: 'components/forgotpassword/forgotpassword.html',
                 controller: 'forgotpasswordCtrl'
@@ -42,14 +37,10 @@ angular
                 templateUrl: 'components/profile/profile.html',
                 controller: 'profileCtrl'
             })
-            .when('/view3', {
-                templateUrl: 'components/view3/view3.html',
-                controller: 'View3Ctrl'
-            })
-            .otherwise({ redirectTo: '/login' })
+            .otherwise({ redirectTo: '/' })
     }])
     .run(['$rootScope', '$location', '$cookies', '$http', function ($rootScope, $location, $cookies, $http) {
-        // keep user logged in after page refresh
+
         $rootScope.globals = $cookies.getObject('globals') || {};
         if ($rootScope.globals.currentUser) {
             $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata;
@@ -67,23 +58,30 @@ angular
             if (!isRestrictedPage && !$rootScope.loggedIn)
                 $location.path('/login');
 
-            $rootScope.logout = function () {
-                $rootScope.globals = {};
-                $cookies.remove('globals');
-                $http.defaults.headers.common.Authorization = 'Basic';
-
-                $location.path('/login');
-            }
-
             $('.navbar-collapse').collapse('hide');
         });
     }])
-    .controller('mainCtrl', ['$scope', 'AnchorSmoothScrollService', '$location',
-        function ($scope, AnchorSmoothScrollService, $location) {
+    .controller('mainCtrl', ['$scope', '$location', '$timeout', 'AnchorSmoothScrollService', 'AuthenticationService', 
+        function ($scope, $location, $timeout, AnchorSmoothScrollService, AuthenticationService) {
+
             $scope.gotoElement = function (eID) {
-                AnchorSmoothScrollService.scrollTo(eID);
+
+                if ($location.path() !== '/profile') {
+                    $location.path('/profile');
+                    $timeout(function () {
+                        AnchorSmoothScrollService.scrollTo(eID);
+                    }, 1000);
+                }
+                else {
+                    AnchorSmoothScrollService.scrollTo(eID);
+                }
                 $('.navbar-collapse').collapse('hide');
             };
+
+            $scope.logout = function () {
+                AuthenticationService.ClearCredentials();
+                $location.path('/login');
+            }
         }])
     .animation('.reveal-animation', function () {
         return {
@@ -91,7 +89,7 @@ angular
                 jQuery(element).hide().fadeIn(800, done);
             },
             leave: function (element, done) {
-                jQuery(element).fadeOut(800, done);
+                jQuery(element).hide();
             }
         }
     })

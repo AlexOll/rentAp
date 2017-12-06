@@ -1,0 +1,168 @@
+.div-message-header {
+    color: white;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+    .div-message-header ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #f3f3f3;
+    }
+
+    .div-message-header li {
+        float: left;
+    }
+
+        .div-message-header li a {
+            display: block;
+            color: #666;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+            .div-message-header li a:hover:not(.active) {
+                background-color: #ddd;
+            }
+
+            .div-message-header li a.active {
+                color: white;
+                background-color: #4CAF50;
+            }
+
+
+
+.table-message-img {
+    border-radius: 50%;
+    height: 60px;
+    width: 60px;
+}
+
+.div-message {
+    box-shadow: 10px 3px 0 rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 100%;
+    border: none;
+}
+
+.table-message {
+    width: 100%;
+}
+
+    .table-message td, .table-message th {
+        color: #2b686e;
+        padding: 10px;
+    }
+
+    .table-message td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+        .table-message td:last-child {
+            font-size: 0.95em;
+            line-height: 1.4;
+            text-align: left;
+        }
+
+    .table-message th {
+        background-color: #daeff1;
+        font-weight: 300;
+        text-align: center;
+    }
+
+.tr-new-message {
+    background-color: #edf7f8;
+}
+
+.tr-old-message {
+    background-color: white;
+}
+
+@media screen and (max-width: 700px) {
+    .div-message {
+        box-shadow: none;
+    }
+
+    .table-message, tr, td:nth-child(4) {
+        display: block;
+    }
+
+        .table-message td:first-child {
+            display: none;
+        }
+
+        .table-message td:not(:first-child) {
+            clear: both;
+            margin-left: 100px;
+            padding: 4px 20px 4px 90px;
+            position: relative;
+            text-align: left;
+        }
+
+            .table-message td:not(:first-child):before {
+                color: #91ced4;
+                content: '';
+                display: block;
+                left: 0;
+                position: absolute;
+            }
+
+        .table-message td:nth-child(2):before {
+            content: '';
+        }
+
+        .table-message td:nth-child(3):before {
+            content: '';
+        }
+
+        .table-message td:nth-child(4):before {
+            content: 'Message:';
+            width: 100%;
+        }
+
+        .table-message tr {
+            padding: 10px 0;
+            position: relative;
+        }
+
+            .table-message tr:first-child {
+                display: none;
+            }
+}
+
+@media screen and (max-width: 500px) {
+    .table-message-header {
+        background-color: transparent;
+        color: white;
+        font-size: 2em;
+        font-weight: 700;
+        padding: 0;
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+    }
+
+
+    .table-message td:not(:first-child) {
+        margin: 0;
+        padding: 5px 1em;
+    }
+
+        .table-message td:not(:first-child):before {
+            font-size: .8em;
+            padding-top: 0.3em;
+            position: relative;
+        }
+
+    .table-message td:last-child {
+        padding-bottom: 1rem !important;
+    }
+
+    .table-message tr {
+        background-color: white !important;
+        margin: 0.5rem 0;
+        padding: 0;
+    }
+}
