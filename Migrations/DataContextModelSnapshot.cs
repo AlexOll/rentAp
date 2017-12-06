@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using RentApp.Models;
+using RentApp.Models.DbModels;
 using RentApp.Models.Structs;
 using System;
 
@@ -38,6 +39,11 @@ namespace RentApp.Migrations
 
                     b.Property<DateTime>("LastRepairDate");
 
+                    b.Property<string>("PlaceId")
+                        .IsRequired();
+
+                    b.Property<int>("PropertyType");
+
                     b.Property<DateTime>("ReleaseDate");
 
                     b.Property<int>("RoomsCount");
@@ -47,6 +53,22 @@ namespace RentApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Flats");
+                });
+
+            modelBuilder.Entity("RentApp.Models.DbModels.FlatServiceType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("FlatId");
+
+                    b.Property<int>("ServiceType");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FlatId");
+
+                    b.ToTable("FlatServiceTypes");
                 });
 
             modelBuilder.Entity("RentApp.Models.DbModels.Message", b =>
@@ -97,6 +119,14 @@ namespace RentApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("RentApp.Models.DbModels.FlatServiceType", b =>
+                {
+                    b.HasOne("RentApp.Models.DbModels.Flat", "Flat")
+                        .WithMany()
+                        .HasForeignKey("FlatId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
