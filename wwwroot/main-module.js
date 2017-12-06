@@ -91,7 +91,7 @@ angular
                 jQuery(element).hide().fadeIn(800, done);
             },
             leave: function (element, done) {
-                jQuery(element).fadeOut(800, done);
+                jQuery(element).hide();
             }
         }
     })

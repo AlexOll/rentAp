@@ -298,9 +298,9 @@ angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
 
 
 
-angular.module('myApp.forgotpassword', ['ngRoute', 'ngMaterial', 'services', 'toastr', 'directives'])
-    .controller('forgotpasswordCtrl', ['$scope', '$location', '$mdDialog', 'AuthenticationService', 'toastr',
-        function ($scope, $location, $mdDialog, AuthenticationService, toastr) {
+angular.module('myApp.forgotpassword', ['ngRoute', 'services', 'toastr', 'directives'])
+    .controller('forgotpasswordCtrl', ['$scope', '$location', 'AuthenticationService', 'toastr',
+        function ($scope, $location, AuthenticationService, toastr) {
 
             $scope.forgotPassword = function (ev) {
                 $scope.dataLoading = true;
