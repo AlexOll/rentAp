@@ -5,13 +5,13 @@ using System.Collections.Generic;
 
 namespace RentApp.Controllers
 {
-    [Route("api/dictionaries")]
+    [Route("api/[controller]")]
     public class DictionaryController : ApiController
     {
         [HttpGet, Route("messageTypes")]
         public IActionResult GetMessageTypes()
         {
-            return Ok(EnumExtensionHelper.GetDictionary<MessageType>());
+            return Ok(EnumExtensionHelper.GetDictionaryFromEnum<MessageType>());
         }
     }
 }
