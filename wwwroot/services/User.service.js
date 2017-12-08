@@ -5,7 +5,7 @@
 
     Create(user, callback) {
         return this.$http.post('/api/user', {
-            "Username": user.username,
+            "PhoneNumber": user.phonenumber,
             "FirstName": user.firstName,
             "LastName": user.lastName,
             "Password": user.password,

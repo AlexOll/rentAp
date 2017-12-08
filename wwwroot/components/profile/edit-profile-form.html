@@ -1,0 +1,46 @@
+<br />
+<h2 class="mb-5">Edit profile</h2>
+<form name="form" ng-submit="register()" role="form">
+
+    <div class="form-group"
+         ng-class="{ 'has-error': (form.firstName.$dirty && form.firstName.$error.required) || form.firstName.$error.pattern}">
+
+        <input type="text" name="firstName" id="firstName" class="form-control" ng-model="user.firstName"
+               required ng-pattern="/^[a-zA-Z0-9]+$/" placeholder="type your First name" />
+        <span ng-show="form.firstName.$dirty && form.firstName.$error.required" class="error-span">First name is required<br /></span>
+        <span ng-show="form.firstName.$error.pattern" class="error-span">Only letter and/or number characters<br /></span>
+    </div>
+
+    <div class="form-group"
+         ng-class="{ 'has-error': (form.lastName.$dirty && form.lastName.$error.required) || form.lastName.$error.pattern}">
+
+        <input type="text" name="lastName" id="lastName" class="form-control" ng-model="user.lastName"
+               required ng-pattern="/^[a-zA-Z0-9]+$/" placeholder="type your Last name" />
+        <span ng-show="form.lastName.$dirty && form.lastName.$error.required" class="error-span">Last name is required<br /></span>
+        <span ng-show="form.lastName.$error.pattern" class="error-span">Only letter and/or number characters<br /></span>
+    </div>
+
+    <div class="form-group"
+         ng-class="{ 'has-error': form.phonenumber.$error.pattern || form.phonenumber.$error.duplicate}">
+
+        <input type="text" name="phonenumber" id="phonenumber" class="form-control" ng-model="user.phonenumber"
+               unique-field ng-pattern="/^[a-zA-Z0-9]+$/" required maxlength="30" placeholder="type your Phone Number for authenification" />
+
+        <span ng-show="form.phonenumber.$error.pattern" class="error-span">Only letter and/or number characters<br /></span>
+        <span ng-show="form.phonenumber.$error.duplicate" class="error-span" ng-cloak>Phone Number is already registered<br /></span>
+    </div>
+
+    <div class="form-group"
+         ng-class="{ 'has-error': (form.password.$dirty && form.password.$error.required) || form.password.$error.pattern }">
+
+        <input type="password" name="password" id="password" ng-pattern="/^[a-zA-Z0-9]+$/" min="4" maxlength="20"
+               class="form-control" ng-model="user.password" required placeholder="Submit form with your password" />
+        <span ng-show="form.password.$dirty && form.password.$error.required" class="error-span">Password is required<br /></span>
+        <span ng-show="form.password.$error.pattern" class="error-span">Only letter and/or number characters<br /></span>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" ng-disabled="form.$invalid || dataLoading " class="btn btn-primary">Update</button>
+        <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+    </div>
+</form>

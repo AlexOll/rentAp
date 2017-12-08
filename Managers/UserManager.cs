@@ -56,21 +56,16 @@ namespace RentApp.Managers
                 };
             }
 
-            var isUserNameExist = UserCache.CachedItems.Values.Any(a => a.Username == item.Username);
+            var isPhoneNumberExist = UserCache.CachedItems.Values.Any(a => a.PhoneNumber == item.PhoneNumber);
 
-            if (isUserNameExist)
+            if (isPhoneNumberExist)
             {
                 return new BaseResponse
                 {
-                    Message = "Username exists",
+                    Message = "Phone number exists",
                     ResponseCode = StatusCodes.Status406NotAcceptable
                 };
             }
-
-            item.Id = Guid.NewGuid();
-            item.CreateDate = DateTime.Now;
-            item.IsAlive = true;
-            item.ActivationCode = Guid.NewGuid();
 
             _userRepository.Create(item);
 
@@ -99,7 +94,7 @@ namespace RentApp.Managers
             {
                 return new BaseResponse
                 {
-                    Message = "Username not exists",
+                    Message = "Account not exists",
                     ResponseCode = StatusCodes.Status406NotAcceptable
                 };
             }
@@ -121,21 +116,21 @@ namespace RentApp.Managers
             }
         }
 
-        internal bool CheckEmailAsync(string value)
+        internal bool CheckEmail(string value)
         {
             return UserCache.CachedItems.Values.Any(a => a.Email == value);
         }
 
-        internal bool CheckUsername(string value)
+        internal bool CheckPhoneNumber(string value)
         {
-            return UserCache.CachedItems.Values.Any(a => a.Username == value);
+            return UserCache.CachedItems.Values.Any(a => a.PhoneNumber == value);
         }
 
         internal BaseResponse Authenticate(AuthenticationRequest inputUser)
         {
             var foundUser = UserCache.CachedItems.Values
                     .FirstOrDefault(a =>
-                        a.Username == inputUser.Username &&
+                        (a.PhoneNumber == inputUser.Input || a.Email == inputUser.Input) &&
                         a.Password == inputUser.Password);
 
             if (foundUser != null)

@@ -52,7 +52,10 @@ angular
 
             $rootScope.currentPath = $location.path();
             if ($rootScope.loggedIn)
-                $rootScope.username = $rootScope.globals.currentUser.username;
+            {
+                $rootScope.firstname = $rootScope.globals.currentUser.firstname
+                $rootScope.lastname = $rootScope.globals.currentUser.lastname;
+            }
 
             var isRestrictedPage = $.inArray($location.path(), ['/', '/login', '/register', '/forgotpassword']) >= 0;
             if (!isRestrictedPage && !$rootScope.loggedIn)

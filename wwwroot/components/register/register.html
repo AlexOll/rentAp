@@ -2,59 +2,59 @@
     <h2>Register your account</h2>
     <form name="form" ng-submit="register()" role="form">
 
-        <div class="form-group" 
+        <div class="form-group"
              ng-class="{ 'has-error': (form.firstName.$dirty && form.firstName.$error.required) || form.firstName.$error.pattern}">
 
-            <input type="text" name="firstName" id="firstName" class="form-control" ng-model="user.firstName" 
-                   required ng-pattern="/^[a-zA-Z0-9]+$/" placeholder="type your First name"/>
+            <input type="text" name="firstName" id="firstName" class="form-control" ng-model="user.firstName"
+                   required ng-pattern="/^[a-zA-Z0-9]+$/" placeholder="type your First name" />
             <span ng-show="form.firstName.$dirty && form.firstName.$error.required" class="error-span">First name is required<br /></span>
             <span ng-show="form.firstName.$error.pattern" class="error-span">Only letter and/or number characters<br /></span>
         </div>
 
-        <div class="form-group" 
+        <div class="form-group"
              ng-class="{ 'has-error': (form.lastName.$dirty && form.lastName.$error.required) || form.lastName.$error.pattern}">
 
-            <input type="text" name="lastName" id="lastName" class="form-control" ng-model="user.lastName" 
-                   required ng-pattern="/^[a-zA-Z0-9]+$/" placeholder="type your Last name"/>
+            <input type="text" name="lastName" id="lastName" class="form-control" ng-model="user.lastName"
+                   required ng-pattern="/^[a-zA-Z0-9]+$/" placeholder="type your Last name" />
             <span ng-show="form.lastName.$dirty && form.lastName.$error.required" class="error-span">Last name is required<br /></span>
             <span ng-show="form.lastName.$error.pattern" class="error-span">Only letter and/or number characters<br /></span>
         </div>
 
-        <div class="form-group" 
+        <div class="form-group"
              ng-class="{ 'has-error': (form.email.$dirty && form.email.$error.required) || form.email.$error.pattern || form.email.$error.duplicate}">
 
-            <input type="email" name="email" id="email" class="form-control" ng-model="user.email" unique-field 
-                   required ng-pattern="/^[a-z0-9._-]+@[a-z]+\.[a-z.]{2,5}$/" placeholder="type your E-mail"/>
+            <input type="email" name="email" id="email" class="form-control" ng-model="user.email" unique-field
+                   required ng-pattern="/^[a-z0-9._-]+@[a-z]+\.[a-z.]{2,5}$/" placeholder="type your E-mail" />
             <span ng-show="form.email.$dirty && form.email.$error.required" class="error-span">E-mail is required<br /></span>
             <span ng-show="form.email.$error.pattern" class="error-span">Email is invalid<br /></span>
             <span ng-show="form.email.$error.duplicate" class="error-span">Email is already registered<br /></span>
-            
+
         </div>
 
-        <div class="form-group" 
-             ng-class="{ 'has-error': (form.username.$dirty && form.username.$error.required) || 
-                form.username.$error.pattern || form.username.$error.duplicate}">
+        <!--div class="form-group"
+             ng-class="{ 'has-error': (form.phonenumber.$dirty && form.phonenumber.$error.required) ||
+                form.phonenumber.$error.pattern || form.phonenumber.$error.duplicate}">
 
-            <input type="text" name="username" id="username" class="form-control" ng-model="user.username" 
-                   unique-field ng-pattern="/^[a-zA-Z0-9]+$/"  required maxlength="30" placeholder="type your Username for authenification"/>
+            <input type="text" name="phonenumber" id="phonenumber" class="form-control" ng-model="user.phonenumber"
+                   unique-field ng-pattern="/^[a-zA-Z0-9]+$/"  required maxlength="30" placeholder="type your Phone Number for authenification"/>
 
-            <span ng-show="form.username.$error.pattern" class="error-span">Only letter and/or number characters<br /></span>
-            <span ng-show="form.username.$error.duplicate" class="error-span"  ng-cloak>Username is already registered<br /></span>
-            <span ng-show="form.username.$dirty && form.username.$error.required" class="error-span">Username is required<br /></span>
-        </div>
+            <span ng-show="form.phonenumber.$error.pattern" class="error-span">Only letter and/or number characters<br /></span>
+            <span ng-show="form.phonenumber.$error.duplicate" class="error-span"  ng-cloak>Phone Number is already registered<br /></span>
+            <span ng-show="form.phonenumber.$dirty && form.phonenumber.$error.required" class="error-span">Phone Number is required<br /></span>
+        </div-->
 
-        <div class="form-group" 
+        <div class="form-group"
              ng-class="{ 'has-error': (form.password.$dirty && form.password.$error.required) || form.password.$error.pattern }">
 
-            <input type="password" name="password" id="password" ng-pattern="/^[a-zA-Z0-9]+$/" min="4" maxlength="20" 
-                   class="form-control" ng-model="user.password" required  placeholder="type your Password"/>
+            <input type="password" name="password" id="password" ng-pattern="/^[a-zA-Z0-9]+$/" min="4" maxlength="20"
+                   class="form-control" ng-model="user.password" required placeholder="type your Password" />
             <span ng-show="form.password.$dirty && form.password.$error.required" class="error-span">Password is required<br /></span>
             <span ng-show="form.password.$error.pattern" class="error-span">Only letter and/or number characters<br /></span>
         </div>
 
         <div class="form-group" ng-class="{ 'has-error': (form.confirmPassword.$dirty && form.confirmPassword.$error.required) || (form.confirmPassword.$dirty && confirmPassword != user.password)}">
 
-            <input type="password" name="confirmPassword" id="confirmPassword" ng-pattern="/^[a-zA-Z0-9]+$/" class="form-control" 
+            <input type="password" name="confirmPassword" id="confirmPassword" ng-pattern="/^[a-zA-Z0-9]+$/" class="form-control"
                    ng-model="confirmPassword" required placeholder="Confirm your Password" />
             <span ng-show="form.confirmPassword.$dirty && form.confirmPassword.$error.required" class="error-span">Confirm Password is required<br /></span>
             <span ng-show="form.confirmPassword.$dirty && confirmPassword != user.password" class="error-span">Confirm password is not the same as Password<br /></span>

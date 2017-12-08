@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using RentApp.Models;
+using RentApp.Models.Structs;
 using System;
 
 namespace RentApp.Migrations
@@ -17,7 +18,7 @@ namespace RentApp.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.0-rtm-26452")
+                .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("RentApp.Models.DbModels.Flat", b =>
@@ -48,6 +49,28 @@ namespace RentApp.Migrations
                     b.ToTable("Flats");
                 });
 
+            modelBuilder.Entity("RentApp.Models.DbModels.Message", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Body");
+
+                    b.Property<DateTime>("CreateDate");
+
+                    b.Property<bool>("IsRead");
+
+                    b.Property<int>("MessageType");
+
+                    b.Property<Guid>("UserIdFrom");
+
+                    b.Property<Guid>("UserIdTo");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Messages");
+                });
+
             modelBuilder.Entity("RentApp.Models.DbModels.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -69,7 +92,7 @@ namespace RentApp.Migrations
 
                     b.Property<string>("Password");
 
-                    b.Property<string>("Username");
+                    b.Property<string>("PhoneNumber");
 
                     b.HasKey("Id");
 

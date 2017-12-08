@@ -17,6 +17,9 @@ namespace RentApp.RunModules
             builder.RegisterType<FlatRepository>().AsSelf();
 
             builder.RegisterType<FlatFilterManager>().AsSelf();
+
+            builder.RegisterType<ProfileManager>().AsSelf();
+            
         }
     }
 }

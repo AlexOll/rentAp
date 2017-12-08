@@ -15,8 +15,8 @@
                         if (inputValue && !ctrl.$error.pattern) {
 
                             var url = '';
-                            if (attr.id === "username")
-                                url = '/api/user/usernamecheck'
+                            if (attr.id === "phonenumber")
+                                url = '/api/user/phonenumbercheck'
                             else if (attr.id === "email")
                                 url = '/api/user/emailcheck'
 

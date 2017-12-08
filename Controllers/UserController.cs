@@ -18,11 +18,11 @@ namespace RentApp.Controllers
             _userManager = userManager;
         }
 
-        [HttpGet, Route("usernamecheck")]
+        [HttpGet, Route("phonenumbercheck")]
         [ProducesResponseType(typeof(bool), 200)]
         public async Task<IActionResult> CheckUsername([FromQuery]string value)
         {
-            bool result = await Task.Factory.StartNew(() => _userManager.CheckUsername(value));
+            bool result = await Task.Factory.StartNew(() => _userManager.CheckPhoneNumber(value));
 
             return Ok(result);
         }
@@ -31,7 +31,7 @@ namespace RentApp.Controllers
         [ProducesResponseType(typeof(bool), 200)]
         public async Task<IActionResult> CheckEmail([FromQuery]string value)
         {
-            bool result = await Task.Factory.StartNew(() => _userManager.CheckEmailAsync(value));
+            bool result = await Task.Factory.StartNew(() => _userManager.CheckEmail(value));
 
             return Ok(result);
         }

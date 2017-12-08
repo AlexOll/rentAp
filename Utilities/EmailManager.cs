@@ -48,7 +48,7 @@ namespace RentApp.Utilities
         {
             var emailMessage = new MimeMessage();
             emailMessage.From.Add(new MailboxAddress("Rent App", "renty.application@gmail.com"));
-            emailMessage.To.Add(new MailboxAddress(_user.Username, _user.Email));
+            emailMessage.To.Add(new MailboxAddress(_user.Firstname+" "+_user.Lastname, _user.Email));
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart("html") { Text = body };
 

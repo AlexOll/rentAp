@@ -22,7 +22,7 @@ class AnchorSmoothScrollService {
                 leapY += step; if (leapY > stopY) leapY = stopY; timer++;
             } return;
         }
-        for (var i = startY; i > stopY; i -= step) {
+        for (var j = startY; j > stopY; j -= step) {
             setTimeout("window.scrollTo(0, " + leapY + ")", timer * speed);
             leapY -= step; if (leapY < stopY) leapY = stopY; timer++;
         }
@@ -42,7 +42,7 @@ class AnchorSmoothScrollService {
             var elm = document.getElementById(eID);
             var y = elm.offsetTop;
             var node = elm;
-            while (node.offsetParent && node.offsetParent != document.body) {
+            while (node.offsetParent && node.offsetParent !== document.body) {
                 node = node.offsetParent;
                 y += node.offsetTop;
             } return y;
@@ -50,7 +50,7 @@ class AnchorSmoothScrollService {
 
     };
 
-};
+}
 class UserService {
     constructor($http) {
         this.$http = $http;
@@ -58,7 +58,7 @@ class UserService {
 
     Create(user, callback) {
         return this.$http.post('/api/user', {
-            "Username": user.username,
+            "PhoneNumber": user.phonenumber,
             "FirstName": user.firstName,
             "LastName": user.lastName,
             "Password": user.password,
@@ -78,9 +78,8 @@ class AuthenticationService {
         this.keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
     }
 
-    Login(username, password, callback) {
-
-        this.$http.post('/api/authentication', { Username: username, Password: password })
+    Login(input, password, callback) {
+        this.$http.post('/api/authentication', { Input: input, Password: password })
             .then(res => callback(res));
     }
 
@@ -93,18 +92,20 @@ class AuthenticationService {
         this.$http.get('/api/authentication/newactivationcode/' + email)
             .then(res => callback(res));
     }
+
     CheckActivationCode(activationCode, callback) {
         this.$http.get('/api/authentication/' + activationCode)
             .then(res => callback(res));
     }
 
     SetCredentials(user) {
-        var input = user.username + ':' + user.id;
+        var input = user.email + ':' + user.id;
         var authdata = this.Base64Encode(input);
 
         this.$rootScope.globals = {
             currentUser: {
-                username: user.username,
+                firstname: user.firstname,
+                lastname: user.lastname,
                 authdata: authdata
             }
         };
@@ -236,10 +237,10 @@ angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
 
             $scope.login = function (ev) {
                 $scope.dataLoading = true;
-                AuthenticationService.Login($scope.username, $scope.password, function (response) {
+                AuthenticationService.Login($scope.input, $scope.password, function (response) {
 
                     if (response.data.responseCode === 200) {
-                        
+
                         AuthenticationService.SetCredentials(response.data);
                         toastr.success('Authentication succeeded', 'Have fun!');
                         $location.path('/');
@@ -386,7 +387,9 @@ angular.module('myApp.home', ['ngRoute', 'directives'])
 'use strict';
 
 angular.module('myApp.profile', ['ngRoute'])
-    .controller('profileCtrl', ['$scope', function ($scope) { }])
+    .controller('profileCtrl', ['$scope', function ($scope) {
+
+    }])
 
 
 
@@ -407,8 +410,8 @@ angular
                         if (inputValue && !ctrl.$error.pattern) {
 
                             var url = '';
-                            if (attr.id === "username")
-                                url = '/api/user/usernamecheck'
+                            if (attr.id === "phonenumber")
+                                url = '/api/user/phonenumbercheck'
                             else if (attr.id === "email")
                                 url = '/api/user/emailcheck'
 
