@@ -24,7 +24,7 @@ namespace RentApp.Repositories
             }
         }
 
-        internal Flat GetById(int id)
+        internal Flat GetById(Guid id)
         {
             using (_context)
             {

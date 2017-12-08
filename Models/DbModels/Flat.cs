@@ -7,7 +7,7 @@ namespace RentApp.Models.DbModels
     public class Flat
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string Description { get; set; }
         public float Cost { get; set; }
         public float Area { get; set; }

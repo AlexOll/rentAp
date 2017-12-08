@@ -22,15 +22,13 @@ namespace RentApp.Managers
             return await Task.Factory.StartNew(() => _flatRepository.GetAll());
         }
 
-        internal async Task<Flat> GetById(int id)
+        internal async Task<Flat> GetById(Guid id)
         {
             return await Task.Factory.StartNew(() => _flatRepository.GetById(id));
         }
 
         internal async Task<BaseResponse> Create(Flat item)
         {
-
-            //item.Id = (new Random()).Next(1, 9999); // [tmp] solution
             item.CreateDate = DateTime.Now;
             item.UpdateDate = DateTime.Now;
             await Task.Factory.StartNew(() => _flatRepository.Create(item));

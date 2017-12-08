@@ -23,7 +23,7 @@ namespace RentApp.Migrations
 
             modelBuilder.Entity("RentApp.Models.DbModels.Flat", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<float>("Area");
