@@ -7,7 +7,14 @@ namespace RentApp.Cache
     {
         public static void UseCacheWarmer(this IApplicationBuilder app)
         {
-            app.ApplicationServices.GetRequiredService<UserCache>();
+            try
+            {
+                app.ApplicationServices.GetRequiredService<UserCache>();
+            }
+            catch
+            {
+
+            }
         }
     }
 }
