@@ -20,7 +20,7 @@ namespace RentApp.Repositories
         {
             using (_context)
             {
-                return _context.Flats.Where(w => w.IsAlive).ToList();
+                return _context.Flats.Where(f => f.IsAlive).ToList();
             }
         }
 
@@ -28,7 +28,7 @@ namespace RentApp.Repositories
         {
             using (_context)
             {
-                return _context.Flats.Where(w => w.IsAlive).FirstOrDefault(f => f.Id == id);
+                return _context.Flats.Where(f => f.IsAlive).FirstOrDefault(f => f.Id == id);
             }
         }
 
@@ -43,12 +43,28 @@ namespace RentApp.Repositories
 
         internal void Update(Flat flat)
         {
-            using (_context)
-            {
-                _context.Flats.Attach(flat);
-                _context.Entry(flat).State = EntityState.Modified;
-                _context.SaveChanges();
-            }
+            // TODO: to implement it
+
+            //using (_context)
+            //{
+            //    flat.UpdateDate = DateTime.Now;
+            //    _context.Flats.Attach(flat);
+            //    _context.Entry(flat).State = EntityState.Modified;
+            //    _context.SaveChanges();
+            //}
+        }
+
+        internal void Remove(Flat flat)
+        {
+            // TODO: to implement it
+
+            //using (_context)
+            //{
+            //    flat.IsAlive = false;
+            //    _context.Flats.Attach(flat);
+            //    _context.Entry(flat).State = EntityState.Modified;
+            //    _context.SaveChanges();
+            //}
         }
 
     }

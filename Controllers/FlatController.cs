@@ -25,6 +25,17 @@ namespace RentApp.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{id}", Name = "GetById")]
+        public IActionResult GetById(Guid id)
+        {
+            var item = _flatManager.GetById(id);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return new ObjectResult(item);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Flat item)
         {
@@ -34,8 +45,38 @@ namespace RentApp.Controllers
             }
 
             var result = await _flatManager.Create(item);
-
             return Ok(result);
         }
+
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> Delete(Guid id)
+        //{
+        //    var flat = await _flatManager.GetById(id);
+        //    if (flat == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    _flatManager.Remove(flat);
+        //    return new NoContentResult();
+        //}
+
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> Update(Guid id, [FromBody] Flat item)
+        //{
+        //    if (item == null || item.Id != id)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    var flat = await _flatManager.GetById(id);
+        //    if (flat == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    _flatManager.Update(flat);
+        //    return new NoContentResult();
+        //}
     }
 }

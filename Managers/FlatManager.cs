@@ -34,5 +34,17 @@ namespace RentApp.Managers
             await Task.Factory.StartNew(() => _flatRepository.Create(item));
             return new BaseResponse();
         }
+
+        internal BaseResponse Update(Flat item)
+        {
+            _flatRepository.Update(item);
+            return new BaseResponse();
+        }
+
+        internal BaseResponse Remove(Flat item)
+        {
+            _flatRepository.Remove(item);
+            return new BaseResponse();
+        }
     }
 }
