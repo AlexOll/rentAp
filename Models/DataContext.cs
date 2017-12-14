@@ -12,6 +12,7 @@ namespace RentApp.Models
 
         public DbSet<User> Users { get; set; }
         public DbSet<Flat> Flats { get; set; }
+	    public DbSet<FlatServiceType> FlatServiceTypes { get; set; }
         public DbSet<Message> Messages { get; set; }
 
     }

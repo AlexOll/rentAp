@@ -5,7 +5,7 @@ namespace RentApp.Models.ResponseModels
 {
     public class FlatResponse
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Description { get; set; }
         public float Cost { get; set; }
         public float Area { get; set; }
@@ -26,8 +26,6 @@ namespace RentApp.Models.ResponseModels
             UpdateDate = model.UpdateDate;
             LastRepairDate = model.LastRepairDate;
             ReleaseDate = model.ReleaseDate;
-
-
         }
     }
 }
