@@ -39,46 +39,55 @@ angular
             })
             .otherwise({ redirectTo: '/' })
     }])
-    .run(['$rootScope', '$location', '$cookies', '$http', function ($rootScope, $location, $cookies, $http) {
+    .run(['$rootScope', '$location', '$cookies', '$http', '$window', function ($rootScope, $location, $cookies, $http, $window) {
 
         $rootScope.globals = $cookies.getObject('globals') || {};
         if ($rootScope.globals.currentUser) {
             $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata;
         }
 
+        function onScroll() {
+            $rootScope.windowScrollY = $window.scrollY;
+            $rootScope.$apply();
+        }
+
         $rootScope.$on('$locationChangeStart', function (event, next, current) {
 
             $rootScope.loggedIn = $rootScope.globals.currentUser;
 
-            $rootScope.currentPath = $location.path();
             if ($rootScope.loggedIn)
-            {
-                $rootScope.firstname = $rootScope.globals.currentUser.firstname
-                $rootScope.lastname = $rootScope.globals.currentUser.lastname;
-            }
+                $rootScope.name = $rootScope.globals.currentUser.name;
 
             var isRestrictedPage = $.inArray($location.path(), ['/', '/login', '/register', '/forgotpassword']) >= 0;
             if (!isRestrictedPage && !$rootScope.loggedIn)
                 $location.path('/login');
 
-            $('.navbar-collapse').collapse('hide');
+            $rootScope.isSmallResolution = $window.innerWidth <= 992;
+
+            if (!$rootScope.isSmallResolution && $location.path() === '/profile')
+                angular.element($window).on('scroll', onScroll);
+            else
+                angular.element($window).off('scroll', onScroll);
+
+            if ($rootScope.isSmallResolution)
+                $('.navbar-collapse').collapse('hide');
         });
     }])
-    .controller('mainCtrl', ['$scope', '$location', '$timeout', 'AnchorSmoothScrollService', 'AuthenticationService', 
-        function ($scope, $location, $timeout, AnchorSmoothScrollService, AuthenticationService) {
+    .controller('mainCtrl', ['$scope', '$rootScope', '$location', '$timeout', 'AnchorSmoothScrollService', 'AuthenticationService',
+        function ($scope, $rootScope, $location, $timeout, AnchorSmoothScrollService, AuthenticationService, $window) {
 
             $scope.gotoElement = function (eID) {
 
-                if ($location.path() !== '/profile') {
+                if ($rootScope.isSmallResolution) {
                     $location.path('/profile');
                     $timeout(function () {
                         AnchorSmoothScrollService.scrollTo(eID);
-                    }, 1000);
+                    }, 500);
+                    $('.navbar-collapse').collapse('hide');
                 }
                 else {
                     AnchorSmoothScrollService.scrollTo(eID);
                 }
-                $('.navbar-collapse').collapse('hide');
             };
 
             $scope.logout = function () {
@@ -89,7 +98,7 @@ angular
     .animation('.reveal-animation', function () {
         return {
             enter: function (element, done) {
-                jQuery(element).hide().fadeIn(800, done);
+                jQuery(element).hide().fadeIn(1000, done);
             },
             leave: function (element, done) {
                 jQuery(element).hide();

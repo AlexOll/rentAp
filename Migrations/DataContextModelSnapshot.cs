@@ -58,9 +58,13 @@ namespace RentApp.Migrations
 
                     b.Property<DateTime>("CreateDate");
 
+                    b.Property<bool>("IsAlive");
+
                     b.Property<bool>("IsRead");
 
                     b.Property<int>("MessageType");
+
+                    b.Property<DateTime>("UpdateDate");
 
                     b.Property<Guid>("UserIdFrom");
 
@@ -92,7 +96,9 @@ namespace RentApp.Migrations
 
                     b.Property<string>("Password");
 
-                    b.Property<string>("PhoneNumber");
+                    b.Property<string>("Phonenumber");
+
+                    b.Property<DateTime>("UpdateDate");
 
                     b.HasKey("Id");
 

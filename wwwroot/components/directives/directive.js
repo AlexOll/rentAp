@@ -1,6 +1,6 @@
 ﻿angular
     .module('directives', [])
-    .directive('uniqueField', ['$http', function uniqueDirective($http) {
+    .directive('uniqueField', ['$http','$rootScope', function ($http,$rootScope) {
         var toId;
         return {
             restrict: 'A',
@@ -12,6 +12,9 @@
 
                     toId = setTimeout(function () {
                         ctrl.$setValidity('duplicate', true);
+                        if (inputValue === $rootScope.globals.currentUser.phonenumber) {
+                            return;
+                        }
                         if (inputValue && !ctrl.$error.pattern) {
 
                             var url = '';

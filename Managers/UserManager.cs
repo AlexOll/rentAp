@@ -1,13 +1,8 @@
 ﻿using RentApp.Repositories;
 using System;
-using System.Threading.Tasks;
 using RentApp.Models.DbModels;
 using RentApp.Models.RequestModels;
 using RentApp.Models.ResponseModels;
-using MimeKit;
-using MailKit.Security;
-using MailKit.Net.Smtp;
-using System.Text;
 using Microsoft.AspNetCore.Http;
 using RentApp.Cache;
 using System.Linq;
@@ -56,16 +51,19 @@ namespace RentApp.Managers
                 };
             }
 
-            var isPhoneNumberExist = UserCache.CachedItems.Values.Any(a => a.PhoneNumber == item.PhoneNumber);
+            var isPhoneNumberExist = UserCache.CachedItems.Values.Any(a => a.Phonenumber == item.Phonenumber);
 
             if (isPhoneNumberExist)
             {
                 return new BaseResponse
                 {
-                    Message = "Phone number exists",
+                    Message = "Phone number allready exists",
                     ResponseCode = StatusCodes.Status406NotAcceptable
                 };
             }
+            item.Id = Guid.NewGuid();
+            item.ActivationCode = Guid.NewGuid();
+            item.CreateDate = DateTime.Now;
 
             _userRepository.Create(item);
 
@@ -73,6 +71,54 @@ namespace RentApp.Managers
             emailManager.SendActivationEmail();
 
             return new BaseResponse();
+        }
+
+        internal BaseResponse Update(User item)
+        {
+            var isAccExist = UserCache.CachedItems.ContainsKey(item.Id);
+
+            if (!isAccExist)
+            {
+                return new BaseResponse
+                {
+                    Message = "Account not exists",
+                    ResponseCode = StatusCodes.Status406NotAcceptable
+                };
+            }
+            else
+            {
+                var cacheUser = UserCache.CachedItems[item.Id];
+                if (cacheUser.Email != item.Email || cacheUser.Password != item.Password)
+                {
+                    return new BaseResponse
+                    {
+                        Message = "Email and password don't match",
+                        ResponseCode = StatusCodes.Status406NotAcceptable
+                    };
+                }
+            }
+
+            var isPhoneNumberExist = UserCache.CachedItems.Values
+                .Any(a => !string.IsNullOrEmpty(a.Phonenumber) && a.Phonenumber == item.Phonenumber && a.Id != item.Id);
+
+            if (isPhoneNumberExist)
+            {
+                return new BaseResponse
+                {
+                    Message = "Phone number allready exists",
+                    ResponseCode = StatusCodes.Status406NotAcceptable
+                };
+            }
+
+            var foundUser = UserCache.CachedItems[item.Id];
+
+            foundUser.Firstname = item.Firstname;
+            foundUser.Lastname = item.Lastname;
+            foundUser.Phonenumber = item.Phonenumber;
+
+            _userRepository.Update(foundUser);
+
+            return (AuthenticationResponse)UserCache.CachedItems[item.Id];
         }
 
         internal BaseResponse ResendActivationCode(string email)
@@ -123,14 +169,14 @@ namespace RentApp.Managers
 
         internal bool CheckPhoneNumber(string value)
         {
-            return UserCache.CachedItems.Values.Any(a => a.PhoneNumber == value);
+            return UserCache.CachedItems.Values.Any(a => a.Phonenumber == value);
         }
 
         internal BaseResponse Authenticate(AuthenticationRequest inputUser)
         {
             var foundUser = UserCache.CachedItems.Values
                     .FirstOrDefault(a =>
-                        (a.PhoneNumber == inputUser.Input || a.Email == inputUser.Input) &&
+                        (a.Phonenumber == inputUser.Input || a.Email == inputUser.Input) &&
                         a.Password == inputUser.Password);
 
             if (foundUser != null)

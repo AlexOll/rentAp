@@ -44,10 +44,8 @@
                 <ul class="navbar-nav ml-auto nav navbar-right">
                     
                     <li class="nav-item" ng-show="loggedIn">
-                        <a class="nav-link" href="/profile"><b> {{firstname+' '+lastname}}'s profile</b></a>
-                        <div id="profileSubMenu" ng-include src="'components/profile/profile-nav-bar.html'">
-                            
-                        </div>
+                        <a class="nav-link" href="/profile"><b> {{name}}'s profile</b></a>
+                        <div ng-show="isSmallResolution" ng-include src="'components/profile/profile-nav-bar.html'"></div>
                     </li>
                     <li class="nav-item" ng-show="!loggedIn">
                         <a class="nav-link" href="/login"> Login</a>

@@ -48,6 +48,18 @@ namespace RentApp.Controllers
 
             return Ok(result);
         }
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] User item)
+        {
+            if (item == null)
+            {
+                return BadRequest();
+            }
+
+            var result = await Task.Factory.StartNew(() => _userManager.Update(item));
+
+            return Ok(result);
+        }
     }
 }
 

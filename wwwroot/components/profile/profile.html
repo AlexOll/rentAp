@@ -1,5 +1,6 @@
-<link rel="stylesheet" href="../../css/resume.css" />
 <link rel="stylesheet" href="../../css/table-messages.css" />
+<link rel="stylesheet" href="../../css/chat.css" />
+
 <div id="page-top">
     <div id="sideNav">
         <a class="navbar-brand js-scroll-trigger">
@@ -8,70 +9,13 @@
             </span>
         </a>
         <br />
-        <div class="collapse navbar-collapse navigation" id="navbarSupportedContent" ng-include src="'components/profile/profile-nav-bar.html'"></div>
+        <div class="collapse navbar-collapse navigation" id="navbar-div" ng-include src="'components/profile/profile-nav-bar.html'"></div>
     </div>
+
     <div class="container-fluid p-0">
         <section class="resume-section d-column" id="messages">
             <br />
-            <div class="div-message">
-                <div class="div-message-header">
-                    <ul>
-                        <li><a class="active" href="#home">Inbox</a></li>
-                        <li><a href="#news">Sent</a></li>
-                        <li><a href="#contact">Archive</a></li>
-                    </ul>
-                </div>
-                <table cellspacing="0" class="table-message">
-                    <tr>
-                        <th>Picture</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th width="60%">Message</th>
-                    </tr>
-                    <tr class="tr-new-message">
-                        <td><img class="table-message-img" src="http://lorempixel.com/100/100/people/1" alt="" /></td>
-                        <td>Jane Doe</td>
-                        <td>01 800 2000</td>
-                        <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </td>
-                    </tr>
-                    <tr class="tr-new-message">
-                        <td><img class="table-message-img" src="http://lorempixel.com/100/100/sports/2" alt="" /></td>
-                        <td>John Doe</td>
-                        <td>01 800 2000</td>
-                        <td>Blanditiis, aliquid numquam iure voluptatibus ut maiores explicabo ducimus neque, nesciunt rerum perferendis, inventore.</td>
-                    </tr>
-                    <tr class="tr-old-message">
-                        <td><img class="table-message-img" src="http://lorempixel.com/100/100/people/9" alt="" /></td>
-                        <td>Jane Smith</td>
-                        <td>01 800 2000</td>
-                        <td> Culpa praesentium unde pariatur fugit eos recusandae voluptas.</td>
-                    </tr>
-                    <tr class="tr-old-message">
-                        <td><img class="table-message-img" src="http://lorempixel.com/100/100/people/9" alt="" /></td>
-                        <td>Jane Smith</td>
-                        <td>01 800 2000</td>
-                        <td> Culpa praesentium unde pariatur fugit eos recusandae voluptas.</td>
-                    </tr>
-                    <tr class="tr-old-message">
-                        <td><img class="table-message-img" src="http://lorempixel.com/100/100/people/9" alt="" /></td>
-                        <td>Jane Smith</td>
-                        <td>01 800 2000</td>
-                        <td> Culpa praesentium unde pariatur fugit eos recusandae voluptas.</td>
-                    </tr>
-                    <tr class="tr-old-message">
-                        <td><img class="table-message-img" src="http://lorempixel.com/100/100/people/9" alt="" /></td>
-                        <td>Jane Smith</td>
-                        <td>01 800 2000</td>
-                        <td> Culpa praesentium unde pariatur fugit eos recusandae voluptas.</td>
-                    </tr>
-                    <tr class="tr-old-message">
-                        <td><img class="table-message-img" src="http://lorempixel.com/100/100/people/3" alt="" /></td>
-                        <td>John Smith</td>
-                        <td>01 800 2000</td>
-                        <td>Aut voluptatum accusantium, eveniet, sapiente quaerat adipisci consequatur maxime temporibus quas, dolorem impedit.</td>
-                    </tr>
-                </table>
-            </div>
+            <div ng-include src="'components/profile/chat.html'"></div>
         </section>
         <section class="resume-section flex-column" id="favorites">
             <div class="row">
@@ -168,7 +112,7 @@
         </section>
         <section class="resume-section flex-column" id="editProfile">
 
-            <div class="my-auto" ng-include src="'components/profile/edit-profile-form.html"></div>
+            <div class="my-auto" ng-include src="'components/profile/edit-profile-form.html'"></div>
 
         </section>
         <section class="resume-section flex-column" id="watchDog">

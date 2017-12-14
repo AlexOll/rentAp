@@ -15,7 +15,7 @@ html {
 }
 
 body {
-    padding-top: 54px;
+    padding-top: 56px;
     background-color: inherit;
 }
 
@@ -28,7 +28,7 @@ h4, h5 {
     border-radius: 0;
 }
 
-@media (min-width: 992px) {
+@media (max-width: 992px) {
     body {
         padding-top: 56px;
     }
@@ -97,9 +97,6 @@ footer {
 }
 
 @media (min-width: 992px) {
-    #profileSubMenu {
-        display: none
-    }
 
     #sideNav {
         text-align: center;
@@ -147,8 +144,8 @@ footer {
 
 section.resume-section {
     border-bottom: 1px solid #dee2e6;
-    padding-top: 5rem !important;
-    padding-bottom: 5rem !important;
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
 }
 
     section.resume-section .resume-item .resume-date {

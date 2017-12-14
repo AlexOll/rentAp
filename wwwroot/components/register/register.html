@@ -31,22 +31,10 @@
 
         </div>
 
-        <!--div class="form-group"
-             ng-class="{ 'has-error': (form.phonenumber.$dirty && form.phonenumber.$error.required) ||
-                form.phonenumber.$error.pattern || form.phonenumber.$error.duplicate}">
-
-            <input type="text" name="phonenumber" id="phonenumber" class="form-control" ng-model="user.phonenumber"
-                   unique-field ng-pattern="/^[a-zA-Z0-9]+$/"  required maxlength="30" placeholder="type your Phone Number for authenification"/>
-
-            <span ng-show="form.phonenumber.$error.pattern" class="error-span">Only letter and/or number characters<br /></span>
-            <span ng-show="form.phonenumber.$error.duplicate" class="error-span"  ng-cloak>Phone Number is already registered<br /></span>
-            <span ng-show="form.phonenumber.$dirty && form.phonenumber.$error.required" class="error-span">Phone Number is required<br /></span>
-        </div-->
-
         <div class="form-group"
              ng-class="{ 'has-error': (form.password.$dirty && form.password.$error.required) || form.password.$error.pattern }">
 
-            <input type="password" name="password" id="password" ng-pattern="/^[a-zA-Z0-9]+$/" min="4" maxlength="20"
+            <input type="password" name="password" id="password" ng-pattern="/^[a-zA-Z0-9]+$/" maxlength="20"
                    class="form-control" ng-model="user.password" required placeholder="type your Password" />
             <span ng-show="form.password.$dirty && form.password.$error.required" class="error-span">Password is required<br /></span>
             <span ng-show="form.password.$error.pattern" class="error-span">Only letter and/or number characters<br /></span>

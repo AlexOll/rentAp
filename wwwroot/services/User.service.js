@@ -13,5 +13,16 @@
         })
             .then(res => callback(res));
     }
+    Update(user, callback) {
+        return this.$http.put('/api/user', {
+            "Id": user.id,
+            "PhoneNumber": user.phonenumber,
+            "FirstName": user.firstname,
+            "LastName": user.lastname,
+            "Password": user.password,
+            "Email": user.email
+        })
+            .then(res => callback(res));
+    }
 }
 

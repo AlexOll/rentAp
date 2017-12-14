@@ -19,7 +19,10 @@ namespace RentApp.RunModules
             builder.RegisterType<FlatFilterManager>().AsSelf();
 
             builder.RegisterType<ProfileManager>().AsSelf();
+            builder.RegisterType<MessageRepository>().AsSelf();
             
+
+
         }
     }
 }

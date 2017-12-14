@@ -30,11 +30,14 @@
     SetCredentials(user) {
         var input = user.email + ':' + user.id;
         var authdata = this.Base64Encode(input);
-
         this.$rootScope.globals = {
             currentUser: {
+                id: user.id,
+                email: user.email,
                 firstname: user.firstname,
+                phonenumber: user.phonenumber,
                 lastname: user.lastname,
+                name: user.firstname+' '+user.lastname,
                 authdata: authdata
             }
         };
