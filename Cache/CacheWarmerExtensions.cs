@@ -11,7 +11,7 @@ namespace RentApp.Cache
             try
             {
                 app.ApplicationServices.GetRequiredService<UserCache>();
-                //app.ApplicationServices.GetRequiredService<FlatCache>();
+                app.ApplicationServices.GetRequiredService<FlatCache>();
             }
             catch
             {
