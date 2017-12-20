@@ -18,8 +18,6 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
                     $scope.editProfileH = angular.element(document.querySelector('#editProfile'))[0].offsetTop;
                     $scope.watchDogH = angular.element(document.querySelector('#watchDog'))[0].offsetTop;
                 }
-
-                ScrollChatDown();
             }, 1000);
 
             $scope.user = angular.copy($rootScope.globals.currentUser);
@@ -38,21 +36,38 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
             ]
 
             $scope.chatUsers = [
-                { id: "1ca88925-5ee3-4278-8808-d1229726af60", name: "John Brown", isOnline: true, avatar: "../../img/chat_avatars/chat_avatar_01.jpg", lastEntrance: "online" },
-                { id: "1211111", name: "John2", isOnline: true, avatar: "../../img/chat_avatars/chat_avatar_02.jpg", lastEntrance: "online" },
-                { id: "1311111", name: "John3", isOnline: false, avatar: "../../img/chat_avatars/chat_avatar_03.jpg", lastEntrance: " left 7 mins ago " },
-                { id: "1411111", name: "John4", isOnline: false, avatar: "../../img/chat_avatars/chat_avatar_04.jpg", lastEntrance: " left 7 mins ago " },
-                { id: "1511111", name: "John5", isOnline: false, avatar: "../../img/chat_avatars/chat_avatar_05.jpg", lastEntrance: " left 7 mins ago " }
+                { id: "1ca88925-5ee3-4278-8808-d1229726af60", name: "John Brown", isOnline: true, profileImageURL: "../../img/chat_avatars/chat_avatar_01.jpg", lastEntrance: "online" },
+                { id: "1211111", name: "John2", isOnline: true, profileImageURL: "../../img/chat_avatars/chat_avatar_02.jpg", lastEntrance: "online" },
+                { id: "1311111", name: "John3", isOnline: false, profileImageURL: "../../img/chat_avatars/chat_avatar_03.jpg", lastEntrance: " left 7 mins ago " },
+                { id: "1411111", name: "John4", isOnline: false, profileImageURL: "../../img/chat_avatars/chat_avatar_04.jpg", lastEntrance: " left 7 mins ago " },
+                { id: "1511111", name: "John5", isOnline: false, profileImageURL: "../../img/chat_avatars/chat_avatar_05.jpg", lastEntrance: " left 7 mins ago " }
             ]
 
-            $scope.chosenChater = $scope.chatUsers[0];
+            ProfileService.GetUserMessages($scope.user.id, function (response) {
+
+                if (response.data.responseCode === 200) {
+                    $scope.userMessages = response.data["messages"];
+                    $scope.chatUsers = response.data["users"];
+                    $scope.chosenChater = $scope.chatUsers[0];
+
+                    ScrollChatDown();
+                }
+                else {
+                    toastr.error(response.data.message, "Error", {
+                        "timeOut": "5000",
+                        "extendedTImeout": "0"
+                    });
+                }
+            });
+
+
 
             $scope.chooseChater = function (user) {
                 $scope.chosenChater = user;
                 $timeout(function () {
                     ScrollChatDown();
                     if ($rootScope.isSmallResolution) {
-                        AnchorSmoothScrollService.scrollTo('chat-header',-70);
+                        AnchorSmoothScrollService.scrollTo('chat-header', -70);
                     }
                 }, 500);
             }
@@ -87,12 +102,11 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
             }
 
             $scope.updateProfile = function (ev) {
-                debugger;
+                $scope.dataLoading = true;
                 $scope.user.profileImageURL = $rootScope.globals.currentUser.profileImageURL;
                 UserService.Update($scope.user, function (response) {
 
                     if (response.data.responseCode === 200) {
-                        debugger;
                         AuthenticationService.SetCredentials(response.data);
                         $rootScope.name = $rootScope.globals.currentUser.name;
                         toastr.success('Your profile has been updated.', 'Success!');
@@ -106,6 +120,7 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
                         $scope.user.password = '';
                     }
                 });
+                $scope.dataLoading = false;
             }
 
         }])

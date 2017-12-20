@@ -9,7 +9,7 @@ namespace RentApp.Models.RequestModels
         public Guid UserIdTo { get; set; }
         public Guid UserIdFrom { get; set; }
         public string Body { get; set; }
-        public DateTime CreateDate { get; set; }
+        public DateTime CreateDateTime { get; set; }
 
         public Message CreateDbModel()
         {
@@ -18,7 +18,7 @@ namespace RentApp.Models.RequestModels
             model.UserIdTo = UserIdTo;
             model.UserIdFrom = UserIdFrom;
             model.Body = Body;
-            model.CreateDate = CreateDate;
+            model.CreateDateTime = CreateDateTime;
             model.IsAlive = true;
             model.IsRead = false;
 

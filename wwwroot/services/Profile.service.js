@@ -14,7 +14,7 @@
             "UserIdFrom": message.userIdFrom,
             "UserIdTo": message.userIdTo,
             "Body": message.body,
-            "CreateDate": message.createDateTime,
+            "CreateDateTime": message.createDateTime,
         })
             .then(res => callback(res));
     }

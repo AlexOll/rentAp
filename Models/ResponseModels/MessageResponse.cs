@@ -11,7 +11,7 @@ namespace RentApp.Models.ResponseModels
         public Guid UserIdFrom { get; set; }
         public string Body { get; set; }
         public bool IsRead { get; set; }
-        public DateTime CreateDate { get; set; }
+        public DateTime CreateDateTime { get; set; }
 
         public MessageResponse(Message model)
         {
@@ -20,7 +20,8 @@ namespace RentApp.Models.ResponseModels
             UserIdFrom = model.UserIdFrom;
             Body = model.Body;
             IsRead = model.IsRead;
-            CreateDate = model.CreateDate;
+            CreateDateTime = model.CreateDateTime;
         }
+
     }
 }

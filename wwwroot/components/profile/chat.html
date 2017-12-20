@@ -7,7 +7,7 @@
             </div>
             <ul class="list">
                 <li class="clearfix" ng-class="chater.id==chosenChater.id ? 'chosenChater' : ''" ng-repeat="chater in chatUsers" ng-click="chooseChater(chater)" >
-                    <img class="rounded-circle"  ng-src="{{chater.avatar}}" alt="avatar" />
+                    <img class="rounded-circle"  ng-src="{{chater.profileImageURL || '../../img/profile/profile.jpg'}}" />
                     <div class="about">
                         <div class="name">{{chater.name}}</div>
                         <div class="status online" ng-class="chater.isOnline ? 'online' : 'offline'"> {{chater.lastEntrance}} </div>

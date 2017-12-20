@@ -40,44 +40,50 @@ angular
             })
             .otherwise({ redirectTo: '/' })
     }])
-    .run(['$rootScope', '$location', '$cookies', '$http', '$window',
-        function ($rootScope, $location, $cookies, $http, $window) {
+    .run(['$rootScope', '$location', '$cookies', '$http', '$window', '$interval',
+        function ($rootScope, $location, $cookies, $http, $window, $interval) {
 
-        $rootScope.globals = $cookies.getObject('globals') || {};
-        if ($rootScope.globals.currentUser) {
-            $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata;
-        }
+            $rootScope.globals = $cookies.getObject('globals') || {};
+            if ($rootScope.globals.currentUser) {
+                $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata;
+            }
 
-        function onScroll() {
-            $rootScope.windowScrollY = $window.scrollY;
-            $rootScope.$apply();
-        }
+            function onScroll() {
+                $rootScope.windowScrollY = $window.scrollY;
+                $rootScope.$apply();
+            }
 
-        $rootScope.$on('$locationChangeStart', function (event, next, current) {
+            $rootScope.$on('$locationChangeStart', function (event, next, current) {
+                
+                $rootScope.loggedIn = $rootScope.globals.currentUser;
 
-            $rootScope.loggedIn = $rootScope.globals.currentUser;
+                if ($rootScope.loggedIn)
+                    $rootScope.name = $rootScope.globals.currentUser.name;
 
-            if ($rootScope.loggedIn)
-                $rootScope.name = $rootScope.globals.currentUser.name;
+                var isRestrictedPage = $.inArray($location.path(), ['/', '/login', '/register', '/forgotpassword']) >= 0;
+                if (!isRestrictedPage && !$rootScope.loggedIn)
+                    $location.path('/login');
 
-            var isRestrictedPage = $.inArray($location.path(), ['/', '/login', '/register', '/forgotpassword']) >= 0;
-            if (!isRestrictedPage && !$rootScope.loggedIn)
-                $location.path('/login');
+                $rootScope.isSmallResolution = $window.innerWidth <= 992;
 
-            $rootScope.isSmallResolution = $window.innerWidth <= 992;
+                if (!$rootScope.isSmallResolution && $location.path() === '/profile') {
+                    angular.element($window).on('scroll', onScroll);
+                    stop = $interval(function () {
+                        console.log("5 sec")
+                    }, 5000);
+                }
+                else {
+                    angular.element($window).off('scroll', onScroll);
+                    $interval.cancel(stop);
+                    stop = undefined;
+                }
 
-            if (!$rootScope.isSmallResolution && $location.path() === '/profile')
-                angular.element($window).on('scroll', onScroll);
-            else
-                angular.element($window).off('scroll', onScroll);
-
-            if ($rootScope.isSmallResolution)
-                $('.navbar-collapse').collapse('hide');
-        });
-    }])
+                if ($rootScope.isSmallResolution)
+                    $('.navbar-collapse').collapse('hide');
+            });
+        }])
     .controller('mainCtrl', ['$scope', '$rootScope', '$location', '$timeout', 'AnchorSmoothScrollService', 'AuthenticationService',
         function ($scope, $rootScope, $location, $timeout, AnchorSmoothScrollService, AuthenticationService, $window) {
-
             $scope.gotoElement = function (eID) {
 
                 if ($rootScope.isSmallResolution) {

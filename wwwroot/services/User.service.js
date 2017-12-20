@@ -14,8 +14,7 @@
             .then(res => callback(res));
     }
     Update(user, callback) {
-        debugger;
-        return this.$http.put('/api/user', {
+        return this.$http.post('/api/user/update', {
             "Id": user.id,
             "PhoneNumber": user.phonenumber,
             "FirstName": user.firstname,

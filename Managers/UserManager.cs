@@ -67,7 +67,7 @@ namespace RentApp.Managers
             }
             item.Id = Guid.NewGuid();
             item.ActivationCode = Guid.NewGuid();
-            item.CreateDate = DateTime.Now;
+            item.CreateDateTime = DateTime.Now;
 
             _userRepository.Create(item);
 

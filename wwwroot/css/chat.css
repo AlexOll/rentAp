@@ -39,6 +39,8 @@
 
     .people-list img {
         float: left;
+        width: 60px;
+        height: 60px;
     }
 
     .people-list .about {
@@ -178,6 +180,7 @@
 #chat-button-div {
     width: 100%;
 }
+
 #chat-button-attach {
     float: left;
 }

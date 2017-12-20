@@ -18,14 +18,14 @@ namespace RentApp.Managers
             _messageRepository = messageRepository;
         }
 
-        internal (List<AuthenticationResponse>, List<MessageResponse>)
-            GetAllUserMessages(Guid userId)
+        internal UserMessagesResponse GetAllUserMessages(Guid userId)
         {
             var messageList = MessageCache.CachedItems.Values
                 .Where(w => w.UserIdFrom == userId || w.UserIdTo == userId)
-                .OrderBy(o => o.CreateDate)
-                .Cast<MessageResponse>()
+                .OrderBy(o => o.CreateDateTime)
+                .Select(x => (MessageResponse)x)
                 .ToList();
+
 
             var distinctUserIds = messageList
                 .Select(s => new[] { s.UserIdFrom, s.UserIdTo })
@@ -38,7 +38,7 @@ namespace RentApp.Managers
                 if (UserCache.CachedItems.ContainsKey(item))
                     userList.Add((AuthenticationResponse)UserCache.CachedItems[item]);
 
-            return (userList, messageList);
+            return new UserMessagesResponse(messageList, userList);
         }
 
         internal BaseResponse SendMessage(SendMessageRequest messageRequest)

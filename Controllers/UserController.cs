@@ -48,7 +48,7 @@ namespace RentApp.Controllers
 
             return Ok(result);
         }
-        [HttpPut]
+        [HttpPost, Route("update")]
         public async Task<IActionResult> Update([FromBody]UpdateUserRequest item)
         {
             if (item == null)

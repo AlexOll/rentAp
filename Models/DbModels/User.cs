@@ -17,7 +17,7 @@ namespace RentApp.Models.DbModels
         public Guid ActivationCode { get; set; }
         public bool IsAlive { get; set; } = true;
         public bool IsActivated { get; set; }
-        public DateTime CreateDate { get; set; }
+        public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDate { get; set; }
 
         public static explicit operator AuthenticationResponse(User model)
