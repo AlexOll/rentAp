@@ -1,6 +1,7 @@
 # Custom ignores
 obj/*
 localDB/*
+Migrations/*
 
 # User-specific files
 *.suo
