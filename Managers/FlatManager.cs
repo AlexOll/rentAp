@@ -1,10 +1,12 @@
-﻿using RentApp.Models.DbModels;
-using RentApp.Models.ResponseModels;
-using RentApp.Repositories;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using RentApp.Repositories;
+using RentApp.Models.DbModels;
+using RentApp.Models.RequestModels;
+using RentApp.Models.ResponseModels;
+using RentApp.Cache;
+using System.Collections.Generic;
 
 namespace RentApp.Managers
 {
@@ -17,21 +19,24 @@ namespace RentApp.Managers
             _flatRepository = flatRepository;
         }
 
-        internal async Task<IEnumerable<Flat>> GetAll()
+        internal IEnumerable<Flat> GetAll()
         {
-            return await Task.Factory.StartNew(() => _flatRepository.GetAll());
+            return _flatRepository.GetAll();
         }
 
-        internal async Task<Flat> GetById(Guid id)
+        internal Flat GetById(Guid id)
         {
-            return await Task.Factory.StartNew(() => _flatRepository.GetById(id));
+            return _flatRepository.GetById(id);
         }
 
-        internal async Task<BaseResponse> Create(Flat item)
+        internal BaseResponse Create(Flat item)
         {
+            item.Id = Guid.NewGuid();
             item.CreateDate = DateTime.Now;
             item.UpdateDate = DateTime.Now;
-            await Task.Factory.StartNew(() => _flatRepository.Create(item));
+            
+            _flatRepository.Create(item);
+
             return new BaseResponse();
         }
 

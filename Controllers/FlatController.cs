@@ -21,7 +21,7 @@ namespace RentApp.Controllers
         [ProducesResponseType(typeof(List<Flat>), 200)]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _flatManager.GetAll();
+            var result = await Task.Factory.StartNew(() => _flatManager.GetAll());
             return Ok(result);
         }
 
@@ -44,39 +44,32 @@ namespace RentApp.Controllers
                 return BadRequest();
             }
 
-            var result = await _flatManager.Create(item);
+            var result = await Task.Factory.StartNew(() => _flatManager.Create(item));
             return Ok(result);
         }
 
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> Delete(Guid id)
-        //{
-        //    var flat = await _flatManager.GetById(id);
-        //    if (flat == null)
-        //    {
-        //        return NotFound();
-        //    }
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] Flat item)
+        {
+            if (item == null)
+            {
+                return BadRequest();
+            }
 
-        //    _flatManager.Remove(flat);
-        //    return new NoContentResult();
-        //}
+            var result = await Task.Factory.StartNew(() => _flatManager.Update(item));
+            return Ok(result);
+        }
 
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> Update(Guid id, [FromBody] Flat item)
-        //{
-        //    if (item == null || item.Id != id)
-        //    {
-        //        return BadRequest();
-        //    }
+        [HttpDelete]
+        public async Task<IActionResult> Delete(Flat item)
+        {
+            if (item == null)
+            {
+                return BadRequest();
+            }
 
-        //    var flat = await _flatManager.GetById(id);
-        //    if (flat == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _flatManager.Update(flat);
-        //    return new NoContentResult();
-        //}
+            var result = await Task.Factory.StartNew(() => _flatManager.Remove(item));
+            return Ok(result);
+        }
     }
 }

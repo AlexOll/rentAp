@@ -4,6 +4,7 @@ using System.Linq;
 using RentApp.Models;
 using Microsoft.EntityFrameworkCore;
 using RentApp.Models.DbModels;
+using RentApp.Cache;
 
 namespace RentApp.Repositories
 {
@@ -39,33 +40,31 @@ namespace RentApp.Repositories
                 _context.Flats.Add(flat);
                 _context.SaveChanges();
             }
+            FlatCache.AddOrUpdate(flat);
         }
 
         internal void Update(Flat flat)
         {
-            // TODO: to implement it
-
-            //using (_context)
-            //{
-            //    flat.UpdateDate = DateTime.Now;
-            //    _context.Flats.Attach(flat);
-            //    _context.Entry(flat).State = EntityState.Modified;
-            //    _context.SaveChanges();
-            //}
+            using (_context)
+            {
+                flat.UpdateDate = DateTime.Now;
+                _context.Flats.Attach(flat);
+                _context.Entry(flat).State = EntityState.Modified;
+                _context.SaveChanges();
+            }
+            FlatCache.AddOrUpdate(flat);
         }
 
         internal void Remove(Flat flat)
         {
-            // TODO: to implement it
-
-            //using (_context)
-            //{
-            //    flat.IsAlive = false;
-            //    _context.Flats.Attach(flat);
-            //    _context.Entry(flat).State = EntityState.Modified;
-            //    _context.SaveChanges();
-            //}
+            using (_context)
+            {
+                flat.IsAlive = false;
+                _context.Flats.Attach(flat);
+                _context.Entry(flat).State = EntityState.Modified;
+                _context.SaveChanges();
+            }
+            FlatCache.AddOrUpdate(flat);
         }
-
     }
 }

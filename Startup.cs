@@ -25,6 +25,7 @@ namespace RentApp
             //var connection = @"Server=(LocalDB)\MSSQLLocalDB;Database=RentApLocalDb;Integrated Security=True;Connect Timeout=30";
 
             services.AddDbContext<DataContext>(opt => opt.UseSqlServer(connection),ServiceLifetime.Transient);
+
             services.AddMvc();
 
             var builder = new ContainerBuilder();
