@@ -27,7 +27,6 @@ angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
                 AuthenticationService.Login($scope.input, $scope.password, function (response) {
 
                     if (response.data.responseCode === 200) {
-
                         AuthenticationService.SetCredentials(response.data);
                         toastr.success('Authentication succeeded', 'Have fun!');
                         $location.path('/');

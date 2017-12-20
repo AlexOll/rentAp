@@ -11,7 +11,7 @@ namespace RentApp.Controllers
         [HttpGet, Route("messageTypes")]
         public IActionResult GetMessageTypes()
         {
-            return Ok(EnumExtensionHelper.GetDictionaryFromEnum<MessageType>());
+            return Ok(EnumUtility.GetDictionaryFromEnum<MessageType>());
         }
     }
 }

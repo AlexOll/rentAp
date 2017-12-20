@@ -2,11 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace RentApp.Utilities
 {
-    public class PasswordManager
+    public class PasswordUtility
     {
         public static string GenerateRandomPassword(PasswordOptions opts = null)
         {

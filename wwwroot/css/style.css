@@ -91,12 +91,24 @@ footer {
     }
 
 @media (max-width: 991px) {
+
+    .fixed-bottom {
+        display: none;
+    }
+
     #sideNav {
         display: none;
     }
 }
 
+.img-profile {
+    width: 10em;
+    height: 10em;
+    border: 0.5rem solid rgba(255, 255, 255, 0.2);
+}
+
 @media (min-width: 992px) {
+
 
     #sideNav {
         text-align: center;
@@ -114,11 +126,7 @@ footer {
             padding: 0.5rem;
         }
 
-            #sideNav .navbar-brand .img-profile {
-                max-width: 10rem;
-                max-height: 10rem;
-                border: 0.5rem solid rgba(255, 255, 255, 0.2);
-            }
+
 
         #sideNav .navbar-collapse {
             display: flex;
@@ -175,4 +183,27 @@ section.resume-section {
 
 .text-primary {
     color: #BD5D38 !important;
+}
+
+.upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.upload-btn {
+    border: 2px solid gray;
+    color: gray;
+    background-color: white;
+    padding: 8px 20px;
+    font-weight: bold;
+}
+
+.upload-btn-wrapper input[type=file] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    cursor: pointer;
 }

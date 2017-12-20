@@ -14,13 +14,15 @@
             .then(res => callback(res));
     }
     Update(user, callback) {
+        debugger;
         return this.$http.put('/api/user', {
             "Id": user.id,
             "PhoneNumber": user.phonenumber,
             "FirstName": user.firstname,
             "LastName": user.lastname,
             "Password": user.password,
-            "Email": user.email
+            "Email": user.email,
+            "ProfileImageURL": user.profileImageURL
         })
             .then(res => callback(res));
     }

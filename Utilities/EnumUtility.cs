@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace RentApp.Utilities
 {
-    public static class EnumExtensionHelper
+    public static class EnumUtility
     {
         public static Dictionary<int, string> GetDictionaryFromEnum<T>() where T : struct
         {

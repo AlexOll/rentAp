@@ -1,10 +1,11 @@
 ﻿class AuthenticationService {
-    constructor($http, $cookies, $rootScope) {
+    constructor($http, $cookies, $rootScope, $base64) {
 
         this.$http = $http;
         this.$cookies = $cookies;
         this.$rootScope = $rootScope;
         this.keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+        this.$base64 = $base64;
     }
 
     Login(input, password, callback) {
@@ -13,7 +14,7 @@
     }
 
     ForgotPass(email, callback) {
-        this.$http.get('/api/authentication/forgotpassword/'+ email )
+        this.$http.get('/api/authentication/forgotpassword/' + email)
             .then(res => callback(res));
     }
 
@@ -27,9 +28,26 @@
             .then(res => callback(res));
     }
 
+    //Base64ToImage(source) {
+    //    var result = null;
+
+    //    if (typeof source !== 'string') {
+    //        return result;
+    //    }
+    //    var dataURL = this.$base64.decode(source);
+    //    var mime = dataURL.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/);
+
+    //    if (mime && mime.length) {
+    //        result = new File([""], "", { type: mime[1] })
+    //        result.dataURL = dataURL;
+    //    }
+
+    //    return result;
+    //}
     SetCredentials(user) {
         var input = user.email + ':' + user.id;
         var authdata = this.Base64Encode(input);
+
         this.$rootScope.globals = {
             currentUser: {
                 id: user.id,
@@ -37,7 +55,8 @@
                 firstname: user.firstname,
                 phonenumber: user.phonenumber,
                 lastname: user.lastname,
-                name: user.firstname+' '+user.lastname,
+                name: user.firstname + ' ' + user.lastname,
+                profileImageURL: user.profileImageURL,
                 authdata: authdata
             }
         };
@@ -89,48 +108,48 @@
         return output;
     };
 
-    Base64Decode(input) {
+    //Base64Decode(input) {
 
-        var output = "";
-        var chr1, chr2, chr3 = "";
-        var enc1, enc2, enc3, enc4 = "";
-        var i = 0;
+    //    var output = "";
+    //    var chr1, chr2, chr3 = "";
+    //    var enc1, enc2, enc3, enc4 = "";
+    //    var i = 0;
 
-        // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
-        var base64test = /[^A-Za-z0-9\+\/\=]/g;
-        if (base64test.exec(input)) {
-            window.alert("There were invalid base64 characters in the input text.\n" +
-                "Valid base64 characters are A-Z, a-z, 0-9, '+', '/',and '='\n" +
-                "Expect errors in decoding.");
-        }
-        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+    //    // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
+    //    var base64test = /[^A-Za-z0-9\+\/\=]/g;
+    //    if (base64test.exec(input)) {
+    //        window.alert("There were invalid base64 characters in the input text.\n" +
+    //            "Valid base64 characters are A-Z, a-z, 0-9, '+', '/',and '='\n" +
+    //            "Expect errors in decoding.");
+    //    }
+    //    input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
 
-        do {
-            enc1 = this.keyStr.indexOf(input.charAt(i++));
-            enc2 = this.keyStr.indexOf(input.charAt(i++));
-            enc3 = this.keyStr.indexOf(input.charAt(i++));
-            enc4 = this.keyStr.indexOf(input.charAt(i++));
+    //    do {
+    //        enc1 = this.keyStr.indexOf(input.charAt(i++));
+    //        enc2 = this.keyStr.indexOf(input.charAt(i++));
+    //        enc3 = this.keyStr.indexOf(input.charAt(i++));
+    //        enc4 = this.keyStr.indexOf(input.charAt(i++));
 
-            chr1 = (enc1 << 2) | (enc2 >> 4);
-            chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-            chr3 = ((enc3 & 3) << 6) | enc4;
+    //        chr1 = (enc1 << 2) | (enc2 >> 4);
+    //        chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+    //        chr3 = ((enc3 & 3) << 6) | enc4;
 
-            output = output + String.fromCharCode(chr1);
+    //        output = output + String.fromCharCode(chr1);
 
-            if (enc3 !== 64) {
-                output = output + String.fromCharCode(chr2);
-            }
-            if (enc4 !== 64) {
-                output = output + String.fromCharCode(chr3);
-            }
+    //        if (enc3 !== 64) {
+    //            output = output + String.fromCharCode(chr2);
+    //        }
+    //        if (enc4 !== 64) {
+    //            output = output + String.fromCharCode(chr3);
+    //        }
 
-            chr1 = chr2 = chr3 = "";
-            enc1 = enc2 = enc3 = enc4 = "";
+    //        chr1 = chr2 = chr3 = "";
+    //        enc1 = enc2 = enc3 = enc4 = "";
 
-        } while (i < input.length);
+    //    } while (i < input.length);
 
-        return output;
-    }
+    //    return output;
+    //}
 };
 
 

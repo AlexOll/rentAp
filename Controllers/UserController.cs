@@ -49,7 +49,7 @@ namespace RentApp.Controllers
             return Ok(result);
         }
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] User item)
+        public async Task<IActionResult> Update([FromBody]UpdateUserRequest item)
         {
             if (item == null)
             {

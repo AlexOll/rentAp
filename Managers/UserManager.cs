@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Http;
 using RentApp.Cache;
 using System.Linq;
 using RentApp.Utilities;
+using System.Text;
+using System.IO;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace RentApp.Managers
 {
@@ -67,13 +71,13 @@ namespace RentApp.Managers
 
             _userRepository.Create(item);
 
-            var emailManager = new EmailManager(item);
+            var emailManager = new EmailUtility(item);
             emailManager.SendActivationEmail();
 
             return new BaseResponse();
         }
 
-        internal BaseResponse Update(User item)
+        internal BaseResponse Update(UpdateUserRequest item)
         {
             var isAccExist = UserCache.CachedItems.ContainsKey(item.Id);
 
@@ -92,14 +96,16 @@ namespace RentApp.Managers
                 {
                     return new BaseResponse
                     {
-                        Message = "Email and password don't match",
+                        Message = "Password doesn't match",
                         ResponseCode = StatusCodes.Status406NotAcceptable
                     };
                 }
             }
 
             var isPhoneNumberExist = UserCache.CachedItems.Values
-                .Any(a => !string.IsNullOrEmpty(a.Phonenumber) && a.Phonenumber == item.Phonenumber && a.Id != item.Id);
+                .Any(a => !string.IsNullOrEmpty(a.Phonenumber)
+                    && a.Phonenumber == item.Phonenumber
+                    && a.Id != item.Id);
 
             if (isPhoneNumberExist)
             {
@@ -112,9 +118,13 @@ namespace RentApp.Managers
 
             var foundUser = UserCache.CachedItems[item.Id];
 
+            var imageUtility = new ImageUtility();
+            var imageId = imageUtility.UploadImage(foundUser.ProfileImageId, item.ProfileImageURL);
+
             foundUser.Firstname = item.Firstname;
             foundUser.Lastname = item.Lastname;
             foundUser.Phonenumber = item.Phonenumber;
+            foundUser.ProfileImageId = imageId;
 
             _userRepository.Update(foundUser);
 
@@ -129,7 +139,7 @@ namespace RentApp.Managers
             {
                 foundUser.ActivationCode = Guid.NewGuid();
 
-                var emailManager = new EmailManager(foundUser);
+                var emailManager = new EmailUtility(foundUser);
                 emailManager.SendActivationEmail();
 
                 _userRepository.Update(foundUser);
@@ -152,10 +162,10 @@ namespace RentApp.Managers
 
             if (foundUser != null)
             {
-                var newPassword = PasswordManager.GenerateRandomPassword();
+                var newPassword = PasswordUtility.GenerateRandomPassword();
                 foundUser.Password = newPassword;
 
-                var emailManager = new EmailManager(foundUser);
+                var emailManager = new EmailUtility(foundUser);
                 emailManager.SendNewPasswordForUser(newPassword);
 
                 _userRepository.Update(foundUser);

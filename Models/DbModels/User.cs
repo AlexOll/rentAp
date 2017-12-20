@@ -13,6 +13,7 @@ namespace RentApp.Models.DbModels
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public string Password { get; set; }
+        public Guid? ProfileImageId { get; set; }
         public Guid ActivationCode { get; set; }
         public bool IsAlive { get; set; } = true;
         public bool IsActivated { get; set; }

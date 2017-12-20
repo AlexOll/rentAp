@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Http;
 
 namespace RentApp.Utilities
 {
-    public class EmailManager
+    public class EmailUtility
     {
         private User _user;
 
 
-        public EmailManager(User user)
+        public EmailUtility(User user)
         {
             _user = user;
         }

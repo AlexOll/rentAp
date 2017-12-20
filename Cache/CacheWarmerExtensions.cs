@@ -11,6 +11,7 @@ namespace RentApp.Cache
             try
             {
                 app.ApplicationServices.GetRequiredService<UserCache>();
+                app.ApplicationServices.GetRequiredService<MessageCache>();
             }
             catch
             {

@@ -11,7 +11,8 @@ angular
         'myApp.register',
         'myApp.home',
         'myApp.profile',
-        'services'
+        'services',
+        'utilities'
     ])
     .config(['$locationProvider', '$routeProvider', function ($locationProvider, $routeProvider) {
         $locationProvider.html5Mode(true).hashPrefix('');
@@ -39,7 +40,8 @@ angular
             })
             .otherwise({ redirectTo: '/' })
     }])
-    .run(['$rootScope', '$location', '$cookies', '$http', '$window', function ($rootScope, $location, $cookies, $http, $window) {
+    .run(['$rootScope', '$location', '$cookies', '$http', '$window',
+        function ($rootScope, $location, $cookies, $http, $window) {
 
         $rootScope.globals = $cookies.getObject('globals') || {};
         if ($rootScope.globals.currentUser) {

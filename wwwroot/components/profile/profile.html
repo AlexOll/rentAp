@@ -5,9 +5,11 @@
     <div id="sideNav">
         <a class="navbar-brand js-scroll-trigger">
             <span class="d-none d-lg-block">
-                <img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="../../img/profile.jpg" alt="">
+                <img ng-click="gotoElement('editProfile')" class="img-fluid img-profile rounded-circle mx-auto mb-2"
+                     ng-src="{{globals.currentUser.profileImageURL || '../../img/profile/profile.jpg'}}" />
             </span>
         </a>
+        <br />
         <br />
         <div class="collapse navbar-collapse navigation" id="navbar-div" ng-include src="'components/profile/profile-nav-bar.html'"></div>
     </div>
@@ -111,9 +113,7 @@
             <!-- /.row -->
         </section>
         <section class="resume-section flex-column" id="editProfile">
-
             <div class="my-auto" ng-include src="'components/profile/edit-profile-form.html'"></div>
-
         </section>
         <section class="resume-section flex-column" id="watchDog">
             <div class="my-auto">
@@ -175,6 +175,5 @@
                 </ul>
             </div>
         </section>
-
     </div>
 </div>

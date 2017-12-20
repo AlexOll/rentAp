@@ -4,7 +4,9 @@
     {
     "outputFileName": "wwwroot/js/bundle.js",
       "inputFiles": [
+        "wwwroot/utilities/Guid.utility.js",
 
+        "wwwroot/services/Profile.service.js",
         "wwwroot/services/AnchorSmoothScroll.service.js",
         "wwwroot/services/User.service.js",
         "wwwroot/services/Authentication.service.js",

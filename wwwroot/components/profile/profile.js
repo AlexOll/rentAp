@@ -1,71 +1,115 @@
 
-angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
-    .controller('profileCtrl', ['$rootScope', '$scope', 'UserService', 'AuthenticationService', 'toastr', '$mdDialog', '$timeout',
-        function ($rootScope, $scope, UserService, AuthenticationService, toastr, $mdDialog, $timeout) {
+angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 'base64', 'utilities'])
+    .controller('profileCtrl',
+    ['$rootScope', '$scope', 'UserService', 'AuthenticationService', 'toastr', '$timeout', 'AnchorSmoothScrollService', '$base64', 'ProfileService', 'GuidUtility',
+        function ($rootScope, $scope, UserService, AuthenticationService, toastr, $timeout, AnchorSmoothScrollService, $base64, ProfileService, GuidUtility) {
 
-            if (!$rootScope.isSmallResolution)
+            function ScrollChatDown() {
                 $timeout(function () {
+                    var objDiv = angular.element(document.querySelector('.chat-history'))[0];
+                    objDiv.scrollTop = objDiv.scrollHeight;
+                }, 200);
+            }
+
+            $timeout(function () {
+                if (!$rootScope.isSmallResolution) {
                     $rootScope.windowScrollY = 0;
                     $scope.favoritesH = angular.element(document.querySelector('#favorites'))[0].offsetTop;
                     $scope.editProfileH = angular.element(document.querySelector('#editProfile'))[0].offsetTop;
                     $scope.watchDogH = angular.element(document.querySelector('#watchDog'))[0].offsetTop;
-                }, 100);
+                }
 
-            $scope.user = $rootScope.globals.currentUser;
+                ScrollChatDown();
+            }, 1000);
+
+            $scope.user = angular.copy($rootScope.globals.currentUser);
 
             $scope.userMessages = [
-                { messageId: "111", body: "Hi!", createDateTime: "10:00 AM, Today", isRead: false, userIdFrom: "1111111", userIdTo: $scope.user.id },
-                { messageId: "121", body: "Hi Vincent, how are you? How is the project coming along?", createDateTime: "10:10 AM, Today", isRead: true, userIdFrom: $scope.user.id, userIdTo: "1111111" },
-                { messageId: "131", body: "Are we meeting today? Project has been already finished and I have results to show you.", createDateTime: "10:14 AM, Today", isRead: true, userIdFrom: "1111111", userIdTo: $scope.user.id },
-                { messageId: "141", body: "Well I am not sure. The rest of the team is not here yet. Maybe in an hour or so? Have you faced any problems at the last phase of the project?", createDateTime: "10:18 AM, Today", isRead: true, userIdFrom: "1111111", userIdTo: $scope.user.id },
-                { messageId: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1111111" },
-                { messageId: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1211111" },
-                { messageId: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1311111" },
-                { messageId: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1411111" },
-                { messageId: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1511111" },
-                { messageId: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: "1511111", userIdTo: $scope.user.id }
+                { id: "111", body: "Hi to ME", createDateTime: "10:00 AM, Today", isRead: false, userIdFrom: "1ca88925-5ee3-4278-8808-d1229726af60", userIdTo: $scope.user.id },
+                { id: "121", body: "Hi to U", createDateTime: "10:10 AM, Today", isRead: true, userIdFrom: $scope.user.id, userIdTo: "1ca88925-5ee3-4278-8808-d1229726af60" },
+                { id: "131", body: "Hi to ME", createDateTime: "10:14 AM, Today", isRead: true, userIdFrom: "1ca88925-5ee3-4278-8808-d1229726af60", userIdTo: $scope.user.id },
+                { id: "141", body: "Hi to ME", createDateTime: "10:18 AM, Today", isRead: true, userIdFrom: "1ca88925-5ee3-4278-8808-d1229726af60", userIdTo: $scope.user.id },
+                { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1ca88925-5ee3-4278-8808-d1229726af60" },
+                { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1211111" },
+                { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1311111" },
+                { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1411111" },
+                { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1511111" },
+                { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: "1511111", userIdTo: $scope.user.id }
             ]
 
             $scope.chatUsers = [
-                { userId: "1111111", name: "John Brown", isOnline: true, avatar: "../../img/chat_avatars/chat_avatar_01.jpg", lastEntrance: "online" },
-                { userId: "1211111", name: "John2", isOnline: true, avatar: "../../img/chat_avatars/chat_avatar_02.jpg", lastEntrance: "online" },
-                { userId: "1311111", name: "John3", isOnline: false, avatar: "../../img/chat_avatars/chat_avatar_03.jpg", lastEntrance: " left 7 mins ago " },
-                { userId: "1411111", name: "John4", isOnline: false, avatar: "../../img/chat_avatars/chat_avatar_04.jpg", lastEntrance: " left 7 mins ago " },
-                { userId: "1511111", name: "John5", isOnline: false, avatar: "../../img/chat_avatars/chat_avatar_05.jpg", lastEntrance: " left 7 mins ago " }
+                { id: "1ca88925-5ee3-4278-8808-d1229726af60", name: "John Brown", isOnline: true, avatar: "../../img/chat_avatars/chat_avatar_01.jpg", lastEntrance: "online" },
+                { id: "1211111", name: "John2", isOnline: true, avatar: "../../img/chat_avatars/chat_avatar_02.jpg", lastEntrance: "online" },
+                { id: "1311111", name: "John3", isOnline: false, avatar: "../../img/chat_avatars/chat_avatar_03.jpg", lastEntrance: " left 7 mins ago " },
+                { id: "1411111", name: "John4", isOnline: false, avatar: "../../img/chat_avatars/chat_avatar_04.jpg", lastEntrance: " left 7 mins ago " },
+                { id: "1511111", name: "John5", isOnline: false, avatar: "../../img/chat_avatars/chat_avatar_05.jpg", lastEntrance: " left 7 mins ago " }
             ]
+
             $scope.chosenChater = $scope.chatUsers[0];
 
             $scope.chooseChater = function (user) {
                 $scope.chosenChater = user;
+                $timeout(function () {
+                    ScrollChatDown();
+                    if ($rootScope.isSmallResolution) {
+                        AnchorSmoothScrollService.scrollTo('chat-header',-70);
+                    }
+                }, 500);
             }
-            $scope.editProfile = function (ev) {
 
-                UserService.Update($scope.user, function (response) {
+            $scope.sendMessageInChat = function () {
+                var now = new Date();
+                var guid = GuidUtility.createGuid();
+                var message =
+                    {
+                        id: guid,
+                        body: $scope.newMessage,
+                        createDateTime: now,
+                        userIdFrom: $scope.user.id,
+                        userIdTo: $scope.chosenChater.id
+                    }
+
+                ProfileService.SendMessageInChat(message, function (response) {
 
                     if (response.data.responseCode === 200) {
+                        $scope.userMessages.push(message);
+                        ScrollChatDown();
 
-                        AuthenticationService.SetCredentials(response.data);
-                        $scope.actualPhoneNumber = $rootScope.globals.currentUser.phonenumber;
-                        $rootScope.name = $rootScope.globals.currentUser.name;
-                        toastr.success('Your profile has been updated.', 'Success!');
-
-                        $scope.user.password = '';
+                        $scope.newMessage = null;
                     }
                     else {
-                        alert = $mdDialog.alert({
-                            title: "You shall not pass",
-                            textContent: response.data.message,
-                            ok: 'Close',
-                            clickOutsideToClose: true,
-                            targetEvent: ev
+                        toastr.error(response.data.message, "Error", {
+                            "timeOut": "5000",
+                            "extendedTImeout": "0"
                         });
-                        $mdDialog.show(alert);
-
-                        $scope.dataLoading = false;
                     }
                 });
             }
+
+            $scope.updateProfile = function (ev) {
+                debugger;
+                $scope.user.profileImageURL = $rootScope.globals.currentUser.profileImageURL;
+                UserService.Update($scope.user, function (response) {
+
+                    if (response.data.responseCode === 200) {
+                        debugger;
+                        AuthenticationService.SetCredentials(response.data);
+                        $rootScope.name = $rootScope.globals.currentUser.name;
+                        toastr.success('Your profile has been updated.', 'Success!');
+                        $scope.user.password = '';
+                    }
+                    else {
+                        toastr.error(response.data.message, "Error", {
+                            "timeOut": "5000",
+                            "extendedTImeout": "0"
+                        });
+                        $scope.user.password = '';
+                    }
+                });
+            }
+
         }])
+
 
 
 

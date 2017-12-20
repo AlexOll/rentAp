@@ -1,3 +1,51 @@
+(function () {
+    'use strict';
+
+    angular
+        .module('utilities',[])
+        .factory('GuidUtility', GuidUtility);
+
+    GuidUtility.$inject = [];
+
+    function GuidUtility($q, photoManagerClient, appInfo) {
+        var service = {
+            createGuid: createGuid
+        };
+
+        return service;
+
+        function createGuid() {
+            function _p8(s) {
+                var p = (Math.random().toString(16) + "000000000").substr(2, 8);
+                return s ? "-" + p.substr(0, 4) + "-" + p.substr(4, 4) : p;
+            }
+            return _p8() + _p8(true) + _p8(true) + _p8();
+        }
+    }
+})();
+class ProfileService {
+    constructor($http) {
+        this.$http = $http;
+    }
+
+    GetUserMessages(id, callback) {
+        this.$http.get('/api/profile/usermessages/' + id)
+            .then(res => callback(res));
+    }
+
+    SendMessageInChat(message, callback) {
+        return this.$http.post('/api/profile', {
+            "Id": message.id,
+            "UserIdFrom": message.userIdFrom,
+            "UserIdTo": message.userIdTo,
+            "Body": message.body,
+            "CreateDate": message.createDateTime,
+        })
+            .then(res => callback(res));
+    }
+}
+
+
 class AnchorSmoothScrollService {
 
     scrollTo(eID) {
@@ -64,13 +112,15 @@ class UserService {
             .then(res => callback(res));
     }
     Update(user, callback) {
+        debugger;
         return this.$http.put('/api/user', {
             "Id": user.id,
             "PhoneNumber": user.phonenumber,
             "FirstName": user.firstname,
             "LastName": user.lastname,
             "Password": user.password,
-            "Email": user.email
+            "Email": user.email,
+            "ProfileImageURL": user.profileImageURL
         })
             .then(res => callback(res));
     }
@@ -78,12 +128,13 @@ class UserService {
 
 
 class AuthenticationService {
-    constructor($http, $cookies, $rootScope) {
+    constructor($http, $cookies, $rootScope, $base64) {
 
         this.$http = $http;
         this.$cookies = $cookies;
         this.$rootScope = $rootScope;
         this.keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+        this.$base64 = $base64;
     }
 
     Login(input, password, callback) {
@@ -92,7 +143,7 @@ class AuthenticationService {
     }
 
     ForgotPass(email, callback) {
-        this.$http.get('/api/authentication/forgotpassword/'+ email )
+        this.$http.get('/api/authentication/forgotpassword/' + email)
             .then(res => callback(res));
     }
 
@@ -106,9 +157,26 @@ class AuthenticationService {
             .then(res => callback(res));
     }
 
+    //Base64ToImage(source) {
+    //    var result = null;
+
+    //    if (typeof source !== 'string') {
+    //        return result;
+    //    }
+    //    var dataURL = this.$base64.decode(source);
+    //    var mime = dataURL.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/);
+
+    //    if (mime && mime.length) {
+    //        result = new File([""], "", { type: mime[1] })
+    //        result.dataURL = dataURL;
+    //    }
+
+    //    return result;
+    //}
     SetCredentials(user) {
         var input = user.email + ':' + user.id;
         var authdata = this.Base64Encode(input);
+
         this.$rootScope.globals = {
             currentUser: {
                 id: user.id,
@@ -116,7 +184,8 @@ class AuthenticationService {
                 firstname: user.firstname,
                 phonenumber: user.phonenumber,
                 lastname: user.lastname,
-                name: user.firstname+' '+user.lastname,
+                name: user.firstname + ' ' + user.lastname,
+                profileImageURL: user.profileImageURL,
                 authdata: authdata
             }
         };
@@ -168,48 +237,48 @@ class AuthenticationService {
         return output;
     };
 
-    Base64Decode(input) {
+    //Base64Decode(input) {
 
-        var output = "";
-        var chr1, chr2, chr3 = "";
-        var enc1, enc2, enc3, enc4 = "";
-        var i = 0;
+    //    var output = "";
+    //    var chr1, chr2, chr3 = "";
+    //    var enc1, enc2, enc3, enc4 = "";
+    //    var i = 0;
 
-        // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
-        var base64test = /[^A-Za-z0-9\+\/\=]/g;
-        if (base64test.exec(input)) {
-            window.alert("There were invalid base64 characters in the input text.\n" +
-                "Valid base64 characters are A-Z, a-z, 0-9, '+', '/',and '='\n" +
-                "Expect errors in decoding.");
-        }
-        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+    //    // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
+    //    var base64test = /[^A-Za-z0-9\+\/\=]/g;
+    //    if (base64test.exec(input)) {
+    //        window.alert("There were invalid base64 characters in the input text.\n" +
+    //            "Valid base64 characters are A-Z, a-z, 0-9, '+', '/',and '='\n" +
+    //            "Expect errors in decoding.");
+    //    }
+    //    input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
 
-        do {
-            enc1 = this.keyStr.indexOf(input.charAt(i++));
-            enc2 = this.keyStr.indexOf(input.charAt(i++));
-            enc3 = this.keyStr.indexOf(input.charAt(i++));
-            enc4 = this.keyStr.indexOf(input.charAt(i++));
+    //    do {
+    //        enc1 = this.keyStr.indexOf(input.charAt(i++));
+    //        enc2 = this.keyStr.indexOf(input.charAt(i++));
+    //        enc3 = this.keyStr.indexOf(input.charAt(i++));
+    //        enc4 = this.keyStr.indexOf(input.charAt(i++));
 
-            chr1 = (enc1 << 2) | (enc2 >> 4);
-            chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-            chr3 = ((enc3 & 3) << 6) | enc4;
+    //        chr1 = (enc1 << 2) | (enc2 >> 4);
+    //        chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+    //        chr3 = ((enc3 & 3) << 6) | enc4;
 
-            output = output + String.fromCharCode(chr1);
+    //        output = output + String.fromCharCode(chr1);
 
-            if (enc3 !== 64) {
-                output = output + String.fromCharCode(chr2);
-            }
-            if (enc4 !== 64) {
-                output = output + String.fromCharCode(chr3);
-            }
+    //        if (enc3 !== 64) {
+    //            output = output + String.fromCharCode(chr2);
+    //        }
+    //        if (enc4 !== 64) {
+    //            output = output + String.fromCharCode(chr3);
+    //        }
 
-            chr1 = chr2 = chr3 = "";
-            enc1 = enc2 = enc3 = enc4 = "";
+    //        chr1 = chr2 = chr3 = "";
+    //        enc1 = enc2 = enc3 = enc4 = "";
 
-        } while (i < input.length);
+    //    } while (i < input.length);
 
-        return output;
-    }
+    //    return output;
+    //}
 };
 
 
@@ -220,6 +289,7 @@ angular.module('services', ['ngRoute','ngCookies'])
     .service('UserService', UserService)
     .service('AuthenticationService', AuthenticationService)
     .service('AnchorSmoothScrollService', AnchorSmoothScrollService)
+    .service('ProfileService', ProfileService)
 
 
 
@@ -251,7 +321,6 @@ angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
                 AuthenticationService.Login($scope.input, $scope.password, function (response) {
 
                     if (response.data.responseCode === 200) {
-
                         AuthenticationService.SetCredentials(response.data);
                         toastr.success('Authentication succeeded', 'Have fun!');
                         $location.path('/');
@@ -396,87 +465,130 @@ angular.module('myApp.home', ['ngRoute', 'directives'])
     }]);
 
 
-angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
-    .controller('profileCtrl', ['$rootScope', '$scope', 'UserService', 'AuthenticationService', 'toastr', '$mdDialog', '$timeout',
-        function ($rootScope, $scope, UserService, AuthenticationService, toastr, $mdDialog, $timeout) {
+angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 'base64', 'utilities'])
+    .controller('profileCtrl',
+    ['$rootScope', '$scope', 'UserService', 'AuthenticationService', 'toastr', '$timeout', 'AnchorSmoothScrollService', '$base64', 'ProfileService', 'GuidUtility',
+        function ($rootScope, $scope, UserService, AuthenticationService, toastr, $timeout, AnchorSmoothScrollService, $base64, ProfileService, GuidUtility) {
 
-            if (!$rootScope.isSmallResolution)
+            function ScrollChatDown() {
                 $timeout(function () {
+                    var objDiv = angular.element(document.querySelector('.chat-history'))[0];
+                    objDiv.scrollTop = objDiv.scrollHeight;
+                }, 200);
+            }
+
+            $timeout(function () {
+                if (!$rootScope.isSmallResolution) {
                     $rootScope.windowScrollY = 0;
                     $scope.favoritesH = angular.element(document.querySelector('#favorites'))[0].offsetTop;
                     $scope.editProfileH = angular.element(document.querySelector('#editProfile'))[0].offsetTop;
                     $scope.watchDogH = angular.element(document.querySelector('#watchDog'))[0].offsetTop;
-                }, 100);
+                }
 
-            $scope.user = $rootScope.globals.currentUser;
+                ScrollChatDown();
+            }, 1000);
+
+            $scope.user = angular.copy($rootScope.globals.currentUser);
 
             $scope.userMessages = [
-                { messageId: "111", body: "Hi!", createDateTime: "10:00 AM, Today", isRead: false, userIdFrom: "1111111", userIdTo: $scope.user.id },
-                { messageId: "121", body: "Hi Vincent, how are you? How is the project coming along?", createDateTime: "10:10 AM, Today", isRead: true, userIdFrom: $scope.user.id, userIdTo: "1111111" },
-                { messageId: "131", body: "Are we meeting today? Project has been already finished and I have results to show you.", createDateTime: "10:14 AM, Today", isRead: true, userIdFrom: "1111111", userIdTo: $scope.user.id },
-                { messageId: "141", body: "Well I am not sure. The rest of the team is not here yet. Maybe in an hour or so? Have you faced any problems at the last phase of the project?", createDateTime: "10:18 AM, Today", isRead: true, userIdFrom: "1111111", userIdTo: $scope.user.id },
-                { messageId: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1111111" },
-                { messageId: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1211111" },
-                { messageId: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1311111" },
-                { messageId: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1411111" },
-                { messageId: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1511111" },
-                { messageId: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: "1511111", userIdTo: $scope.user.id }
+                { id: "111", body: "Hi to ME", createDateTime: "10:00 AM, Today", isRead: false, userIdFrom: "1ca88925-5ee3-4278-8808-d1229726af60", userIdTo: $scope.user.id },
+                { id: "121", body: "Hi to U", createDateTime: "10:10 AM, Today", isRead: true, userIdFrom: $scope.user.id, userIdTo: "1ca88925-5ee3-4278-8808-d1229726af60" },
+                { id: "131", body: "Hi to ME", createDateTime: "10:14 AM, Today", isRead: true, userIdFrom: "1ca88925-5ee3-4278-8808-d1229726af60", userIdTo: $scope.user.id },
+                { id: "141", body: "Hi to ME", createDateTime: "10:18 AM, Today", isRead: true, userIdFrom: "1ca88925-5ee3-4278-8808-d1229726af60", userIdTo: $scope.user.id },
+                { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1ca88925-5ee3-4278-8808-d1229726af60" },
+                { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1211111" },
+                { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1311111" },
+                { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1411111" },
+                { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1511111" },
+                { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: "1511111", userIdTo: $scope.user.id }
             ]
 
             $scope.chatUsers = [
-                { userId: "1111111", name: "John Brown", isOnline: true, avatar: "../../img/chat_avatars/chat_avatar_01.jpg", lastEntrance: "online" },
-                { userId: "1211111", name: "John2", isOnline: true, avatar: "../../img/chat_avatars/chat_avatar_02.jpg", lastEntrance: "online" },
-                { userId: "1311111", name: "John3", isOnline: false, avatar: "../../img/chat_avatars/chat_avatar_03.jpg", lastEntrance: " left 7 mins ago " },
-                { userId: "1411111", name: "John4", isOnline: false, avatar: "../../img/chat_avatars/chat_avatar_04.jpg", lastEntrance: " left 7 mins ago " },
-                { userId: "1511111", name: "John5", isOnline: false, avatar: "../../img/chat_avatars/chat_avatar_05.jpg", lastEntrance: " left 7 mins ago " }
+                { id: "1ca88925-5ee3-4278-8808-d1229726af60", name: "John Brown", isOnline: true, avatar: "../../img/chat_avatars/chat_avatar_01.jpg", lastEntrance: "online" },
+                { id: "1211111", name: "John2", isOnline: true, avatar: "../../img/chat_avatars/chat_avatar_02.jpg", lastEntrance: "online" },
+                { id: "1311111", name: "John3", isOnline: false, avatar: "../../img/chat_avatars/chat_avatar_03.jpg", lastEntrance: " left 7 mins ago " },
+                { id: "1411111", name: "John4", isOnline: false, avatar: "../../img/chat_avatars/chat_avatar_04.jpg", lastEntrance: " left 7 mins ago " },
+                { id: "1511111", name: "John5", isOnline: false, avatar: "../../img/chat_avatars/chat_avatar_05.jpg", lastEntrance: " left 7 mins ago " }
             ]
+
             $scope.chosenChater = $scope.chatUsers[0];
 
             $scope.chooseChater = function (user) {
                 $scope.chosenChater = user;
+                $timeout(function () {
+                    ScrollChatDown();
+                    if ($rootScope.isSmallResolution) {
+                        AnchorSmoothScrollService.scrollTo('chat-header',-70);
+                    }
+                }, 500);
             }
-            $scope.editProfile = function (ev) {
 
-                UserService.Update($scope.user, function (response) {
+            $scope.sendMessageInChat = function () {
+                var now = new Date();
+                var guid = GuidUtility.createGuid();
+                var message =
+                    {
+                        id: guid,
+                        body: $scope.newMessage,
+                        createDateTime: now,
+                        userIdFrom: $scope.user.id,
+                        userIdTo: $scope.chosenChater.id
+                    }
+
+                ProfileService.SendMessageInChat(message, function (response) {
 
                     if (response.data.responseCode === 200) {
+                        $scope.userMessages.push(message);
+                        ScrollChatDown();
 
-                        AuthenticationService.SetCredentials(response.data);
-                        $scope.actualPhoneNumber = $rootScope.globals.currentUser.phonenumber;
-                        $rootScope.name = $rootScope.globals.currentUser.name;
-                        toastr.success('Your profile has been updated.', 'Success!');
-
-                        $scope.user.password = '';
+                        $scope.newMessage = null;
                     }
                     else {
-                        alert = $mdDialog.alert({
-                            title: "You shall not pass",
-                            textContent: response.data.message,
-                            ok: 'Close',
-                            clickOutsideToClose: true,
-                            targetEvent: ev
+                        toastr.error(response.data.message, "Error", {
+                            "timeOut": "5000",
+                            "extendedTImeout": "0"
                         });
-                        $mdDialog.show(alert);
-
-                        $scope.dataLoading = false;
                     }
                 });
             }
+
+            $scope.updateProfile = function (ev) {
+                debugger;
+                $scope.user.profileImageURL = $rootScope.globals.currentUser.profileImageURL;
+                UserService.Update($scope.user, function (response) {
+
+                    if (response.data.responseCode === 200) {
+                        debugger;
+                        AuthenticationService.SetCredentials(response.data);
+                        $rootScope.name = $rootScope.globals.currentUser.name;
+                        toastr.success('Your profile has been updated.', 'Success!');
+                        $scope.user.password = '';
+                    }
+                    else {
+                        toastr.error(response.data.message, "Error", {
+                            "timeOut": "5000",
+                            "extendedTImeout": "0"
+                        });
+                        $scope.user.password = '';
+                    }
+                });
+            }
+
         }])
+
 
 
 
 
 angular
     .module('directives', [])
-    .directive('uniqueField', ['$http','$rootScope', function ($http,$rootScope) {
+    .directive('uniqueField', ['$http', '$rootScope', function ($http, $rootScope) {
         var toId;
         return {
             restrict: 'A',
             require: 'ngModel',
             link: function (scope, elem, attr, ctrl) {
                 scope.$watch(attr.ngModel, function (inputValue) {
-
                     if (toId) clearTimeout(toId);
 
                     toId = setTimeout(function () {
@@ -648,3 +760,159 @@ angular
             }
         };
     })
+    .directive('setHeight', function ($window) {
+        return {
+            link: function (scope, element, attrs) {
+                element.css('height', $window.innerHeight * 0.6 + 'px');
+            }
+        }
+    })
+    .directive('ngImageCompress', ['$q', '$rootScope', function ($q, $rootScope) {
+
+
+            var URL = window.URL || window.webkitURL;
+
+            var getResizeArea = function() {
+                var resizeAreaId = 'fileupload-resize-area';
+
+                var resizeArea = document.getElementById(resizeAreaId);
+
+                if (!resizeArea) {
+                    resizeArea = document.createElement('canvas');
+                    resizeArea.id = resizeAreaId;
+                    resizeArea.style.visibility = 'hidden';
+                    document.body.appendChild(resizeArea);
+                }
+
+                return resizeArea;
+            };
+
+            /**
+             * Receives an Image Object (can be JPG OR PNG) and returns a new Image Object compressed
+             * @param {Image} sourceImgObj The source Image Object
+             * @param {Integer} quality The output quality of Image Object
+             * @return {Image} result_image_obj The compressed Image Object
+             */
+
+            var jicCompress = function(sourceImgObj, options) {
+                var outputFormat = options.resizeType;
+                var quality = options.resizeQuality * 100 || 70;
+                var mimeType = 'image/jpeg';
+                if (outputFormat !== undefined && outputFormat === 'png') {
+                    mimeType = 'image/png';
+                }
+
+
+                var maxHeight = options.resizeMaxHeight || 300;
+                var maxWidth = options.resizeMaxWidth || 250;
+
+                var height = sourceImgObj.height;
+                var width = sourceImgObj.width;
+
+                // calculate the width and height, constraining the proportions
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height = Math.round(height *= maxWidth / width);
+                        width = maxWidth;
+                    }
+                } else {
+                    if (height > maxHeight) {
+                        width = Math.round(width *= maxHeight / height);
+                        height = maxHeight;
+                    }
+                }
+
+                var cvs = document.createElement('canvas');
+                cvs.width = width; //sourceImgObj.naturalWidth;
+                cvs.height = height; //sourceImgObj.naturalHeight;
+                var ctx = cvs.getContext('2d').drawImage(sourceImgObj, 0, 0, width, height);
+                var newImageData = cvs.toDataURL(mimeType, quality / 100);
+                var resultImageObj = new Image();
+                resultImageObj.src = newImageData;
+                return resultImageObj.src;
+
+            };
+
+            var createImage = function(url, callback) {
+                var image = new Image();
+                image.onload = function() {
+                    callback(image);
+                };
+                image.src = url;
+            };
+
+            var fileToDataURL = function(file) {
+                var deferred = $q.defer();
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    deferred.resolve(e.target.result);
+                };
+                reader.readAsDataURL(file);
+                return deferred.promise;
+            };
+
+
+            return {
+                restrict: 'A',
+                scope: {
+                    //image: '=',
+                    resizeMaxHeight: '@?',
+                    resizeMaxWidth: '@?',
+                    resizeQuality: '@?',
+                    resizeType: '@?'
+                },
+                link: function (scope, element, attrs) {
+                    var doResizing = function(imageResult, callback) {
+                        createImage(imageResult.url, function(image) {
+                            var dataURLcompressed = jicCompress(image, scope);
+                            imageResult.compressed = {
+                                dataURL: dataURLcompressed,
+                                type: dataURLcompressed.match(/:(.+\/.+);/)[1]
+                            };
+                            callback(imageResult);
+                        });
+                    };
+
+                    var applyScope = function(imageResult) {
+                        scope.$apply(function() {
+                            if (attrs.multiple) {
+                                //scope.image.push(imageResult);
+                            } else {
+                                $rootScope.globals.currentUser.profileImageURL = imageResult.compressed.dataURL;
+                                //scope.image = imageResult;
+                            }
+                        });
+                    };
+
+
+                    element.bind('change', function(evt) {
+                        //when multiple always return an array of images
+                        if (attrs.multiple) {
+                            scope.image = [];
+                        }
+
+                        var files = evt.target.files;
+                        for (var i = 0; i < files.length; i++) {
+                            //create a result object for each file in files
+                            var imageResult = {
+                                file: files[i],
+                                url: URL.createObjectURL(files[i])
+                            };
+
+                            fileToDataURL(files[i]).then(function(dataURL) {
+                                imageResult.dataURL = dataURL;
+                            });
+
+                            if (scope.resizeMaxHeight || scope.resizeMaxWidth) { //resize image
+                                doResizing(imageResult, function(imageResult) {
+                                    applyScope(imageResult);
+                                });
+                            } else { //no resizing
+                                applyScope(imageResult);
+                            }
+                        }
+                    });
+                }
+            };
+        }
+    ]);

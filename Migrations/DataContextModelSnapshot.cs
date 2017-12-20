@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using RentApp.Models;
 using RentApp.Models.DbModels;
-using RentApp.Models.Structs;
 using System;
 
 namespace RentApp.Migrations
@@ -84,8 +83,6 @@ namespace RentApp.Migrations
 
                     b.Property<bool>("IsRead");
 
-                    b.Property<int>("MessageType");
-
                     b.Property<DateTime>("UpdateDate");
 
                     b.Property<Guid>("UserIdFrom");
@@ -119,6 +116,8 @@ namespace RentApp.Migrations
                     b.Property<string>("Password");
 
                     b.Property<string>("Phonenumber");
+
+                    b.Property<Guid?>("ProfileImageId");
 
                     b.Property<DateTime>("UpdateDate");
 

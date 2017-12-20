@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using RentApp.Managers;
 using System;
 using System.Threading.Tasks;
+using RentApp.Models.DbModels;
+using RentApp.Models.RequestModels;
 
 namespace RentApp.Controllers
 {
@@ -16,10 +18,22 @@ namespace RentApp.Controllers
             _profileManager = profileManager;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll(Guid id)
+        [HttpGet,Route("usermessages/{id}")]
+        public async Task<IActionResult> GetAllUserMessages(Guid id)
         {
-            var result = await _profileManager.GetAllUserMessages(id);
+            var result = await
+                Task.Factory.StartNew(() => _profileManager.GetAllUserMessages(id));
+            return Ok(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> SendMessage([FromBody]SendMessageRequest message)
+        {
+            if (message == null)
+            {
+                return BadRequest();
+            }
+            var result = await
+                Task.Factory.StartNew(() => _profileManager.SendMessage(message));
             return Ok(result);
         }
     }
