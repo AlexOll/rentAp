@@ -3,9 +3,18 @@
 .chosenChater {
     background-color: #F2F5F8;
 }
+.no-messages-h2 {
+    text-align:center;
+}
 
 .chat-table tr {
     vertical-align: top !important;
+}
+@media(max-width: 992px) {
+
+    .chat-table tr {
+        display:block;
+    }
 }
 
 .people-list {
@@ -105,7 +114,7 @@
 
         .chat .chat-history .message {
             color: white;
-            padding: 18px 20px;
+            padding: 10px 15px;
             line-height: 26px;
             font-size: 16px;
             border-radius: 7px;

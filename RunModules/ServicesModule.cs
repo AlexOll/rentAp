@@ -13,6 +13,8 @@ namespace RentApp.RunModules
             builder.RegisterType<UserManager>().AsSelf();
             builder.RegisterType<UserRepository>().AsSelf();
 
+            builder.RegisterType<AuthenticationManager>().AsSelf();
+
             builder.RegisterType<FlatCache>().AsSelf();
             builder.RegisterType<FlatManager>().AsSelf();
             builder.RegisterType<FlatRepository>().AsSelf();
@@ -22,8 +24,6 @@ namespace RentApp.RunModules
             builder.RegisterType<MessageCache>().AsSelf();
             builder.RegisterType<ProfileManager>().AsSelf();
             builder.RegisterType<MessageRepository>().AsSelf();
-            
-
 
         }
     }

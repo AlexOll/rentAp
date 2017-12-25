@@ -2,12 +2,12 @@
     'use strict';
 
     angular
-        .module('utilities',[])
+        .module('utilities')
         .factory('GuidUtility', GuidUtility);
 
     GuidUtility.$inject = [];
 
-    function GuidUtility($q, photoManagerClient, appInfo) {
+    function GuidUtility() {
         var service = {
             createGuid: createGuid
         };

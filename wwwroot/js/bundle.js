@@ -1,13 +1,22 @@
 (function () {
+
+    'use strict';
+
+    angular.module('utilities', []);
+
+})();
+
+
+(function () {
     'use strict';
 
     angular
-        .module('utilities',[])
+        .module('utilities')
         .factory('GuidUtility', GuidUtility);
 
     GuidUtility.$inject = [];
 
-    function GuidUtility($q, photoManagerClient, appInfo) {
+    function GuidUtility() {
         var service = {
             createGuid: createGuid
         };
@@ -23,6 +32,38 @@
         }
     }
 })();
+(function () {
+    'use strict';
+
+    angular
+        .module('utilities')
+        .factory('HubUtility', HubUtility);
+
+    HubUtility.$inject = ['$rootScope'];
+
+    function HubUtility($rootScope) {
+        var service = {
+            initConnection: initConnection,
+            messageSent : messageSent
+        };
+
+        return service;
+
+        function initConnection() {
+            $rootScope.hubConnection = new signalR.HubConnection('/mainHub');
+            $rootScope.hubConnection.start().then(
+                function () {
+                    $rootScope.hubConnection.invoke("InitConnection", $rootScope.globals.currentUser.id);
+                });
+        }
+
+        function messageSent(callback) {
+            $rootScope.hubConnection.on('messageSent', msg => callback(msg));
+        }
+
+        
+    }
+})();
 class ProfileService {
     constructor($http) {
         this.$http = $http;
@@ -33,7 +74,7 @@ class ProfileService {
             .then(res => callback(res));
     }
 
-    SendMessageInChat(message, callback) {
+    SendChatMessage(message, callback) {
         return this.$http.post('/api/profile', {
             "Id": message.id,
             "UserIdFrom": message.userIdFrom,
@@ -123,6 +164,12 @@ class UserService {
         })
             .then(res => callback(res));
     }
+
+    UpdateOnlineStatus(id) {
+        return this.$http.put('/api/user/updateonlinestatus/' + id)
+        .then();
+    }
+
 }
 
 
@@ -173,6 +220,7 @@ class AuthenticationService {
     //    return result;
     //}
     SetCredentials(user) {
+
         var input = user.email + ':' + user.id;
         var authdata = this.Base64Encode(input);
 
@@ -293,8 +341,8 @@ angular.module('services', ['ngRoute','ngCookies'])
 
 
 angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
-    .controller('loginCtrl', ['$scope', '$location', '$mdDialog', 'AuthenticationService', 'toastr',
-        function ($scope, $location, $mdDialog, AuthenticationService, toastr) {
+    .controller('loginCtrl', ['$scope', '$location', '$mdDialog', 'AuthenticationService', 'toastr', 'HubUtility',
+        function ($scope, $location, $mdDialog, AuthenticationService, toastr, HubUtility) {
 
             var searchObject = $location.search().activationcode;
             if (searchObject) {
@@ -321,6 +369,7 @@ angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
 
                     if (response.data.responseCode === 200) {
                         AuthenticationService.SetCredentials(response.data);
+                        HubUtility.initConnection();
                         toastr.success('Authentication succeeded', 'Have fun!');
                         $location.path('/');
                     }
@@ -466,13 +515,44 @@ angular.module('myApp.home', ['ngRoute', 'directives'])
 
 angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 'base64', 'utilities'])
     .controller('profileCtrl',
-    ['$rootScope', '$scope', 'UserService', 'AuthenticationService', 'toastr', '$timeout', 'AnchorSmoothScrollService', '$base64', 'ProfileService', 'GuidUtility',
-        function ($rootScope, $scope, UserService, AuthenticationService, toastr, $timeout, AnchorSmoothScrollService, $base64, ProfileService, GuidUtility) {
+    ['$rootScope', '$scope', 'UserService', 'AuthenticationService', 'toastr', '$timeout', 'AnchorSmoothScrollService', '$base64', 'ProfileService', 'GuidUtility', 'HubUtility',
+        function ($rootScope, $scope, UserService, AuthenticationService, toastr, $timeout, AnchorSmoothScrollService, $base64, ProfileService, GuidUtility, HubUtility) {
+
+            $scope.user = angular.copy($rootScope.globals.currentUser);
+
+            //$scope.userMessages = [
+            //    { id: "111", body: "Hi to ME", createDateTime: "10:00 AM, Today", isRead: false, userIdFrom: "1ca88925-5ee3-4278-8808-d1229726af60", userIdTo: $scope.user.id },
+            //    { id: "121", body: "Hi to U", createDateTime: "10:10 AM, Today", isRead: true, userIdFrom: $scope.user.id, userIdTo: "1ca88925-5ee3-4278-8808-d1229726af60" },
+            //    { id: "131", body: "Hi to ME", createDateTime: "10:14 AM, Today", isRead: true, userIdFrom: "1ca88925-5ee3-4278-8808-d1229726af60", userIdTo: $scope.user.id },
+            //    { id: "141", body: "Hi to ME", createDateTime: "10:18 AM, Today", isRead: true, userIdFrom: "1ca88925-5ee3-4278-8808-d1229726af60", userIdTo: $scope.user.id },
+            //    { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1ca88925-5ee3-4278-8808-d1229726af60" },
+            //    { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1211111" },
+            //    { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1311111" },
+            //    { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1411111" },
+            //    { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1511111" },
+            //    { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: "1511111", userIdTo: $scope.user.id }
+            //]
+
+            //$scope.chatUsers = [
+            //    { id: "1ca88925-5ee3-4278-8808-d1229726af60", name: "John Brown", isOnline: true, profileImageURL: "../../img/chat_avatars/chat_avatar_01.jpg", lastEntrance: "online" },
+            //    { id: "1211111", name: "John2", isOnline: true, profileImageURL: "../../img/chat_avatars/chat_avatar_02.jpg", lastEntrance: "online" },
+            //    { id: "1311111", name: "John3", isOnline: false, profileImageURL: "../../img/chat_avatars/chat_avatar_03.jpg", lastEntrance: " left 7 mins ago " },
+            //    { id: "1411111", name: "John4", isOnline: false, profileImageURL: "../../img/chat_avatars/chat_avatar_04.jpg", lastEntrance: " left 7 mins ago " },
+            //    { id: "1511111", name: "John5", isOnline: false, profileImageURL: "../../img/chat_avatars/chat_avatar_05.jpg", lastEntrance: " left 7 mins ago " }
+            //]
+
+
+            HubUtility.messageSent(function (msg) {
+                $scope.userMessages.push(msg);
+                $scope.$apply();
+                ScrollChatDown();
+            });
 
             function ScrollChatDown() {
                 $timeout(function () {
                     var objDiv = angular.element(document.querySelector('.chat-history'))[0];
-                    objDiv.scrollTop = objDiv.scrollHeight;
+                    if (objDiv)
+                        objDiv.scrollTop = objDiv.scrollHeight;
                 }, 200);
             }
 
@@ -484,29 +564,6 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
                     $scope.watchDogH = angular.element(document.querySelector('#watchDog'))[0].offsetTop;
                 }
             }, 1000);
-
-            $scope.user = angular.copy($rootScope.globals.currentUser);
-
-            $scope.userMessages = [
-                { id: "111", body: "Hi to ME", createDateTime: "10:00 AM, Today", isRead: false, userIdFrom: "1ca88925-5ee3-4278-8808-d1229726af60", userIdTo: $scope.user.id },
-                { id: "121", body: "Hi to U", createDateTime: "10:10 AM, Today", isRead: true, userIdFrom: $scope.user.id, userIdTo: "1ca88925-5ee3-4278-8808-d1229726af60" },
-                { id: "131", body: "Hi to ME", createDateTime: "10:14 AM, Today", isRead: true, userIdFrom: "1ca88925-5ee3-4278-8808-d1229726af60", userIdTo: $scope.user.id },
-                { id: "141", body: "Hi to ME", createDateTime: "10:18 AM, Today", isRead: true, userIdFrom: "1ca88925-5ee3-4278-8808-d1229726af60", userIdTo: $scope.user.id },
-                { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1ca88925-5ee3-4278-8808-d1229726af60" },
-                { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1211111" },
-                { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1311111" },
-                { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1411111" },
-                { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1511111" },
-                { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: "1511111", userIdTo: $scope.user.id }
-            ]
-
-            $scope.chatUsers = [
-                { id: "1ca88925-5ee3-4278-8808-d1229726af60", name: "John Brown", isOnline: true, profileImageURL: "../../img/chat_avatars/chat_avatar_01.jpg", lastEntrance: "online" },
-                { id: "1211111", name: "John2", isOnline: true, profileImageURL: "../../img/chat_avatars/chat_avatar_02.jpg", lastEntrance: "online" },
-                { id: "1311111", name: "John3", isOnline: false, profileImageURL: "../../img/chat_avatars/chat_avatar_03.jpg", lastEntrance: " left 7 mins ago " },
-                { id: "1411111", name: "John4", isOnline: false, profileImageURL: "../../img/chat_avatars/chat_avatar_04.jpg", lastEntrance: " left 7 mins ago " },
-                { id: "1511111", name: "John5", isOnline: false, profileImageURL: "../../img/chat_avatars/chat_avatar_05.jpg", lastEntrance: " left 7 mins ago " }
-            ]
 
             ProfileService.GetUserMessages($scope.user.id, function (response) {
 
@@ -525,8 +582,6 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
                 }
             });
 
-
-
             $scope.chooseChater = function (user) {
                 $scope.chosenChater = user;
                 $timeout(function () {
@@ -537,7 +592,7 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
                 }, 500);
             }
 
-            $scope.sendMessageInChat = function () {
+            $scope.sendChatMessage = function () {
                 var now = new Date();
                 var guid = GuidUtility.createGuid();
                 var message =
@@ -549,9 +604,10 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
                         userIdTo: $scope.chosenChater.id
                     }
 
-                ProfileService.SendMessageInChat(message, function (response) {
+                ProfileService.SendChatMessage(message, function (response) {
 
                     if (response.data.responseCode === 200) {
+
                         $scope.userMessages.push(message);
                         ScrollChatDown();
 
@@ -566,7 +622,22 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
                 });
             }
 
+            $scope.getMessageCreateDateTime = function (dateTime) {
+                var actual = new Date(dateTime);
+                var now = new Date();
+                var diff = (now - actual) / 60 / 1000;
+                if (diff < 1)
+                    return "Just sent"
+                else if (diff < 60) //less than an hour
+                    return parseInt(diff) + " minutes ago"
+                else if (diff < 60 * 24) //less than 24 hours
+                    return actual.getHours() + ":" + actual.getMinutes()
+                else
+                    return actual;
+            }
+
             $scope.updateProfile = function (ev) {
+                debugger;
                 $scope.dataLoading = true;
                 $scope.user.profileImageURL = $rootScope.globals.currentUser.profileImageURL;
                 UserService.Update($scope.user, function (response) {
@@ -607,11 +678,12 @@ angular
 
                     toId = setTimeout(function () {
                         ctrl.$setValidity('duplicate', true);
-                        if (inputValue === $rootScope.globals.currentUser.phonenumber) {
-                            return;
-                        }
+                        
                         if (inputValue && !ctrl.$error.pattern) {
-
+                            if ($rootScope.globals.currentUser &&
+                                inputValue === $rootScope.globals.currentUser.phonenumber) {
+                                return;
+                            }
                             var url = '';
                             if (attr.id === "phonenumber")
                                 url = '/api/user/phonenumbercheck'
@@ -686,7 +758,7 @@ angular
                     }
                 }
 
-                if (scope.gPlace == undefined) {
+                if (scope.gPlace === undefined) {
                     scope.gPlace = new google.maps.places.Autocomplete(element[0], {});
                 }
                 google.maps.event.addListener(scope.gPlace, 'place_changed', function () {
@@ -723,7 +795,7 @@ angular
                                 offset: result.name.length
                             },
                             function listentoresult(list, status) {
-                                if (list == null || list.length == 0) {
+                                if (list === null || list.length === 0) {
 
                                     scope.$apply(function () {
                                         scope.details = null;
@@ -735,7 +807,7 @@ angular
                                         { 'reference': list[0].reference },
                                         function detailsresult(detailsResult, placesServiceStatus) {
 
-                                            if (placesServiceStatus == google.maps.GeocoderStatus.OK) {
+                                            if (placesServiceStatus === google.maps.GeocoderStatus.OK) {
                                                 scope.$apply(function () {
 
                                                     ctrl.$setViewValue(detailsResult.formatted_address);

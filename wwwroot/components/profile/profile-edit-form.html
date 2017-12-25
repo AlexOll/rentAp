@@ -1,5 +1,6 @@
 <br />
-<h2 class="mb-3">Edit profile</h2>
+<h4 class="mb-3" ng-show="isSmallResolution">Edit profile</h4>
+
 <form name="form" ng-submit="updateProfile($event)" role="form">
     <div class="form-group">
         <div class="upload-btn-wrapper">
@@ -9,7 +10,7 @@
         </div>
         <br />
         <br />
-        <img ng-show="isSmallResolution" class="img-fluid img-profile rounded-circle mx-auto mb-2" 
+        <img ng-show="isSmallResolution" class="img-fluid img-profile rounded-circle mx-auto mb-2"
              ng-src="{{globals.currentUser.profileImageURL || '../../img/profile/profile.jpg'}}" />
 
     </div>

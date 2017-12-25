@@ -11,11 +11,12 @@
 
                     toId = setTimeout(function () {
                         ctrl.$setValidity('duplicate', true);
-                        if (inputValue === $rootScope.globals.currentUser.phonenumber) {
-                            return;
-                        }
+                        
                         if (inputValue && !ctrl.$error.pattern) {
-
+                            if ($rootScope.globals.currentUser &&
+                                inputValue === $rootScope.globals.currentUser.phonenumber) {
+                                return;
+                            }
                             var url = '';
                             if (attr.id === "phonenumber")
                                 url = '/api/user/phonenumbercheck'
@@ -90,7 +91,7 @@
                     }
                 }
 
-                if (scope.gPlace == undefined) {
+                if (scope.gPlace === undefined) {
                     scope.gPlace = new google.maps.places.Autocomplete(element[0], {});
                 }
                 google.maps.event.addListener(scope.gPlace, 'place_changed', function () {
@@ -127,7 +128,7 @@
                                 offset: result.name.length
                             },
                             function listentoresult(list, status) {
-                                if (list == null || list.length == 0) {
+                                if (list === null || list.length === 0) {
 
                                     scope.$apply(function () {
                                         scope.details = null;
@@ -139,7 +140,7 @@
                                         { 'reference': list[0].reference },
                                         function detailsresult(detailsResult, placesServiceStatus) {
 
-                                            if (placesServiceStatus == google.maps.GeocoderStatus.OK) {
+                                            if (placesServiceStatus === google.maps.GeocoderStatus.OK) {
                                                 scope.$apply(function () {
 
                                                     ctrl.$setViewValue(detailsResult.formatted_address);

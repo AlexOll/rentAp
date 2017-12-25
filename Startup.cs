@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RentApp.Cache;
+using RentApp.Hubs;
 using RentApp.Models;
 using System;
 using System.IO;
@@ -27,6 +28,7 @@ namespace RentApp
             services.AddDbContext<DataContext>(opt => opt.UseSqlServer(connection),ServiceLifetime.Transient);
 
             services.AddMvc();
+            services.AddSignalR();
 
             var builder = new ContainerBuilder();
             builder.RegisterAssemblyModules(GetType().GetTypeInfo().Assembly);
@@ -64,6 +66,10 @@ namespace RentApp
             });
 
             app.UseStaticFiles();
+            app.UseSignalR(router =>
+            {
+                router.MapHub<MainHub>("mainHub");
+            });
 
             if (env.IsDevelopment())
             {

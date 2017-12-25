@@ -4,15 +4,16 @@ using MimeKit;
 using RentApp.Models.DbModels;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using RentApp.Models.Interfaces;
 
 namespace RentApp.Utilities
 {
     public class EmailUtility
     {
-        private User _user;
+        private IUser _user;
 
 
-        public EmailUtility(User user)
+        public EmailUtility(IUser user)
         {
             _user = user;
         }

@@ -1,4 +1,5 @@
-﻿<table class="container clearfix chat-table">
+﻿<h2 ng-show="chatUsers.length==0" class="no-messages-h2" ng-cloak>No messages found</h2>
+<table ng-show="chatUsers.length!=0" class="container clearfix chat-table" ng-cloak>
     <tr>
         <td class="people-list" id="people-list">
             <div class="search">
@@ -6,8 +7,8 @@
                 <i class="fa fa-search"></i>
             </div>
             <ul class="list">
-                <li class="clearfix" ng-class="chater.id==chosenChater.id ? 'chosenChater' : ''" ng-repeat="chater in chatUsers" ng-click="chooseChater(chater)" >
-                    <img class="rounded-circle"  ng-src="{{chater.profileImageURL || '../../img/profile/profile.jpg'}}" />
+                <li class="clearfix" ng-class="chater.id==chosenChater.id ? 'chosenChater' : ''" ng-repeat="chater in chatUsers" ng-click="chooseChater(chater)">
+                    <img class="rounded-circle" ng-src="{{chater.profileImageURL || '../../img/profile/profile.jpg'}}" />
                     <div class="about">
                         <div class="name">{{chater.name}}</div>
                         <div class="status online" ng-class="chater.isOnline ? 'online' : 'offline'"> {{chater.lastEntrance}} </div>
@@ -20,17 +21,16 @@
             <div id="chat-header" class="chat-header clearfix">
 
                 <div class="chat-about">
-                    <div class="chat-with">Chat with {{chosenChater.name}}</div>
+                    <div class="chat-with">chat with <b>{{chosenChater.name | uppercase}}</b></div>
                 </div>
                 <i class="fa fa-star"></i>
             </div>
             <div id="chat-history" class="chat-history" set-height>
                 <ul>
-                    <li ng-class="message.userIdTo == chosenChater.id ? 'clearfix' : ''" ng-repeat="message in userMessages | filter:chosenChater.id:strict"
-                        ng-attr-id="{{$last ? 'last-message' : message.messageId}}">
+                    <li ng-class="message.userIdTo == chosenChater.id ? 'clearfix' : ''" ng-repeat="message in userMessages | filter:chosenChater.id:strict">
                         <div class="message-data" ng-class="message.userIdTo == chosenChater.id ? 'align-right' : '' ">
-                            <span class="message-data-time">{{message.createDateTime}}</span>
-                            <span class="message-data-name">{{message.userIdTo == chosenChater.id ? 'ME' : chosenChater.name }}</span>
+                            <span class="message-data-time">{{getMessageCreateDateTime(message.createDateTime)}}</span>
+                            <span ng-show="!isSmallResolution" class="message-data-name">- {{message.userIdTo == chosenChater.id ? 'ME' : chosenChater.name }}</span>
                         </div>
                         <div class="message" ng-class="message.userIdTo == chosenChater.id ? 'my-message float-right' : 'other-message'">
                             {{message.body}}
@@ -42,10 +42,10 @@
             <div class="chat-message clearfix">
                 <textarea name="message-to-send" id="message-to-send" ng-model="$parent.newMessage" placeholder="Type your message" rows="2"></textarea>
                 <div id="chat-button-div">
-                    <button ng-click="sendMessageInChat()" ng-show="$parent.newMessage"><b>Send</b></button>
+                    <button ng-click="sendChatMessage()" ng-show="$parent.newMessage"><b>Send</b></button>
                     <button id="chat-button-attach">Attach</button>
                 </div>
-            </div> 
+            </div>
 
         </td>
 

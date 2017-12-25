@@ -13,8 +13,10 @@ namespace RentApp.Models.ResponseModels
         public string Lastname { get; set; }
         public string Name { get; set; }
         public string ProfileImageURL { get; set; }
+        public DateTime LastOnlineDateTime { get; set; }
+        
 
-        public AuthenticationResponse(User model)
+        public AuthenticationResponse(UserCacheItem model)
         {
             Id = model.Id;
             Phonenumber = model.Phonenumber;
@@ -22,8 +24,11 @@ namespace RentApp.Models.ResponseModels
             Firstname = model.Firstname;
             Lastname = model.Lastname;
             Name = model.Firstname+" "+ model.Lastname;
+
             var imageUtility = new ImageUtility();
             ProfileImageURL = imageUtility.GetUploadedImageUrl(model.ProfileImageId);
+
+            LastOnlineDateTime = model.LastOnlineDateTime;
         }
     }
 }

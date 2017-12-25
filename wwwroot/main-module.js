@@ -40,12 +40,17 @@ angular
             })
             .otherwise({ redirectTo: '/' })
     }])
-    .run(['$rootScope', '$location', '$cookies', '$http', '$window', '$interval',
-        function ($rootScope, $location, $cookies, $http, $window, $interval) {
+    .run(['$rootScope', '$location', '$cookies', '$http', '$window', '$interval', 'UserService', 'HubUtility',
+        function ($rootScope, $location, $cookies, $http, $window, $interval, UserService, HubUtility) {
+
+            $rootScope.isSmallResolution = $window.innerWidth <= 992;
 
             $rootScope.globals = $cookies.getObject('globals') || {};
             if ($rootScope.globals.currentUser) {
                 $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata;
+
+                HubUtility.initConnection();
+
             }
 
             function onScroll() {
@@ -54,7 +59,7 @@ angular
             }
 
             $rootScope.$on('$locationChangeStart', function (event, next, current) {
-                
+
                 $rootScope.loggedIn = $rootScope.globals.currentUser;
 
                 if ($rootScope.loggedIn)
@@ -64,19 +69,14 @@ angular
                 if (!isRestrictedPage && !$rootScope.loggedIn)
                     $location.path('/login');
 
-                $rootScope.isSmallResolution = $window.innerWidth <= 992;
+                $interval(function () {
+                    UserService.UpdateOnlineStatus($rootScope.globals.currentUser.id);
+                }, 60000);
 
-                if (!$rootScope.isSmallResolution && $location.path() === '/profile') {
+                if (!$rootScope.isSmallResolution && $location.path() === '/profile')
                     angular.element($window).on('scroll', onScroll);
-                    stop = $interval(function () {
-                        console.log("5 sec")
-                    }, 5000);
-                }
-                else {
+                else
                     angular.element($window).off('scroll', onScroll);
-                    $interval.cancel(stop);
-                    stop = undefined;
-                }
 
                 if ($rootScope.isSmallResolution)
                     $('.navbar-collapse').collapse('hide');
@@ -84,6 +84,7 @@ angular
         }])
     .controller('mainCtrl', ['$scope', '$rootScope', '$location', '$timeout', 'AnchorSmoothScrollService', 'AuthenticationService',
         function ($scope, $rootScope, $location, $timeout, AnchorSmoothScrollService, AuthenticationService, $window) {
+
             $scope.gotoElement = function (eID) {
 
                 if ($rootScope.isSmallResolution) {

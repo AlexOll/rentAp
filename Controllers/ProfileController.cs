@@ -18,13 +18,14 @@ namespace RentApp.Controllers
             _profileManager = profileManager;
         }
 
-        [HttpGet,Route("usermessages/{id}")]
+        [HttpGet, Route("usermessages/{id}")]
         public async Task<IActionResult> GetAllUserMessages(Guid id)
         {
             var result = await
                 Task.Factory.StartNew(() => _profileManager.GetAllUserMessages(id));
             return Ok(result);
         }
+
         [HttpPost]
         public async Task<IActionResult> SendMessage([FromBody]SendMessageRequest message)
         {
@@ -32,8 +33,8 @@ namespace RentApp.Controllers
             {
                 return BadRequest();
             }
-            var result = await
-                Task.Factory.StartNew(() => _profileManager.SendMessage(message));
+            var result = await _profileManager.SendMessage(message);
+
             return Ok(result);
         }
     }

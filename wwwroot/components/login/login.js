@@ -1,7 +1,7 @@
 
 angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
-    .controller('loginCtrl', ['$scope', '$location', '$mdDialog', 'AuthenticationService', 'toastr',
-        function ($scope, $location, $mdDialog, AuthenticationService, toastr) {
+    .controller('loginCtrl', ['$scope', '$location', '$mdDialog', 'AuthenticationService', 'toastr', 'HubUtility',
+        function ($scope, $location, $mdDialog, AuthenticationService, toastr, HubUtility) {
 
             var searchObject = $location.search().activationcode;
             if (searchObject) {
@@ -28,6 +28,7 @@ angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
 
                     if (response.data.responseCode === 200) {
                         AuthenticationService.SetCredentials(response.data);
+                        HubUtility.initConnection();
                         toastr.success('Authentication succeeded', 'Have fun!');
                         $location.path('/');
                     }

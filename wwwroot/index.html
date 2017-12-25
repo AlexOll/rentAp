@@ -26,10 +26,11 @@
     <script src="lib/popper.js/dist/umd/popper.min.js"></script>
     <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="lib/angular-base64/angular-base64.min.js"></script>
+    <script src="js/signalr-client-1.0.0-alpha2-final.js"></script>
+    <script src="js/signalr-msgpackprotocol-1.0.0-alpha2-final.js"></script>
 
     <script src="js/bundle.js"></script>
     <script src="main-module.js"></script>
-
     <base href="/">
 </head>
 <body ng-controller="mainCtrl">
@@ -43,7 +44,7 @@
 
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto nav navbar-right">
-                    
+
                     <li class="nav-item" ng-show="loggedIn">
                         <a class="nav-link" href="/profile"><b> {{name}}'s profile</b></a>
                         <div ng-show="isSmallResolution" ng-include src="'components/profile/profile-nav-bar.html'"></div>

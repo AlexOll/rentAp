@@ -7,10 +7,7 @@ using Microsoft.AspNetCore.Http;
 using RentApp.Cache;
 using System.Linq;
 using RentApp.Utilities;
-using System.Text;
-using System.IO;
-using System.Drawing;
-using System.Drawing.Imaging;
+using RentApp.Models.Interfaces;
 
 namespace RentApp.Managers
 {
@@ -21,25 +18,6 @@ namespace RentApp.Managers
         public UserManager(UserRepository userRepository)
         {
             _userRepository = userRepository;
-        }
-
-        internal BaseResponse ActivateAccountByGuid(Guid value)
-        {
-            var foundUser = UserCache.CachedItems.Values
-                .FirstOrDefault(f => f.ActivationCode == value && !f.IsActivated);
-
-            if (foundUser != null)
-            {
-                foundUser.IsActivated = true;
-                _userRepository.Update(foundUser);
-                return (AuthenticationResponse)foundUser;
-            }
-
-            return new BaseResponse
-            {
-                Message = "Activation code failed",
-                ResponseCode = StatusCodes.Status406NotAcceptable
-            };
         }
 
         internal BaseResponse Create(User item)
@@ -65,16 +43,19 @@ namespace RentApp.Managers
                     ResponseCode = StatusCodes.Status406NotAcceptable
                 };
             }
-            item.Id = Guid.NewGuid();
-            item.ActivationCode = Guid.NewGuid();
-            item.CreateDateTime = DateTime.Now;
 
             _userRepository.Create(item);
 
-            var emailManager = new EmailUtility(item);
+            var emailManager = new EmailUtility((IUser)item);
             emailManager.SendActivationEmail();
 
             return new BaseResponse();
+        }
+
+        internal void UpdateOnlineStatus(Guid value)
+        {
+            UserCache.CachedItems[value].LastOnlineDateTime = DateTime.Now;
+            //UserCache.CachedItems[value].ConnectionId = Context.ConnectionId;
         }
 
         internal BaseResponse Update(UpdateUserRequest item)
@@ -126,50 +107,9 @@ namespace RentApp.Managers
             foundUser.Phonenumber = item.Phonenumber;
             foundUser.ProfileImageId = imageId;
 
-            _userRepository.Update(foundUser);
+            _userRepository.Update(foundUser.GetDbModel());
 
             return (AuthenticationResponse)UserCache.CachedItems[item.Id];
-        }
-
-        internal BaseResponse ResendActivationCode(string email)
-        {
-            var foundUser = UserCache.CachedItems.Values.FirstOrDefault(a => a.Email == email && !a.IsActivated);
-
-            if (foundUser != null)
-            {
-                foundUser.ActivationCode = Guid.NewGuid();
-
-                var emailManager = new EmailUtility(foundUser);
-                emailManager.SendActivationEmail();
-
-                _userRepository.Update(foundUser);
-
-                return new BaseResponse();
-            }
-            else
-            {
-                return new BaseResponse
-                {
-                    Message = "Account not exists",
-                    ResponseCode = StatusCodes.Status406NotAcceptable
-                };
-            }
-        }
-
-        internal void RemindPasswordByEmail(string email)
-        {
-            var foundUser = UserCache.CachedItems.Values.FirstOrDefault(a => a.Email == email);
-
-            if (foundUser != null)
-            {
-                var newPassword = PasswordUtility.GenerateRandomPassword();
-                foundUser.Password = newPassword;
-
-                var emailManager = new EmailUtility(foundUser);
-                emailManager.SendNewPasswordForUser(newPassword);
-
-                _userRepository.Update(foundUser);
-            }
         }
 
         internal bool CheckEmail(string value)
@@ -182,29 +122,6 @@ namespace RentApp.Managers
             return UserCache.CachedItems.Values.Any(a => a.Phonenumber == value);
         }
 
-        internal BaseResponse Authenticate(AuthenticationRequest inputUser)
-        {
-            var foundUser = UserCache.CachedItems.Values
-                    .FirstOrDefault(a =>
-                        (a.Phonenumber == inputUser.Input || a.Email == inputUser.Input) &&
-                        a.Password == inputUser.Password);
-
-            if (foundUser != null)
-            {
-                if (foundUser.IsActivated)
-                    return (AuthenticationResponse)foundUser;
-                else
-                    return new BaseResponse
-                    {
-                        Message = "Account is not activated. Check your email - " + foundUser.Email,
-                        ResponseCode = StatusCodes.Status406NotAcceptable
-                    };
-            }
-            return new BaseResponse
-            {
-                Message = "Account not exists",
-                ResponseCode = StatusCodes.Status404NotFound
-            };
-        }
+        
     }
 }

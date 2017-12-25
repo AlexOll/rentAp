@@ -45,6 +45,7 @@
     //    return result;
     //}
     SetCredentials(user) {
+
         var input = user.email + ':' + user.id;
         var authdata = this.Base64Encode(input);
 

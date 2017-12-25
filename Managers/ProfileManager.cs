@@ -1,4 +1,6 @@
-﻿using RentApp.Cache;
+﻿using Microsoft.AspNetCore.SignalR;
+using RentApp.Cache;
+using RentApp.Hubs;
 using RentApp.Models.DbModels;
 using RentApp.Models.RequestModels;
 using RentApp.Models.ResponseModels;
@@ -6,16 +8,19 @@ using RentApp.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RentApp.Managers
 {
     public class ProfileManager
     {
         MessageRepository _messageRepository;
+        IHubContext<MainHub> _hubContext;
 
-        public ProfileManager(MessageRepository messageRepository)
+        public ProfileManager(MessageRepository messageRepository, IHubContext<MainHub> hubContext)
         {
             _messageRepository = messageRepository;
+            _hubContext = hubContext;
         }
 
         internal UserMessagesResponse GetAllUserMessages(Guid userId)
@@ -41,10 +46,15 @@ namespace RentApp.Managers
             return new UserMessagesResponse(messageList, userList);
         }
 
-        internal BaseResponse SendMessage(SendMessageRequest messageRequest)
+        internal async Task<BaseResponse> SendMessage(SendMessageRequest messageRequest)
         {
             var message = messageRequest.CreateDbModel();
             _messageRepository.Create(message);
+
+            UserCache.CachedItems.TryGetValue(message.UserIdTo, out UserCacheItem result);
+
+           await _hubContext.Clients.Client(result?.ConnectionId.ToString())
+                .InvokeAsync("messageSent", new MessageResponse(message));
 
             return new BaseResponse();
         }

@@ -5,13 +5,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\img\chat_avatars\**" />
     <Compile Remove="wwwroot\lib\**" />
+    <Content Remove="wwwroot\img\chat_avatars\**" />
     <Content Remove="wwwroot\lib\**" />
+    <EmbeddedResource Remove="wwwroot\img\chat_avatars\**" />
     <EmbeddedResource Remove="wwwroot\lib\**" />
+    <None Remove="wwwroot\img\chat_avatars\**" />
     <None Remove="wwwroot\lib\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Hubs\ConnectionMapping.cs" />
+    <Compile Remove="Hubs\OnlineStatusHub.cs" />
+    <Compile Remove="Models\RequestModels\CreateUserRequest.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\css\table-messages.css" />
     <Content Remove="wwwroot\js\chat.js" />
   </ItemGroup>
   <ItemGroup>
@@ -23,8 +34,10 @@
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
     <PackageReference Include="Bower" Version="1.3.11" />
     <PackageReference Include="BuildBundlerMinifier" Version="2.6.362" />
+    <PackageReference Include="CoreCompat.System.Drawing" Version="1.0.0-beta006" />
     <PackageReference Include="MailKit" Version="1.20.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.0-alpha2-final" />
   </ItemGroup>
 
   <ItemGroup>

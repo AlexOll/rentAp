@@ -8,7 +8,7 @@
             .then(res => callback(res));
     }
 
-    SendMessageInChat(message, callback) {
+    SendChatMessage(message, callback) {
         return this.$http.post('/api/profile', {
             "Id": message.id,
             "UserIdFrom": message.userIdFrom,

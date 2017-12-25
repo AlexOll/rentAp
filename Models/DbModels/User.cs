@@ -1,6 +1,7 @@
 ﻿using RentApp.Models.ResponseModels;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RentApp.Models.DbModels
 {
@@ -20,10 +21,11 @@ namespace RentApp.Models.DbModels
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDate { get; set; }
 
-        public static explicit operator AuthenticationResponse(User model)
+        public static explicit operator UserCacheItem(User model)
         {
-            return new AuthenticationResponse(model);
+            return new UserCacheItem(model);
         }
+
     }
 
 }

@@ -12,18 +12,18 @@ namespace RentApp.Controllers
     public class AuthenticationController : ApiController
     {
 
-        private readonly UserManager _userManager;
+        private readonly AuthenticationManager _authenticationManager;
 
-        public AuthenticationController(UserManager userManager)
+        public AuthenticationController(AuthenticationManager authenticationManager)
         {
-            _userManager = userManager;
+            _authenticationManager = authenticationManager;
         }
 
         [HttpGet, Route("{id}")]
         [ProducesResponseType(typeof(bool), 200)]
         public async Task<IActionResult> ActivateAccount([FromRoute]Guid id)
         {
-            var result = await Task.Factory.StartNew(() => _userManager.ActivateAccountByGuid(id));
+            var result = await Task.Factory.StartNew(() => _authenticationManager.ActivateAccountByGuid(id));
 
             return Ok(result);
         }
@@ -36,7 +36,7 @@ namespace RentApp.Controllers
                 return BadRequest();
             }
 
-            var result = await Task.Factory.StartNew(() => _userManager.Authenticate(input));
+            var result = await Task.Factory.StartNew(() => _authenticationManager.Authenticate(input));
 
             return Ok(result);
         }
@@ -49,7 +49,7 @@ namespace RentApp.Controllers
                 return BadRequest();
             }
 
-            await Task.Factory.StartNew(() => _userManager.RemindPasswordByEmail(email));
+            await Task.Factory.StartNew(() => _authenticationManager.RemindPasswordByEmail(email));
 
             return NoContent();
         }
@@ -62,7 +62,7 @@ namespace RentApp.Controllers
                 return BadRequest();
             }
 
-            await Task.Factory.StartNew(() => _userManager.ResendActivationCode(email));
+            await Task.Factory.StartNew(() => _authenticationManager.ResendActivationCode(email));
 
             return NoContent();
         }
