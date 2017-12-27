@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RentApp.Models.DbModels
+namespace RentApp.Models.Structs
 {
-    public enum PropertyTypes
+    public enum PropertyType
     {
         Appartment = 1,
         House,
