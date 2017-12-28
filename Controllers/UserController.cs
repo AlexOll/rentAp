@@ -34,14 +34,6 @@ namespace RentApp.Controllers
 
             return Ok(result);
         }
-
-        [HttpPut, Route("updateonlinestatus/{value}")]
-        public async Task<IActionResult> UpdateOnlineStatus([FromRoute]Guid value)
-        {
-            await Task.Factory.StartNew(() => _userManager.UpdateOnlineStatus(value));
-
-            return NoContent();
-        }
         
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] User item)

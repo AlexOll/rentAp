@@ -25,11 +25,5 @@
         })
             .then(res => callback(res));
     }
-
-    UpdateOnlineStatus(id) {
-        return this.$http.put('/api/user/updateonlinestatus/' + id)
-        .then();
-    }
-
 }
 

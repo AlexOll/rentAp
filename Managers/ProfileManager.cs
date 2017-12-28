@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using RentApp.Cache;
 using RentApp.Hubs;
+using RentApp.Models.Cache;
 using RentApp.Models.DbModels;
 using RentApp.Models.RequestModels;
 using RentApp.Models.ResponseModels;
@@ -8,6 +9,7 @@ using RentApp.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RentApp.Managers
@@ -16,6 +18,7 @@ namespace RentApp.Managers
     {
         MessageRepository _messageRepository;
         IHubContext<MainHub> _hubContext;
+        static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
 
         public ProfileManager(MessageRepository messageRepository, IHubContext<MainHub> hubContext)
         {
@@ -53,10 +56,35 @@ namespace RentApp.Managers
 
             UserCache.CachedItems.TryGetValue(message.UserIdTo, out UserCacheItem result);
 
-           await _hubContext.Clients.Client(result?.ConnectionId.ToString())
-                .InvokeAsync("messageSent", new MessageResponse(message));
+            await _hubContext.Clients.Client(result?.ConnectionId.ToString())
+                 .InvokeAsync("messageSent", (MessageResponse)message);
 
             return new BaseResponse();
+        }
+
+        internal void UpdateOnlineStatus(Guid value)
+        {
+            var now = DateTime.Now;
+            UserCache.CachedItems[value].LastEntranceDateTime = now;
+            Task.Factory.StartNew(() => UpdateLastEntranceAsync(now));
+        }
+
+        private async Task UpdateLastEntranceAsync(DateTime now)
+        {
+            var minute = 60000;
+            await semaphoreSlim.WaitAsync(minute);
+            try
+            {
+                var result = UserCache.CachedItems.Values
+                    .Where(w => w.LastEntranceDateTime > now.AddMilliseconds(-minute))
+                    .ToDictionary(x => x.Id, x => x.LastEntranceDateTime);
+
+                await _hubContext.Clients.All.InvokeAsync("onlineStatusUpdated", result);
+            }
+            finally
+            {
+                semaphoreSlim.Release();
+            }
         }
     }
 }

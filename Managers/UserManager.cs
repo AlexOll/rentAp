@@ -1,12 +1,11 @@
 ﻿using RentApp.Repositories;
-using System;
 using RentApp.Models.DbModels;
-using RentApp.Models.RequestModels;
 using RentApp.Models.ResponseModels;
 using Microsoft.AspNetCore.Http;
 using RentApp.Cache;
 using System.Linq;
 using RentApp.Utilities;
+using System;
 using RentApp.Models.Interfaces;
 
 namespace RentApp.Managers
@@ -20,7 +19,7 @@ namespace RentApp.Managers
             _userRepository = userRepository;
         }
 
-        internal BaseResponse Create(User item)
+        internal BaseResponse Create(IUser item)
         {
             var isEmailExist = UserCache.CachedItems.Values.Any(a => a.Email == item.Email);
 
@@ -44,18 +43,13 @@ namespace RentApp.Managers
                 };
             }
 
-            _userRepository.Create(item);
+            item.ActivationCode = Guid.NewGuid();
+            _userRepository.Create(item as User);
 
-            var emailManager = new EmailUtility((IUser)item);
+            var emailManager = new EmailUtility(item);
             emailManager.SendActivationEmail();
 
             return new BaseResponse();
-        }
-
-        internal void UpdateOnlineStatus(Guid value)
-        {
-            UserCache.CachedItems[value].LastOnlineDateTime = DateTime.Now;
-            //UserCache.CachedItems[value].ConnectionId = Context.ConnectionId;
         }
 
         internal BaseResponse Update(UpdateUserRequest item)
@@ -107,7 +101,7 @@ namespace RentApp.Managers
             foundUser.Phonenumber = item.Phonenumber;
             foundUser.ProfileImageId = imageId;
 
-            _userRepository.Update(foundUser.GetDbModel());
+            _userRepository.Update(foundUser.CreateDbModel());
 
             return (AuthenticationResponse)UserCache.CachedItems[item.Id];
         }
@@ -122,6 +116,6 @@ namespace RentApp.Managers
             return UserCache.CachedItems.Values.Any(a => a.Phonenumber == value);
         }
 
-        
+
     }
 }

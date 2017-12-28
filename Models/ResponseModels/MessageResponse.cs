@@ -1,5 +1,4 @@
 ﻿using RentApp.Models.DbModels;
-using RentApp.Models.Structs;
 using System;
 
 namespace RentApp.Models.ResponseModels
@@ -23,5 +22,9 @@ namespace RentApp.Models.ResponseModels
             CreateDateTime = model.CreateDateTime;
         }
 
+        public static explicit operator MessageResponse(Message model)
+        {
+            return new MessageResponse(model);
+        }
     }
 }

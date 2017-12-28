@@ -1,8 +1,9 @@
 ﻿using RentApp.Models.ResponseModels;
 using System;
 using RentApp.Models.Interfaces;
+using RentApp.Models.DbModels;
 
-namespace RentApp.Models.DbModels
+namespace RentApp.Models.Cache
 {
     public class UserCacheItem : IUser
     {
@@ -17,8 +18,9 @@ namespace RentApp.Models.DbModels
         public bool IsAlive { get; set; }
         public bool IsActivated { get; set; }
         public DateTime CreateDateTime { get; set; }
+        public DateTime LastEntranceDateTime { get; set; }
 
-        public DateTime LastOnlineDateTime { get; set; } = DateTime.Now;
+        //Not Mapped
         public string ConnectionId { get; set; }
 
         public UserCacheItem(User model)
@@ -34,13 +36,20 @@ namespace RentApp.Models.DbModels
             IsAlive = model.IsAlive;
             IsActivated = model.IsActivated;
             CreateDateTime = model.CreateDateTime;
+            LastEntranceDateTime = model.LastEntranceDateTime;
+        }
+
+        public static explicit operator UserCacheItem(User model)
+        {
+            return new UserCacheItem(model);
         }
 
         public static explicit operator AuthenticationResponse(UserCacheItem model)
         {
             return new AuthenticationResponse(model);
         }
-        public User GetDbModel()
+
+        public User CreateDbModel()
         {
             var user = new User();
             user.Id = Id;
@@ -54,6 +63,7 @@ namespace RentApp.Models.DbModels
             user.IsAlive = IsAlive;
             user.IsActivated = IsActivated;
             user.IsAlive = IsAlive;
+            user.LastEntranceDateTime = LastEntranceDateTime;
             return user;
         }
     }

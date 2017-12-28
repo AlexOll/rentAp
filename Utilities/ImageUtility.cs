@@ -42,7 +42,7 @@ namespace RentApp.Utilities
 
         internal Guid? UploadImage(Guid? oldImageId, string newImageSource)
         {
-            if(newImageSource.Contains(oldImageId.ToString()))
+            if(oldImageId.HasValue && newImageSource.Contains(oldImageId.ToString()))
             {
                 return oldImageId;
             }

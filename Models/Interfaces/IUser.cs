@@ -11,7 +11,6 @@ namespace RentApp.Models.Interfaces
         string Lastname { get; set; }
         string Password { get; set; }
         Guid? ProfileImageId { get; set; }
-
         Guid ActivationCode { get; set; }
     }
 }

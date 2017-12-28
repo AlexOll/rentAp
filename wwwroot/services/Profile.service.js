@@ -18,5 +18,9 @@
         })
             .then(res => callback(res));
     }
+    UpdateOnlineStatus(id) {
+        return this.$http.put('/api/profile/updateonlinestatus/' + id)
+            .then();
+    }
 }
 

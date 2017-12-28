@@ -37,5 +37,13 @@ namespace RentApp.Controllers
 
             return Ok(result);
         }
+
+        [HttpPut, Route("updateonlinestatus/{value}")]
+        public async Task<IActionResult> UpdateOnlineStatus([FromRoute]Guid value)
+        {
+            await Task.Factory.StartNew(() => _profileManager.UpdateOnlineStatus(value));
+
+            return NoContent();
+        }
     }
 }

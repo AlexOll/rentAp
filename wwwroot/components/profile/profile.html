@@ -14,7 +14,7 @@
         <div class="collapse navbar-collapse navigation" id="navbar-div" ng-include src="'components/profile/profile-nav-bar.html'"></div>
     </div>
 
-    <div class="container-fluid p-0">
+    <div id="profile-div" class="container-fluid p-0">
 
         <section class="resume-section d-column" id="messages">
             <br />
@@ -26,9 +26,11 @@
             <div ng-include src="'components/profile/profile-favorites.html'"></div>
             <!-- /.row -->
         </section>
+
         <section class="resume-section flex-column" id="editProfile">
             <div class="my-auto" ng-include src="'components/profile/profile-edit-form.html'"></div>
         </section>
+
         <section class="resume-section flex-column" id="watchDog">
             <div class="my-auto">
                 <h2 class="mb-5">Skills</h2>

@@ -11,7 +11,7 @@
                     <img class="rounded-circle" ng-src="{{chater.profileImageURL || '../../img/profile/profile.jpg'}}" />
                     <div class="about">
                         <div class="name">{{chater.name}}</div>
-                        <div class="status online" ng-class="chater.isOnline ? 'online' : 'offline'"> {{chater.lastEntrance}} </div>
+                        <div class="status online" ng-class="getOnlineStatus(chater.lastOnlineDateTime)==='Online' ? 'online' : 'offline'"> {{getOnlineStatus(chater.lastOnlineDateTime)}} </div>
 
                     </div>
                 </li>

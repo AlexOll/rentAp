@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Cache\Items\UserOnlineCacheItem.cs" />
     <Compile Remove="Hubs\ConnectionMapping.cs" />
     <Compile Remove="Hubs\OnlineStatusHub.cs" />
     <Compile Remove="Models\RequestModels\CreateUserRequest.cs" />
@@ -45,7 +46,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\components\directives\directive.js" />
     <None Include="wwwroot\components\forgotpassword\forgotpassword.js" />
     <None Include="wwwroot\components\home\home.js" />
     <None Include="wwwroot\components\login\login.js" />

@@ -34,6 +34,14 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
                 ScrollChatDown();
             });
 
+            HubUtility.onlineStatusUpdated(function (msg) {
+                $scope.chatUsers.forEach(function (user) {
+                        user.lastOnlineDateTime = msg[user.id.toString()] || user.lastOnlineDateTime;
+                });
+                $scope.$apply();
+            });
+            
+
             function ScrollChatDown() {
                 $timeout(function () {
                     var objDiv = angular.element(document.querySelector('.chat-history'))[0];
@@ -93,7 +101,6 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
                 ProfileService.SendChatMessage(message, function (response) {
 
                     if (response.data.responseCode === 200) {
-
                         $scope.userMessages.push(message);
                         ScrollChatDown();
 
@@ -109,6 +116,7 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
             }
 
             $scope.getMessageCreateDateTime = function (dateTime) {
+
                 var actual = new Date(dateTime);
                 var now = new Date();
                 var diff = (now - actual) / 60 / 1000;
@@ -119,7 +127,22 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
                 else if (diff < 60 * 24) //less than 24 hours
                     return actual.getHours() + ":" + actual.getMinutes()
                 else
-                    return actual;
+                    return actual.toLocaleDateString() + " " + actual.toLocaleTimeString();
+            }
+
+            $scope.getOnlineStatus = function (dateTime) {
+
+                var actual = new Date(dateTime);
+                var now = new Date();
+                var diff = (now - actual) / 60 / 1000;
+                if (diff < 1)
+                    return "Online"
+                else if (diff < 60)
+                    return "Was here " + parseInt(diff) + " minutes ago"
+                else if (diff < 60 * 24)
+                    return "Last entrance - " + actual.getHours() + ":" + actual.getMinutes()
+                else
+                    return "Last entrance - " + actual.toLocaleDateString() + " " + actual.toLocaleTimeString();
             }
 
             $scope.updateProfile = function (ev) {

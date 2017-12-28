@@ -22,8 +22,7 @@ namespace RentApp.Managers
 
         internal BaseResponse ResendActivationCode(string email)
         {
-            IUser foundUser = 
-                (IUser)UserCache.CachedItems.Values
+            var foundUser = UserCache.CachedItems.Values
                 .FirstOrDefault(a => a.Email == email && !a.IsActivated);
 
             if (foundUser != null)
@@ -33,7 +32,7 @@ namespace RentApp.Managers
                 var emailManager = new EmailUtility(foundUser);
                 emailManager.SendActivationEmail();
                 
-                _userRepository.Update((User)foundUser);
+                _userRepository.Update(foundUser.CreateDbModel());
 
                 return new BaseResponse();
             }
@@ -49,7 +48,7 @@ namespace RentApp.Managers
 
         internal void RemindPasswordByEmail(string email)
         {
-            var foundUser = (IUser)UserCache.CachedItems.Values
+            var foundUser = UserCache.CachedItems.Values
                 .FirstOrDefault(a => a.Email == email);
 
             if (foundUser != null)
@@ -60,7 +59,7 @@ namespace RentApp.Managers
                 var emailManager = new EmailUtility(foundUser);
                 emailManager.SendNewPasswordForUser(newPassword);
 
-                _userRepository.Update((User)foundUser);
+                _userRepository.Update(foundUser.CreateDbModel());
             }
         }
         internal BaseResponse ActivateAccountByGuid(Guid value)
@@ -71,7 +70,7 @@ namespace RentApp.Managers
             if (foundUser != null)
             {
                 foundUser.IsActivated = true;
-                _userRepository.Update(foundUser.GetDbModel());
+                _userRepository.Update(foundUser.CreateDbModel());
                 return (AuthenticationResponse)foundUser;
             }
 

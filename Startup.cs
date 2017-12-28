@@ -45,7 +45,7 @@ namespace RentApp
         {
             app.UseMvc();
             loggerFactory.AddConsole();
-            app.UseCacheWarmer();
+            app.UseCache();
 
             var DefaultFile = new DefaultFilesOptions();
             DefaultFile.DefaultFileNames.Clear();

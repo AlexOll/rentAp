@@ -40,17 +40,20 @@ angular
             })
             .otherwise({ redirectTo: '/' })
     }])
-    .run(['$rootScope', '$location', '$cookies', '$http', '$window', '$interval', 'UserService', 'HubUtility',
-        function ($rootScope, $location, $cookies, $http, $window, $interval, UserService, HubUtility) {
+    .run(['$rootScope', '$location', '$cookies', '$http', '$window', '$interval', 'ProfileService', 'HubUtility',
+        function ($rootScope, $location, $cookies, $http, $window, $interval, ProfileService, HubUtility) {
 
             $rootScope.isSmallResolution = $window.innerWidth <= 992;
 
+            $interval(function () {
+                ProfileService.UpdateOnlineStatus($rootScope.globals.currentUser.id);
+            }, 10000);
+
             $rootScope.globals = $cookies.getObject('globals') || {};
             if ($rootScope.globals.currentUser) {
+
                 $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata;
-
                 HubUtility.initConnection();
-
             }
 
             function onScroll() {
@@ -68,10 +71,6 @@ angular
                 var isRestrictedPage = $.inArray($location.path(), ['/', '/login', '/register', '/forgotpassword']) >= 0;
                 if (!isRestrictedPage && !$rootScope.loggedIn)
                     $location.path('/login');
-
-                $interval(function () {
-                    UserService.UpdateOnlineStatus($rootScope.globals.currentUser.id);
-                }, 60000);
 
                 if (!$rootScope.isSmallResolution && $location.path() === '/profile')
                     angular.element($window).on('scroll', onScroll);

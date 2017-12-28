@@ -1,4 +1,4 @@
-﻿using RentApp.Models.DbModels;
+﻿using RentApp.Models.Cache;
 using RentApp.Utilities;
 using System;
 
@@ -28,7 +28,7 @@ namespace RentApp.Models.ResponseModels
             var imageUtility = new ImageUtility();
             ProfileImageURL = imageUtility.GetUploadedImageUrl(model.ProfileImageId);
 
-            LastOnlineDateTime = model.LastOnlineDateTime;
+            LastOnlineDateTime = model.LastEntranceDateTime;
         }
     }
 }

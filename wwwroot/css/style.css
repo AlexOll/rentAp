@@ -90,8 +90,20 @@ footer {
         text-transform: uppercase;
     }
 
-@media (max-width: 991px) {
+@media (min-width: 1329px) and (max-width: 1656px) {
+    #profile-div {
+        width: 85%;
+        margin-left: 15%;
+    }
+}
+@media (min-width: 992px) and (max-width: 1328px){
+    #profile-div {
+        width: 75%;
+        margin-left: 25%;
+    }
+}
 
+@media (max-width: 991px) {
     .fixed-bottom {
         display: none;
     }

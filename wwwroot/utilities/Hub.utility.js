@@ -10,7 +10,8 @@
     function HubUtility($rootScope) {
         var service = {
             initConnection: initConnection,
-            messageSent : messageSent
+            messageSent: messageSent,
+            onlineStatusUpdated: onlineStatusUpdated
         };
 
         return service;
@@ -26,7 +27,9 @@
         function messageSent(callback) {
             $rootScope.hubConnection.on('messageSent', msg => callback(msg));
         }
-
+        function onlineStatusUpdated(callback) {
+            $rootScope.hubConnection.on('onlineStatusUpdated', msg => callback(msg));
+        }
         
     }
 })();

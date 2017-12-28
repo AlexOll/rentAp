@@ -4,6 +4,7 @@ using RentApp.Models;
 using Microsoft.EntityFrameworkCore;
 using RentApp.Models.DbModels;
 using RentApp.Cache;
+using System;
 
 namespace RentApp.Repositories
 {
@@ -26,6 +27,7 @@ namespace RentApp.Repositories
 
         internal void Create(User user)
         {
+            user.CreateDateTime = DateTime.Now;
             using (_context)
             {
                 _context.Users.Add(user);
@@ -36,6 +38,7 @@ namespace RentApp.Repositories
 
         internal void Update(User user)
         {
+            user.UpdateDate = DateTime.Now;
             using (_context)
             {
                 _context.Users.Attach(user);
@@ -43,6 +46,20 @@ namespace RentApp.Repositories
                 _context.SaveChanges();
             }
             UserCache.AddOrUpdate(user);
+        }
+
+        internal void Update(IEnumerable<User> result)
+        {
+            using (_context)
+            {
+                foreach (var user in result)
+                {
+                    _context.Users.Attach(user);
+                    _context.Entry(user).State = EntityState.Modified;
+                }
+
+                _context.SaveChanges();
+            }
         }
     }
 }

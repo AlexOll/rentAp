@@ -17,11 +17,5 @@ namespace RentApp.Models.DbModels
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDate { get; set; }
         public bool IsAlive { get; set; }
-
-        public static explicit operator MessageResponse(Message model)
-        {
-            return new MessageResponse(model);
-        }
-
     }
 }

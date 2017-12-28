@@ -1,11 +1,10 @@
-﻿using RentApp.Models.ResponseModels;
+﻿using RentApp.Models.Interfaces;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RentApp.Models.DbModels
 {
-    public class User : IDbModel
+    public class User : IDbModel, IUser
     {
         [Key]
         public Guid Id { get; set; }
@@ -18,14 +17,8 @@ namespace RentApp.Models.DbModels
         public Guid ActivationCode { get; set; }
         public bool IsAlive { get; set; } = true;
         public bool IsActivated { get; set; }
-        public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDate { get; set; }
-
-        public static explicit operator UserCacheItem(User model)
-        {
-            return new UserCacheItem(model);
-        }
-
+        public DateTime CreateDateTime { get; set; }
+        public DateTime LastEntranceDateTime { get; set; }
     }
-
 }
