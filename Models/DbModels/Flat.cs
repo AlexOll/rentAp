@@ -1,4 +1,5 @@
 ﻿using RentApp.Models.ResponseModels;
+using RentApp.Models.Structs;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -9,7 +10,7 @@ namespace RentApp.Models.DbModels
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Description { get; set; }
-        public PropertyTypes PropertyType { get; set; }
+        public PropertyType PropertyType { get; set; }
         [Required]
         public string PlaceId { get; set; }
         public float Cost { get; set; }
