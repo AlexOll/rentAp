@@ -19,6 +19,7 @@
         "wwwroot/services/AnchorSmoothScroll.service.js",
         "wwwroot/services/User.service.js",
         "wwwroot/services/Authentication.service.js",
+        "wwwroot/services/Dictionary.service.js",
         "wwwroot/services/_service.module.js",
 
 

@@ -5,4 +5,5 @@ angular.module('services', ['ngRoute','ngCookies'])
     .service('AuthenticationService', AuthenticationService)
     .service('AnchorSmoothScrollService', AnchorSmoothScrollService)
     .service('ProfileService', ProfileService)
+    .service('DictionaryService', DictionaryService)
 

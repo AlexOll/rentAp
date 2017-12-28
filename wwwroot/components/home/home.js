@@ -1,23 +1,11 @@
-angular.module('myApp.home', ['ngRoute', 'directives'])
-    .controller('homeCtrl', ['$scope', function ($scope) {
+angular.module('myApp.home', ['ngRoute', 'directives', 'toastr'])
+    .controller('homeCtrl', ['$scope', 'toastr', 'DictionaryService', function ($scope, toastr, DictionaryService) {
 
         $scope.city = null;
         $scope.options = {
             country: 'ukr',
             types: '(cities)'
         }; 
-
-        $scope.serviceType = {
-            model: 1,
-            availableOptions: [
-                { id: 1, name: 'Offer sale' },
-                { id: 2, name: 'Rental offer' },
-                { id: 3, name: 'Offer roommate' },
-                { id: 4, name: 'Sales demand' },
-                { id: 5, name: 'Demand rental' },
-                { id: 6, name: 'Demand for roommates' }
-            ]
-        };
 
         $scope.propertyType = {
             model: [],
@@ -43,4 +31,25 @@ angular.module('myApp.home', ['ngRoute', 'directives'])
             console.log('serviceType - ' + $scope.serviceType.model);
 
         }
+
+        DictionaryService.GetServiceTypes(function (response) {
+
+            if (response.status === 200) {
+
+                $scope.serviceType = {};
+                $scope.serviceType.availableOptions = [];
+
+                angular.forEach(response.data, function (value, key) {
+                    $scope.serviceType.availableOptions.push({ "id": key, "name": value });
+                });
+
+                $scope.serviceType.model = $scope.serviceType.availableOptions[0].id;
+            }
+            else {
+                toastr.error('Error code: ' + response.status, "Error", {
+                    "timeOut": "5000",
+                    "extendedTImeout": "0"
+                });
+            }
+        });
     }]);
