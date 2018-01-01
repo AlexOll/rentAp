@@ -25,6 +25,7 @@
   <ItemGroup>
     <Content Remove="wwwroot\css\table-messages.css" />
     <Content Remove="wwwroot\js\chat.js" />
+    <Content Remove="wwwroot\js\multiselect.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="localDB\" />

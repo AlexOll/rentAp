@@ -44,7 +44,8 @@
     function HubUtility($rootScope) {
         var service = {
             initConnection: initConnection,
-            messageSent : messageSent
+            messageSent: messageSent,
+            onlineStatusUpdated: onlineStatusUpdated
         };
 
         return service;
@@ -60,9 +61,391 @@
         function messageSent(callback) {
             $rootScope.hubConnection.on('messageSent', msg => callback(msg));
         }
-
+        function onlineStatusUpdated(callback) {
+            $rootScope.hubConnection.on('onlineStatusUpdated', msg => callback(msg));
+        }
         
     }
+})();
+(function () {
+
+    'use strict';
+
+    angular.module('directives', []);
+
+})();
+
+
+(function () {
+    'use strict';
+
+    angular
+        .module('directives')
+        .directive('ngAutocomplete', function () {
+            return {
+                require: 'ngModel',
+                scope: {
+                    ngModel: '=',
+                    options: '=?',
+                    details: '=?',
+                    placeid: "=placeid",
+                    lat: "=lat",
+                    long: "=long"
+                },
+
+                link: function (scope, element, attr, ctrl) {
+
+                    //options for autocomplete
+                    var opts
+                    var watchEnter = false
+                    //convert options provided to opts
+                    var initOpts = function () {
+
+                        opts = {}
+                        if (scope.options) {
+
+                            if (scope.options.watchEnter !== true) {
+                                watchEnter = false
+                            } else {
+                                watchEnter = true
+                            }
+
+                            if (scope.options.types) {
+                                opts.types = []
+                                opts.types.push(scope.options.types)
+                                scope.gPlace.setTypes(opts.types)
+                            } else {
+                                scope.gPlace.setTypes([])
+                            }
+
+                            if (scope.options.bounds) {
+                                opts.bounds = scope.options.bounds
+                                scope.gPlace.setBounds(opts.bounds)
+                            } else {
+                                scope.gPlace.setBounds(null)
+                            }
+
+                            if (scope.options.country) {
+                                opts.componentRestrictions = {
+                                    country: scope.options.country
+                                }
+                                scope.gPlace.setComponentRestrictions(opts.componentRestrictions)
+                            } else {
+                                scope.gPlace.setComponentRestrictions(null)
+                            }
+                        }
+                    }
+
+                    if (scope.gPlace === undefined) {
+                        scope.gPlace = new google.maps.places.Autocomplete(element[0], {});
+                    }
+                    google.maps.event.addListener(scope.gPlace, 'place_changed', function () {
+
+                        var result = scope.gPlace.getPlace();
+
+                        attr.$set('placeid', result.place_id);
+                        attr.$set('lat', result.geometry.location.lat());
+                        attr.$set('lng', result.geometry.location.lng());
+
+                        if (result !== undefined) {
+                            if (result.address_components !== undefined) {
+                                ctrl.$setValidity('notexists', false);
+
+                                scope.$apply(function () {
+
+                                    scope.details = result;
+
+                                    ctrl.$setViewValue(element.val());
+                                });
+                            }
+                            else {
+                                ctrl.$setValidity('notexists', true);
+                                if (watchEnter) {
+                                    getPlace(result)
+                                }
+                            }
+                        }
+                    })
+
+                    //function to get retrieve the autocompletes first result using the AutocompleteService 
+                    var getPlace = function (result) {
+                        var autocompleteService = new google.maps.places.AutocompleteService();
+                        if (result.name.length > 0) {
+                            autocompleteService.getPlacePredictions(
+                                {
+                                    input: result.name,
+                                    offset: result.name.length
+                                },
+                                function listentoresult(list, status) {
+                                    if (list === null || list.length === 0) {
+
+                                        scope.$apply(function () {
+                                            scope.details = null;
+                                        });
+
+                                    } else {
+                                        var placesService = new google.maps.places.PlacesService(element[0]);
+                                        placesService.getDetails(
+                                            { 'reference': list[0].reference },
+                                            function detailsresult(detailsResult, placesServiceStatus) {
+
+                                                if (placesServiceStatus === google.maps.GeocoderStatus.OK) {
+                                                    scope.$apply(function () {
+
+                                                        ctrl.$setViewValue(detailsResult.formatted_address);
+                                                        element.val(detailsResult.formatted_address);
+
+                                                        scope.details = detailsResult;
+
+                                                        //on focusout the value reverts, need to set it again.
+                                                        var watchFocusOut = element.on('focusout', function (event) {
+                                                            element.val(detailsResult.formatted_address);
+                                                            element.unbind('focusout')
+                                                        })
+
+                                                    });
+                                                }
+                                            }
+                                        );
+                                    }
+                                });
+                        }
+                    }
+
+                    ctrl.$render = function () {
+                        var location = ctrl.$viewValue;
+                        element.val(location);
+                    };
+
+                    //watch options provided to directive
+                    scope.watchOptions = function () {
+                        return scope.options
+                    };
+                    scope.$watch(scope.watchOptions, function () {
+                        initOpts()
+                    }, true);
+
+                }
+            };
+        })
+
+
+})();
+(function () {
+    'use strict';
+
+    angular
+        .module('directives')
+        .directive('ngImageCompress', ['$q', '$rootScope', function ($q, $rootScope) {
+
+
+            var URL = window.URL || window.webkitURL;
+
+            var getResizeArea = function () {
+                var resizeAreaId = 'fileupload-resize-area';
+
+                var resizeArea = document.getElementById(resizeAreaId);
+
+                if (!resizeArea) {
+                    resizeArea = document.createElement('canvas');
+                    resizeArea.id = resizeAreaId;
+                    resizeArea.style.visibility = 'hidden';
+                    document.body.appendChild(resizeArea);
+                }
+
+                return resizeArea;
+            };
+
+            /**
+             * Receives an Image Object (can be JPG OR PNG) and returns a new Image Object compressed
+             * @param {Image} sourceImgObj The source Image Object
+             * @param {Integer} quality The output quality of Image Object
+             * @return {Image} result_image_obj The compressed Image Object
+             */
+
+            var jicCompress = function (sourceImgObj, options) {
+                var outputFormat = options.resizeType;
+                var quality = options.resizeQuality * 100 || 70;
+                var mimeType = 'image/jpeg';
+                if (outputFormat !== undefined && outputFormat === 'png') {
+                    mimeType = 'image/png';
+                }
+
+
+                var maxHeight = options.resizeMaxHeight || 300;
+                var maxWidth = options.resizeMaxWidth || 250;
+
+                var height = sourceImgObj.height;
+                var width = sourceImgObj.width;
+
+                // calculate the width and height, constraining the proportions
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height = Math.round(height *= maxWidth / width);
+                        width = maxWidth;
+                    }
+                } else {
+                    if (height > maxHeight) {
+                        width = Math.round(width *= maxHeight / height);
+                        height = maxHeight;
+                    }
+                }
+
+                var cvs = document.createElement('canvas');
+                cvs.width = width; //sourceImgObj.naturalWidth;
+                cvs.height = height; //sourceImgObj.naturalHeight;
+                var ctx = cvs.getContext('2d').drawImage(sourceImgObj, 0, 0, width, height);
+                var newImageData = cvs.toDataURL(mimeType, quality / 100);
+                var resultImageObj = new Image();
+                resultImageObj.src = newImageData;
+                return resultImageObj.src;
+
+            };
+
+            var createImage = function (url, callback) {
+                var image = new Image();
+                image.onload = function () {
+                    callback(image);
+                };
+                image.src = url;
+            };
+
+            var fileToDataURL = function (file) {
+                var deferred = $q.defer();
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    deferred.resolve(e.target.result);
+                };
+                reader.readAsDataURL(file);
+                return deferred.promise;
+            };
+
+
+            return {
+                restrict: 'A',
+                scope: {
+                    //image: '=',
+                    resizeMaxHeight: '@?',
+                    resizeMaxWidth: '@?',
+                    resizeQuality: '@?',
+                    resizeType: '@?'
+                },
+                link: function (scope, element, attrs) {
+                    var doResizing = function (imageResult, callback) {
+                        createImage(imageResult.url, function (image) {
+                            var dataURLcompressed = jicCompress(image, scope);
+                            imageResult.compressed = {
+                                dataURL: dataURLcompressed,
+                                type: dataURLcompressed.match(/:(.+\/.+);/)[1]
+                            };
+                            callback(imageResult);
+                        });
+                    };
+
+                    var applyScope = function (imageResult) {
+                        scope.$apply(function () {
+                            if (attrs.multiple) {
+                                //scope.image.push(imageResult);
+                            } else {
+                                $rootScope.globals.currentUser.profileImageURL = imageResult.compressed.dataURL;
+                                //scope.image = imageResult;
+                            }
+                        });
+                    };
+
+
+                    element.bind('change', function (evt) {
+                        //when multiple always return an array of images
+                        if (attrs.multiple) {
+                            scope.image = [];
+                        }
+
+                        var files = evt.target.files;
+                        for (var i = 0; i < files.length; i++) {
+                            //create a result object for each file in files
+                            var imageResult = {
+                                file: files[i],
+                                url: URL.createObjectURL(files[i])
+                            };
+
+                            fileToDataURL(files[i]).then(function (dataURL) {
+                                imageResult.dataURL = dataURL;
+                            });
+
+                            if (scope.resizeMaxHeight || scope.resizeMaxWidth) { //resize image
+                                doResizing(imageResult, function (imageResult) {
+                                    applyScope(imageResult);
+                                });
+                            } else { //no resizing
+                                applyScope(imageResult);
+                            }
+                        }
+                    });
+                }
+            };
+        }
+        ]);
+
+})();
+(function () {
+    'use strict';
+
+    angular
+        .module('directives')
+        .directive('setHeight', function ($window) {
+            return {
+                link: function (scope, element, attrs) {
+                    element.css('height', $window.innerHeight * attrs.setHeight + 'px');
+                }
+            }
+        })
+
+
+})();
+(function () {
+    'use strict';
+
+    angular
+        .module('directives')
+        .directive('uniqueField', ['$http', '$rootScope', function ($http, $rootScope) {
+            var toId;
+            return {
+                restrict: 'A',
+                require: 'ngModel',
+                link: function (scope, elem, attr, ctrl) {
+                    scope.$watch(attr.ngModel, function (inputValue) {
+                        if (toId) clearTimeout(toId);
+
+                        toId = setTimeout(function () {
+                            ctrl.$setValidity('duplicate', true);
+
+                            if (inputValue && !ctrl.$error.pattern) {
+                                if ($rootScope.globals.currentUser &&
+                                    inputValue === $rootScope.globals.currentUser.phonenumber) {
+                                    return;
+                                }
+                                var url = '';
+                                if (attr.id === "phonenumber")
+                                    url = '/api/user/phonenumbercheck'
+                                else if (attr.id === "email")
+                                    url = '/api/user/emailcheck'
+
+                                $http.get(url, { params: { value: inputValue } })
+                                    .then(function (response) {
+                                        if (response.data) {
+                                            ctrl.$setValidity('duplicate', false);
+                                        }
+                                        else {
+                                            ctrl.$setValidity('duplicate', true);
+                                        }
+                                    });
+                            }
+                        }, 500);
+                    })
+                }
+            }
+        }])
+
 })();
 class ProfileService {
     constructor($http) {
@@ -83,6 +466,10 @@ class ProfileService {
             "CreateDateTime": message.createDateTime,
         })
             .then(res => callback(res));
+    }
+    UpdateOnlineStatus(id) {
+        return this.$http.put('/api/profile/updateonlinestatus/' + id)
+            .then();
     }
 }
 
@@ -164,12 +551,6 @@ class UserService {
         })
             .then(res => callback(res));
     }
-
-    UpdateOnlineStatus(id) {
-        return this.$http.put('/api/user/updateonlinestatus/' + id)
-        .then();
-    }
-
 }
 
 
@@ -465,52 +846,54 @@ angular.module('myApp.register', ['ngRoute', 'services', 'toastr', 'directives']
         }]);
 
 
-angular.module('myApp.home', ['ngRoute', 'directives'])
-    .controller('homeCtrl', ['$scope', function ($scope) {
+angular.module('myApp.home', ['directives'])
+    .controller('homeCtrl', ['$scope', '$cookies', '$location',
+        function ($scope, $cookies, $location) {
 
-        $scope.city = null;
-        $scope.options = {
-            country: 'ukr',
-            types: '(cities)'
-        }; 
+            $scope.city = null;
+            $scope.options = {
+                country: 'ukr',
+                types: '(cities)'
+            };
 
-        $scope.serviceType = {
-            model: 1,
-            availableOptions: [
-                { id: 1, name: 'Offer sale' },
-                { id: 2, name: 'Rental offer' },
-                { id: 3, name: 'Offer roommate' },
-                { id: 4, name: 'Sales demand' },
-                { id: 5, name: 'Demand rental' },
-                { id: 6, name: 'Demand for roommates' }
-            ]
-        };
+            $scope.serviceType = {
+                model: 1,
+                availableOptions: [
+                    { id: 1, name: 'Offer sale' },
+                    { id: 2, name: 'Rental offer' },
+                    { id: 3, name: 'Offer roommate' },
+                    { id: 4, name: 'Sales demand' },
+                    { id: 5, name: 'Demand rental' },
+                    { id: 6, name: 'Demand for roommates' }
+                ]
+            };
 
-        $scope.propertyType = {
-            model: [],
-            availableOptions: [
-                { id: 1, name: 'Appartment' },
-                { id: 2, name: 'House' },
-                { id: 3, name: 'Land' },
-                { id: 4, name: 'Garage' },
-                { id: 5, name: 'Office' },
-                { id: 6, name: 'Commercial space' },
-                { id: 7, name: 'Other' }
-            ]
-        };
+            $scope.propertyType = {
+                model: [],
+                availableOptions: [
+                    { id: 1, name: 'Appartment' },
+                    { id: 2, name: 'House' },
+                    { id: 3, name: 'Land' },
+                    { id: 4, name: 'Garage' },
+                    { id: 5, name: 'Office' },
+                    { id: 6, name: 'Commercial space' },
+                    { id: 7, name: 'Other' }
+                ]
+            };
 
-        $scope.search = function () {
+            $scope.search = function () {
+                debugger;
+                var ss = $scope.placeId;
+                $location.path('/search/').search({
+                    propertyType: $scope.propertyType.model,
+                    serviceType: $scope.serviceType.model,
+                    city: $scope.city,
+                    lat: $scope.form.city.$$attr.lat,
+                    lng: $scope.form.city.$$attr.lng,
+                });
+            }
 
-            var e = angular.element(document.querySelector('#city'))[0];
-            $scope.placeId = e.attributes['placeid'].value;
-
-            alert('see console log');
-            console.log('placeId - ' + $scope.placeId);
-            console.log('propertyType - ' + $scope.propertyType.model);
-            console.log('serviceType - ' + $scope.serviceType.model);
-
-        }
-    }]);
+        }]);
 
 
 angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 'base64', 'utilities'])
@@ -520,33 +903,19 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
 
             $scope.user = angular.copy($rootScope.globals.currentUser);
 
-            //$scope.userMessages = [
-            //    { id: "111", body: "Hi to ME", createDateTime: "10:00 AM, Today", isRead: false, userIdFrom: "1ca88925-5ee3-4278-8808-d1229726af60", userIdTo: $scope.user.id },
-            //    { id: "121", body: "Hi to U", createDateTime: "10:10 AM, Today", isRead: true, userIdFrom: $scope.user.id, userIdTo: "1ca88925-5ee3-4278-8808-d1229726af60" },
-            //    { id: "131", body: "Hi to ME", createDateTime: "10:14 AM, Today", isRead: true, userIdFrom: "1ca88925-5ee3-4278-8808-d1229726af60", userIdTo: $scope.user.id },
-            //    { id: "141", body: "Hi to ME", createDateTime: "10:18 AM, Today", isRead: true, userIdFrom: "1ca88925-5ee3-4278-8808-d1229726af60", userIdTo: $scope.user.id },
-            //    { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1ca88925-5ee3-4278-8808-d1229726af60" },
-            //    { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1211111" },
-            //    { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1311111" },
-            //    { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1411111" },
-            //    { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: $scope.user.id, userIdTo: "1511111" },
-            //    { id: "151", body: "Hi!5", createDateTime: "today", isRead: false, userIdFrom: "1511111", userIdTo: $scope.user.id }
-            //]
-
-            //$scope.chatUsers = [
-            //    { id: "1ca88925-5ee3-4278-8808-d1229726af60", name: "John Brown", isOnline: true, profileImageURL: "../../img/chat_avatars/chat_avatar_01.jpg", lastEntrance: "online" },
-            //    { id: "1211111", name: "John2", isOnline: true, profileImageURL: "../../img/chat_avatars/chat_avatar_02.jpg", lastEntrance: "online" },
-            //    { id: "1311111", name: "John3", isOnline: false, profileImageURL: "../../img/chat_avatars/chat_avatar_03.jpg", lastEntrance: " left 7 mins ago " },
-            //    { id: "1411111", name: "John4", isOnline: false, profileImageURL: "../../img/chat_avatars/chat_avatar_04.jpg", lastEntrance: " left 7 mins ago " },
-            //    { id: "1511111", name: "John5", isOnline: false, profileImageURL: "../../img/chat_avatars/chat_avatar_05.jpg", lastEntrance: " left 7 mins ago " }
-            //]
-
-
             HubUtility.messageSent(function (msg) {
                 $scope.userMessages.push(msg);
                 $scope.$apply();
                 ScrollChatDown();
             });
+
+            HubUtility.onlineStatusUpdated(function (msg) {
+                $scope.chatUsers.forEach(function (user) {
+                        user.lastOnlineDateTime = msg[user.id.toString()] || user.lastOnlineDateTime;
+                });
+                $scope.$apply();
+            });
+            
 
             function ScrollChatDown() {
                 $timeout(function () {
@@ -607,7 +976,6 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
                 ProfileService.SendChatMessage(message, function (response) {
 
                     if (response.data.responseCode === 200) {
-
                         $scope.userMessages.push(message);
                         ScrollChatDown();
 
@@ -623,6 +991,7 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
             }
 
             $scope.getMessageCreateDateTime = function (dateTime) {
+
                 var actual = new Date(dateTime);
                 var now = new Date();
                 var diff = (now - actual) / 60 / 1000;
@@ -633,7 +1002,22 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
                 else if (diff < 60 * 24) //less than 24 hours
                     return actual.getHours() + ":" + actual.getMinutes()
                 else
-                    return actual;
+                    return actual.toLocaleDateString() + " " + actual.toLocaleTimeString();
+            }
+
+            $scope.getOnlineStatus = function (dateTime) {
+
+                var actual = new Date(dateTime);
+                var now = new Date();
+                var diff = (now - actual) / 60 / 1000;
+                if (diff < 1)
+                    return "Online"
+                else if (diff < 60)
+                    return "Was here " + parseInt(diff) + " minutes ago"
+                else if (diff < 60 * 24)
+                    return "Last entrance - " + actual.getHours() + ":" + actual.getMinutes()
+                else
+                    return "Last entrance - " + actual.toLocaleDateString() + " " + actual.toLocaleTimeString();
             }
 
             $scope.updateProfile = function (ev) {
@@ -665,340 +1049,123 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
 
 
 
-angular
-    .module('directives', [])
-    .directive('uniqueField', ['$http', '$rootScope', function ($http, $rootScope) {
-        var toId;
-        return {
-            restrict: 'A',
-            require: 'ngModel',
-            link: function (scope, elem, attr, ctrl) {
-                scope.$watch(attr.ngModel, function (inputValue) {
-                    if (toId) clearTimeout(toId);
+angular.module('myApp.mapSearch', [])
+    .controller('mapSearchCtrl', ['$scope', '$location', function ($scope, $location) {
 
-                    toId = setTimeout(function () {
-                        ctrl.$setValidity('duplicate', true);
-                        
-                        if (inputValue && !ctrl.$error.pattern) {
-                            if ($rootScope.globals.currentUser &&
-                                inputValue === $rootScope.globals.currentUser.phonenumber) {
-                                return;
-                            }
-                            var url = '';
-                            if (attr.id === "phonenumber")
-                                url = '/api/user/phonenumbercheck'
-                            else if (attr.id === "email")
-                                url = '/api/user/emailcheck'
 
-                            $http.get(url, { params: { value: inputValue } })
-                                .then(function (response) {
-                                    if (response.data) {
-                                        ctrl.$setValidity('duplicate', false);
-                                    }
-                                    else {
-                                        ctrl.$setValidity('duplicate', true);
-                                    }
-                                });
-                        }
-                    }, 500);
-                })
-            }
-        }
-    }])
-    .directive('ngAutocomplete', function () {
-        return {
-            require: 'ngModel',
-            scope: {
-                ngModel: '=',
-                options: '=?',
-                details: '=?',
-                placeid: "=placeid"
-            },
 
-            link: function (scope, element, attr, ctrl) {
-
-                //options for autocomplete
-                var opts
-                var watchEnter = false
-                //convert options provided to opts
-                var initOpts = function () {
-
-                    opts = {}
-                    if (scope.options) {
-
-                        if (scope.options.watchEnter !== true) {
-                            watchEnter = false
-                        } else {
-                            watchEnter = true
-                        }
-
-                        if (scope.options.types) {
-                            opts.types = []
-                            opts.types.push(scope.options.types)
-                            scope.gPlace.setTypes(opts.types)
-                        } else {
-                            scope.gPlace.setTypes([])
-                        }
-
-                        if (scope.options.bounds) {
-                            opts.bounds = scope.options.bounds
-                            scope.gPlace.setBounds(opts.bounds)
-                        } else {
-                            scope.gPlace.setBounds(null)
-                        }
-
-                        if (scope.options.country) {
-                            opts.componentRestrictions = {
-                                country: scope.options.country
-                            }
-                            scope.gPlace.setComponentRestrictions(opts.componentRestrictions)
-                        } else {
-                            scope.gPlace.setComponentRestrictions(null)
-                        }
-                    }
-                }
-
-                if (scope.gPlace === undefined) {
-                    scope.gPlace = new google.maps.places.Autocomplete(element[0], {});
-                }
-                google.maps.event.addListener(scope.gPlace, 'place_changed', function () {
-
-                    var result = scope.gPlace.getPlace();
-                    attr.$set('placeid', result.place_id);
-                    if (result !== undefined) {
-                        if (result.address_components !== undefined) {
-                            ctrl.$setValidity('notexists', false);
-
-                            scope.$apply(function () {
-
-                                scope.details = result;
-
-                                ctrl.$setViewValue(element.val());
-                            });
-                        }
-                        else {
-                            ctrl.$setValidity('notexists', true);
-                            if (watchEnter) {
-                                getPlace(result)
-                            }
-                        }
-                    }
-                })
-
-                //function to get retrieve the autocompletes first result using the AutocompleteService 
-                var getPlace = function (result) {
-                    var autocompleteService = new google.maps.places.AutocompleteService();
-                    if (result.name.length > 0) {
-                        autocompleteService.getPlacePredictions(
-                            {
-                                input: result.name,
-                                offset: result.name.length
-                            },
-                            function listentoresult(list, status) {
-                                if (list === null || list.length === 0) {
-
-                                    scope.$apply(function () {
-                                        scope.details = null;
-                                    });
-
-                                } else {
-                                    var placesService = new google.maps.places.PlacesService(element[0]);
-                                    placesService.getDetails(
-                                        { 'reference': list[0].reference },
-                                        function detailsresult(detailsResult, placesServiceStatus) {
-
-                                            if (placesServiceStatus === google.maps.GeocoderStatus.OK) {
-                                                scope.$apply(function () {
-
-                                                    ctrl.$setViewValue(detailsResult.formatted_address);
-                                                    element.val(detailsResult.formatted_address);
-
-                                                    scope.details = detailsResult;
-
-                                                    //on focusout the value reverts, need to set it again.
-                                                    var watchFocusOut = element.on('focusout', function (event) {
-                                                        element.val(detailsResult.formatted_address);
-                                                        element.unbind('focusout')
-                                                    })
-
-                                                });
-                                            }
-                                        }
-                                    );
-                                }
-                            });
-                    }
-                }
-
-                ctrl.$render = function () {
-                    var location = ctrl.$viewValue;
-                    element.val(location);
-                };
-
-                //watch options provided to directive
-                scope.watchOptions = function () {
-                    return scope.options
-                };
-                scope.$watch(scope.watchOptions, function () {
-                    initOpts()
-                }, true);
-
-            }
+        $scope.options = {
+            country: 'ukr',
+            types: '(cities)'
         };
-    })
-    .directive('setHeight', function ($window) {
-        return {
-            link: function (scope, element, attrs) {
-                element.css('height', $window.innerHeight * 0.6 + 'px');
+
+        $scope.serviceType = {
+            model: 1,
+            availableOptions: [
+                { id: 1, name: 'Offer sale' },
+                { id: 2, name: 'Rental offer' },
+                { id: 3, name: 'Offer roommate' },
+                { id: 4, name: 'Sales demand' },
+                { id: 5, name: 'Demand rental' },
+                { id: 6, name: 'Demand for roommates' }
+            ]
+        };
+
+        $scope.propertyType = {
+            model: [],
+            availableOptions: [
+                { id: 1, name: 'Appartment' },
+                { id: 2, name: 'House' },
+                { id: 3, name: 'Land' },
+                { id: 4, name: 'Garage' },
+                { id: 5, name: 'Office' },
+                { id: 6, name: 'Commercial space' },
+                { id: 7, name: 'Other' }
+            ]
+        };
+
+        var params = $location.search()
+        console.log(params);
+        $scope.city = params.city;
+        $scope.serviceType.model = parseInt(params.serviceType);
+        $scope.propertyType.model = params.propertyType == null ? [] : params.propertyType.map(Number);
+
+        $scope.choosePropertyType = function (opt) {
+
+            var index = $scope.propertyType.model.indexOf(opt.id);
+            if (index >= 0) {
+                $scope.propertyType.model.splice(index, 1);
             }
+            else
+                $scope.propertyType.model.push(opt.id)
+            console.log($scope.propertyType.model);
         }
-    })
-    .directive('ngImageCompress', ['$q', '$rootScope', function ($q, $rootScope) {
 
+        $(".dropdown dt").on('click', function () {
+            $(".dropdown dd ul").slideToggle('fast');
+        });
 
-            var URL = window.URL || window.webkitURL;
+        $(".dropdown dd ul li").on('click', function () {
+            $(".dropdown dd ul").hide();
+        });
 
-            var getResizeArea = function() {
-                var resizeAreaId = 'fileupload-resize-area';
+        $(document).bind('click', function (e) {
+            var $clicked = $(e.target);
+            if (!$clicked.parents().hasClass("dropdown")) $(".dropdown dd ul").hide();
+        });
 
-                var resizeArea = document.getElementById(resizeAreaId);
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 14,
+            center: { lat: parseFloat(params.lat), lng: parseFloat(params.lng)  }
+        });
+        //{ lat: parseFloat(params.lat), lng: parseFloat(params.lng) 
+        //center: { lat: -28.024, lng: 140.887 }
+        
+        var locations = [
+            { lat: -31.563910, lng: 147.154312 },
+            { lat: -33.718234, lng: 150.363181 },
+            { lat: -33.727111, lng: 150.371124 },
+            { lat: -33.848588, lng: 151.209834 },
+            { lat: -33.851702, lng: 151.216968 },
+            { lat: -34.671264, lng: 150.863657 },
+            { lat: -35.304724, lng: 148.662905 },
+            { lat: -36.817685, lng: 175.699196 },
+            { lat: -36.828611, lng: 175.790222 },
+            { lat: -37.750000, lng: 145.116667 },
+            { lat: -37.759859, lng: 145.128708 },
+            { lat: -37.765015, lng: 145.133858 },
+            { lat: -37.770104, lng: 145.143299 },
+            { lat: -37.773700, lng: 145.145187 },
+            { lat: -37.774785, lng: 145.137978 },
+            { lat: -37.819616, lng: 144.968119 },
+            { lat: -38.330766, lng: 144.695692 },
+            { lat: -39.927193, lng: 175.053218 },
+            { lat: -41.330162, lng: 174.865694 },
+            { lat: -42.734358, lng: 147.439506 },
+            { lat: -42.734358, lng: 147.501315 },
+            { lat: -42.735258, lng: 147.438000 },
+            { lat: -43.999792, lng: 170.463352 }
+        ]
+        
 
-                if (!resizeArea) {
-                    resizeArea = document.createElement('canvas');
-                    resizeArea.id = resizeAreaId;
-                    resizeArea.style.visibility = 'hidden';
-                    document.body.appendChild(resizeArea);
-                }
+        // Create an array of alphabetical characters used to label the markers.
+        var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-                return resizeArea;
-            };
+        // Add some markers to the map.
+        // Note: The code uses the JavaScript Array.prototype.map() method to
+        // create an array of markers based on a given "locations" array.
+        // The map() method here has nothing to do with the Google Maps API.
+        var markers = locations.map(function (location, i) {
+            return new google.maps.Marker({
+                position: location,
+                label: labels[i % labels.length]
+            });
+        });
 
-            /**
-             * Receives an Image Object (can be JPG OR PNG) and returns a new Image Object compressed
-             * @param {Image} sourceImgObj The source Image Object
-             * @param {Integer} quality The output quality of Image Object
-             * @return {Image} result_image_obj The compressed Image Object
-             */
+        // Add a marker clusterer to manage the markers.
+        var markerCluster = new MarkerClusterer(map, markers,
+            { imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m' });
 
-            var jicCompress = function(sourceImgObj, options) {
-                var outputFormat = options.resizeType;
-                var quality = options.resizeQuality * 100 || 70;
-                var mimeType = 'image/jpeg';
-                if (outputFormat !== undefined && outputFormat === 'png') {
-                    mimeType = 'image/png';
-                }
+        
 
-
-                var maxHeight = options.resizeMaxHeight || 300;
-                var maxWidth = options.resizeMaxWidth || 250;
-
-                var height = sourceImgObj.height;
-                var width = sourceImgObj.width;
-
-                // calculate the width and height, constraining the proportions
-                if (width > height) {
-                    if (width > maxWidth) {
-                        height = Math.round(height *= maxWidth / width);
-                        width = maxWidth;
-                    }
-                } else {
-                    if (height > maxHeight) {
-                        width = Math.round(width *= maxHeight / height);
-                        height = maxHeight;
-                    }
-                }
-
-                var cvs = document.createElement('canvas');
-                cvs.width = width; //sourceImgObj.naturalWidth;
-                cvs.height = height; //sourceImgObj.naturalHeight;
-                var ctx = cvs.getContext('2d').drawImage(sourceImgObj, 0, 0, width, height);
-                var newImageData = cvs.toDataURL(mimeType, quality / 100);
-                var resultImageObj = new Image();
-                resultImageObj.src = newImageData;
-                return resultImageObj.src;
-
-            };
-
-            var createImage = function(url, callback) {
-                var image = new Image();
-                image.onload = function() {
-                    callback(image);
-                };
-                image.src = url;
-            };
-
-            var fileToDataURL = function(file) {
-                var deferred = $q.defer();
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    deferred.resolve(e.target.result);
-                };
-                reader.readAsDataURL(file);
-                return deferred.promise;
-            };
-
-
-            return {
-                restrict: 'A',
-                scope: {
-                    //image: '=',
-                    resizeMaxHeight: '@?',
-                    resizeMaxWidth: '@?',
-                    resizeQuality: '@?',
-                    resizeType: '@?'
-                },
-                link: function (scope, element, attrs) {
-                    var doResizing = function(imageResult, callback) {
-                        createImage(imageResult.url, function(image) {
-                            var dataURLcompressed = jicCompress(image, scope);
-                            imageResult.compressed = {
-                                dataURL: dataURLcompressed,
-                                type: dataURLcompressed.match(/:(.+\/.+);/)[1]
-                            };
-                            callback(imageResult);
-                        });
-                    };
-
-                    var applyScope = function(imageResult) {
-                        scope.$apply(function() {
-                            if (attrs.multiple) {
-                                //scope.image.push(imageResult);
-                            } else {
-                                $rootScope.globals.currentUser.profileImageURL = imageResult.compressed.dataURL;
-                                //scope.image = imageResult;
-                            }
-                        });
-                    };
-
-
-                    element.bind('change', function(evt) {
-                        //when multiple always return an array of images
-                        if (attrs.multiple) {
-                            scope.image = [];
-                        }
-
-                        var files = evt.target.files;
-                        for (var i = 0; i < files.length; i++) {
-                            //create a result object for each file in files
-                            var imageResult = {
-                                file: files[i],
-                                url: URL.createObjectURL(files[i])
-                            };
-
-                            fileToDataURL(files[i]).then(function(dataURL) {
-                                imageResult.dataURL = dataURL;
-                            });
-
-                            if (scope.resizeMaxHeight || scope.resizeMaxWidth) { //resize image
-                                doResizing(imageResult, function(imageResult) {
-                                    applyScope(imageResult);
-                                });
-                            } else { //no resizing
-                                applyScope(imageResult);
-                            }
-                        }
-                    });
-                }
-            };
-        }
-    ]);
+    }]);

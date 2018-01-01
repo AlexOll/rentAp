@@ -30,7 +30,7 @@ namespace RentApp.Cache
 
         private static void UpdateDb(IApplicationBuilder app)
         {
-            var tenMinutes = 10000;
+            var tenMinutes = 600000;
             while (true)
             {
                 Thread.Sleep(tenMinutes);

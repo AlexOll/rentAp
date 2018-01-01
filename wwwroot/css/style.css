@@ -103,7 +103,7 @@ footer {
     }
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1328px) {
     .fixed-bottom {
         display: none;
     }
@@ -218,4 +218,8 @@ section.resume-section {
     top: 0;
     opacity: 0;
     cursor: pointer;
+}
+
+.search-flats-div{
+    overflow:auto;
 }

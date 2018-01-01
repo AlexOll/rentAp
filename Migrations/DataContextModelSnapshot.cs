@@ -77,7 +77,7 @@ namespace RentApp.Migrations
 
                     b.Property<string>("Body");
 
-                    b.Property<DateTime>("CreateDate");
+                    b.Property<DateTime>("CreateDateTime");
 
                     b.Property<bool>("IsAlive");
 
@@ -101,7 +101,7 @@ namespace RentApp.Migrations
 
                     b.Property<Guid>("ActivationCode");
 
-                    b.Property<DateTime>("CreateDate");
+                    b.Property<DateTime>("CreateDateTime");
 
                     b.Property<string>("Email");
 
@@ -110,6 +110,8 @@ namespace RentApp.Migrations
                     b.Property<bool>("IsActivated");
 
                     b.Property<bool>("IsAlive");
+
+                    b.Property<DateTime>("LastEntranceDateTime");
 
                     b.Property<string>("Lastname");
 

@@ -11,7 +11,7 @@
     border: 0;
     height: 40px;
     text-indent: 1px;
-    padding: .5rem .75rem;
+    padding: 5px 10px;
     -webkit-appearance: none;
     -moz-appearance: none;
 }
@@ -22,8 +22,7 @@
     }
 
     .home-select-single option {
-        background-color: #343a40;
-        height: 20px;
+        background-color: #4F6877;
         cursor: pointer;
         color: white;
     }
@@ -38,7 +37,7 @@
     border-radius: 0;
     border: 0;
     text-indent: 1px;
-    padding: .5rem .75rem;
+    padding: 5px 10px;
     overflow-y: hidden;
     background-image: none;
 }
@@ -51,7 +50,7 @@
     }
 
         .home-select-multiple option:hover {
-            background-color: #343a40;
+            background-color: #4F6877;
             color: white;
         }
 
@@ -65,5 +64,45 @@
     border: 0;
     height: 40px;
     text-indent: 1px;
-    padding: .5rem .75rem;
+    padding: 5px 10px;
 }
+
+
+
+.dropdown dd {
+    position: relative;
+}
+
+.dropdown dt {
+    font-size: 20px;
+    color: #EC6F66;
+    background-color: white;
+    display: block;
+    height: 40px;
+    text-indent: 1px;
+    padding: 5px 10px;
+}
+
+    .dropdown dt a span,
+    .multiSel span {
+        font-family: 'Raleway', sans-serif;
+        font-size: 20px;
+        color: #EC6F66;
+        cursor: pointer;
+        display: inline-block;
+    }
+
+.dropdown dd ul {
+    background-color: #4F6877;
+    border: 0;
+    color: #fff;
+    display: none;
+    left: 0px;
+    padding: 2px 15px 2px 5px;
+    position: absolute;
+    top: 2px;
+    width: 100%;
+    list-style: none;
+    z-index: 1;
+}
+
