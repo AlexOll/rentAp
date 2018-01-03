@@ -1,6 +1,5 @@
 angular.module('myApp.home', ['directives'])
-    .controller('homeCtrl', ['$scope', '$cookies', '$location',
-        function ($scope, $cookies, $location) {
+    .controller('homeCtrl', ['$scope', '$location', function ($scope, $location) {
 
             $scope.city = null;
             $scope.options = {
@@ -34,7 +33,7 @@ angular.module('myApp.home', ['directives'])
             };
 
             $scope.search = function () {
-                debugger;
+
                 var ss = $scope.placeId;
                 $location.path('/search/').search({
                     propertyType: $scope.propertyType.model,
