@@ -45,31 +45,22 @@ namespace RentApp.Repositories
                 _context.RealEstateObjects.Add(item);
                 _context.SaveChanges();
             }
-        }
-
-        public void RemoveTotaly(Guid id)
-        {
-            using (_context)
-            {
-                RealEstateObject item = GetById(id);
-
-                _context.RealEstateObjects.Attach(item);
-                _context.RealEstateObjects.Remove(item);
-                _context.SaveChanges();
-            }
+            RealEstateCache.AddOrUpdate(item);
         }
 
         public void Remove(Guid id)
         {
+            RealEstateObject item = null;
             using (_context)
             {
-                RealEstateObject item = GetById(id);
+                item = GetById(id);
 
                 item.IsAlive = false;
                 _context.RealEstateObjects.Attach(item);
                 _context.Entry(item).State = EntityState.Modified;
                 _context.SaveChanges();
             }
+            RealEstateCache.AddOrUpdate(item);
         }
 
         internal void Update(RealEstateObject item)
@@ -81,6 +72,7 @@ namespace RentApp.Repositories
                 _context.Entry(item).State = EntityState.Modified;
                 _context.SaveChanges();
             }
+            RealEstateCache.AddOrUpdate(item);
         }
     }
 }

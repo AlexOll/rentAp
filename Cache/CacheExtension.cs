@@ -19,6 +19,8 @@ namespace RentApp.Cache
 
                 app.ApplicationServices.GetRequiredService<FlatCache>();
 
+                app.ApplicationServices.GetRequiredService<RealEstateCache>();
+
 
                 Task.Factory.StartNew(() => UpdateDb(app));
             }
