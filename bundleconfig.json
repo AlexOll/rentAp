@@ -27,7 +27,8 @@
         "wwwroot/components/forgotpassword/forgotpassword.js",
         "wwwroot/components/register/register.js",
         "wwwroot/components/home/home.js",
-        "wwwroot/components/profile/profile.js"
+        "wwwroot/components/profile/profile.js",
+        "wwwroot/components/mapsearch/mapsearch.js"
 
       ],
     "minify": {

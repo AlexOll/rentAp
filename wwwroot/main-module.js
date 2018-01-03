@@ -11,6 +11,7 @@ angular
         'myApp.register',
         'myApp.home',
         'myApp.profile',
+        'myApp.mapSearch',
         'services',
         'utilities'
     ])
@@ -38,7 +39,12 @@ angular
                 templateUrl: 'components/profile/profile.html',
                 controller: 'profileCtrl'
             })
+            .when('/search', {
+                templateUrl: 'components/mapsearch/mapsearch.html',
+                controller: 'mapSearchCtrl'
+            })
             .otherwise({ redirectTo: '/' })
+
     }])
     .run(['$rootScope', '$location', '$cookies', '$http', '$window', '$interval', 'ProfileService', 'HubUtility',
         function ($rootScope, $location, $cookies, $http, $window, $interval, ProfileService, HubUtility) {
@@ -46,8 +52,9 @@ angular
             $rootScope.isSmallResolution = $window.innerWidth <= 992;
 
             $interval(function () {
-                ProfileService.UpdateOnlineStatus($rootScope.globals.currentUser.id);
-            }, 10000);
+                if ($rootScope.globals.currentUser)
+                    ProfileService.UpdateOnlineStatus($rootScope.globals.currentUser.id);
+            }, 60000);
 
             $rootScope.globals = $cookies.getObject('globals') || {};
             if ($rootScope.globals.currentUser) {
@@ -81,8 +88,15 @@ angular
                     $('.navbar-collapse').collapse('hide');
             });
         }])
-    .controller('mainCtrl', ['$scope', '$rootScope', '$location', '$timeout', 'AnchorSmoothScrollService', 'AuthenticationService',
-        function ($scope, $rootScope, $location, $timeout, AnchorSmoothScrollService, AuthenticationService, $window) {
+    .controller('mainCtrl', ['$scope', '$rootScope', '$location', '$timeout', 'AnchorSmoothScrollService', 'AuthenticationService', 'HubUtility',
+        function ($scope, $rootScope, $location, $timeout, AnchorSmoothScrollService, AuthenticationService, HubUtility) {
+
+            HubUtility.messageSent(function (msg) {
+                alert('new message at the mainCtrl');
+            });
+
+            HubUtility.onlineStatusUpdated(function (msg) {});
+
 
             $scope.gotoElement = function (eID) {
 

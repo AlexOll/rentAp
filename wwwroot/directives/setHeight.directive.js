@@ -6,7 +6,7 @@
         .directive('setHeight', function ($window) {
             return {
                 link: function (scope, element, attrs) {
-                    element.css('height', $window.innerHeight * 0.6 + 'px');
+                    element.css('height', $window.innerHeight * attrs.setHeight + 'px');
                 }
             }
         })
