@@ -28,7 +28,7 @@ namespace RentApp.Repositories
             }
         }
 
-        public RealEstateObject getById(Guid id)
+        public RealEstateObject GetById(Guid id)
         {
             using (_context)
             {
@@ -51,7 +51,7 @@ namespace RentApp.Repositories
         {
             using (_context)
             {
-                RealEstateObject item = getById(id);
+                RealEstateObject item = GetById(id);
 
                 _context.RealEstateObjects.Attach(item);
                 _context.RealEstateObjects.Remove(item);
@@ -63,7 +63,7 @@ namespace RentApp.Repositories
         {
             using (_context)
             {
-                RealEstateObject item = getById(id);
+                RealEstateObject item = GetById(id);
 
                 item.IsAlive = false;
                 _context.RealEstateObjects.Attach(item);
