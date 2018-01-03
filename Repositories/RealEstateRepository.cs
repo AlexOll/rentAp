@@ -50,11 +50,9 @@ namespace RentApp.Repositories
 
         public void Remove(Guid id)
         {
-            RealEstateObject item = null;
+            RealEstateObject item = GetById(id); ;
             using (_context)
             {
-                item = GetById(id);
-
                 item.IsAlive = false;
                 _context.RealEstateObjects.Attach(item);
                 _context.Entry(item).State = EntityState.Modified;
