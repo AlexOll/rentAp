@@ -12,7 +12,7 @@ namespace RentApp.Models.DbModels
         public float Area { get; set; }
         public string PlaceId { get; set; }
         public PropertyType PropertyType { get; set; }
-        public BaseRealEstateDetailes PropertyDetailes { get; set; }
+        public BaseRealEstateDetailes RealEstateDetailes { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime UpdateDate { get; set; }
         public bool IsAlive { get; set; }
