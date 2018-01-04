@@ -11,6 +11,7 @@
 
         "wwwroot/directives/_directives.module.js",
         "wwwroot/directives/ngAutocomplete.directive.js",
+        "wwwroot/directives/ngExtendedSelect.directive.js",
         "wwwroot/directives/ngImageCompress.directive.js",
         "wwwroot/directives/setHeight.directive.js",
         "wwwroot/directives/uniqueField.directive.js",

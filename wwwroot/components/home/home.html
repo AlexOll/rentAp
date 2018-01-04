@@ -8,7 +8,7 @@
                             ng-options="opt.id as opt.name for opt in serviceType.availableOptions"></select>
 
                     <h5 class="my-3">Property type:</h5>
-                    <select class="home-select-multiple" ng-model="propertyType.model" size="{{propertyType.availableOptions.length+1}}"
+                    <select class="home-select-multiple" ng-extended-select ng-model="propertyType.model" size="{{propertyType.availableOptions.length+1}}"
                             ng-options="opt.id as opt.name for opt in propertyType.availableOptions" multiple></select>
 
                     <h5 class="my-3">City, Country:</h5>
