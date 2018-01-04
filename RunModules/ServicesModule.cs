@@ -25,6 +25,10 @@ namespace RentApp.RunModules
             builder.RegisterType<ProfileManager>().AsSelf();
             builder.RegisterType<MessageRepository>().AsSelf();
 
+            builder.RegisterType<RealEstateCache>().AsSelf();
+            builder.RegisterType<RealEstateManager>().AsSelf();
+            builder.RegisterType<RealEstateRepository>().AsSelf();
+
         }
     }
 }
