@@ -8,20 +8,18 @@
         "wwwroot/utilities/Guid.utility.js",
         "wwwroot/utilities/Hub.utility.js",
 
-
         "wwwroot/directives/_directives.module.js",
         "wwwroot/directives/ngAutocomplete.directive.js",
         "wwwroot/directives/ngImageCompress.directive.js",
         "wwwroot/directives/setHeight.directive.js",
         "wwwroot/directives/uniqueField.directive.js",
 
-        "wwwroot/services/Profile.service.js",
+        "wwwroot/services/_service.module.js",
         "wwwroot/services/AnchorSmoothScroll.service.js",
         "wwwroot/services/User.service.js",
         "wwwroot/services/Authentication.service.js",
         "wwwroot/services/Dictionary.service.js",
-        "wwwroot/services/_service.module.js",
-
+        "wwwroot/services/Profile.service.js",
 
         "wwwroot/components/login/login.js",
         "wwwroot/components/forgotpassword/forgotpassword.js",

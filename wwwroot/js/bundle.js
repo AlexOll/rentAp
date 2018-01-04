@@ -43,28 +43,34 @@
 
     function HubUtility($rootScope) {
         var service = {
-            initConnection: initConnection,
-            messageSent: messageSent,
-            onlineStatusUpdated: onlineStatusUpdated
+            InitConnection: InitConnection,
+            MessageSent: MessageSent,
+            OnlineStatusUpdated: OnlineStatusUpdated,
+            Disconnect: Disconnect
         };
 
         return service;
 
-        function initConnection() {
+        function InitConnection() {
             $rootScope.hubConnection = new signalR.HubConnection('/mainHub');
             $rootScope.hubConnection.start().then(
                 function () {
                     $rootScope.hubConnection.invoke("InitConnection", $rootScope.globals.currentUser.id);
                 });
+            $rootScope.hubConnection.on('messageSent', function (res) { });
+            $rootScope.hubConnection.on('onlineStatusUpdated', function (res) { });
         }
 
-        function messageSent(callback) {
-            $rootScope.hubConnection.on('messageSent', msg => callback(msg));
+        function MessageSent(callback) {
+            $rootScope.hubConnection.on('messageSent', function (res) { return callback(res) });
         }
-        function onlineStatusUpdated(callback) {
-            $rootScope.hubConnection.on('onlineStatusUpdated', msg => callback(msg));
+        function OnlineStatusUpdated(callback) {
+            $rootScope.hubConnection.on('onlineStatusUpdated', function (res) { return callback(res) });
         }
-        
+        function Disconnect() {
+            $rootScope.hubConnection.stop()
+        }
+
     }
 })();
 (function () {
@@ -88,9 +94,8 @@
                     ngModel: '=',
                     options: '=?',
                     details: '=?',
-                    placeid: "=placeid",
                     lat: "=lat",
-                    long: "=long"
+                    lng: "=lng"
                 },
 
                 link: function (scope, element, attr, ctrl) {
@@ -140,17 +145,18 @@
                         if (scope.gPlace === undefined) {
                             scope.gPlace = new google.maps.places.Autocomplete(element[0], {});
                         }
+
                         google.maps.event.addListener(scope.gPlace, 'place_changed', function () {
 
                             var result = scope.gPlace.getPlace();
 
-                            attr.$set('placeid', result.place_id);
-                            attr.$set('lat', result.geometry.location.lat());
-                            attr.$set('lng', result.geometry.location.lng());
-
                             if (result !== undefined) {
+
                                 if (result.address_components !== undefined) {
                                     ctrl.$setValidity('notexists', false);
+
+                                    attr.$set('lat', result.geometry.location.lat());
+                                    attr.$set('lng', result.geometry.location.lng());
 
                                     scope.$apply(function () {
 
@@ -450,223 +456,228 @@
         }])
 
 })();
-class ProfileService {
-    constructor($http) {
-        this.$http = $http;
-    }
 
-    GetUserMessages(id, callback) {
-        this.$http.get('/api/profile/usermessages/' + id)
-            .then(res => callback(res));
-    }
+(function () {
 
-    SendChatMessage(message, callback) {
-        return this.$http.post('/api/profile', {
-            "Id": message.id,
-            "UserIdFrom": message.userIdFrom,
-            "UserIdTo": message.userIdTo,
-            "Body": message.body,
-            "CreateDateTime": message.createDateTime,
-        })
-            .then(res => callback(res));
-    }
-    UpdateOnlineStatus(id) {
-        return this.$http.put('/api/profile/updateonlinestatus/' + id)
-            .then();
-    }
-}
+    'use strict';
+
+    angular.module('services', ['ngRoute', 'ngCookies']);
+
+})();
 
 
-class AnchorSmoothScrollService {
-
-    scrollTo(eID) {
-
-        var startY = currentYPosition();
-        var stopY = elmYPosition(eID);
-        var distance = stopY > startY ? stopY - startY : startY - stopY;
-        if (distance < 100) {
-            scrollTo(0, stopY); return;
-        }
-        var speed = Math.round(distance / 20);
-        if (speed >= 20) speed = 20;
-        var step = Math.round(distance / 25);
-        var leapY = stopY > startY ? startY + step : startY - step;
-        var timer = 0;
-        if (stopY > startY) {
-            for (var i = startY; i < stopY; i += step) {
-                setTimeout("window.scrollTo(0, " + leapY + ")", timer * speed);
-                leapY += step; if (leapY > stopY) leapY = stopY; timer++;
-            } return;
-        }
-        for (var j = startY; j > stopY; j -= step) {
-            setTimeout("window.scrollTo(0, " + leapY + ")", timer * speed);
-            leapY -= step; if (leapY < stopY) leapY = stopY; timer++;
-        }
-
-        function currentYPosition() {
-            // Firefox, Chrome, Opera, Safari
-            if (self.pageYOffset) return self.pageYOffset;
-            // Internet Explorer 6 - standards mode
-            if (document.documentElement && document.documentElement.scrollTop)
-                return document.documentElement.scrollTop;
-            // Internet Explorer 6, 7 and 8
-            if (document.body.scrollTop) return document.body.scrollTop;
-            return 0;
-        }
-
-        function elmYPosition(eID) {
-            var elm = document.getElementById(eID);
-            var y = elm.offsetTop;
-            var node = elm;
-            while (node.offsetParent && node.offsetParent !== document.body) {
-                node = node.offsetParent;
-                y += node.offsetTop;
-            } return y;
-        }
-
-    };
-
-}
-class UserService {
-    constructor($http) {
-        this.$http = $http;
-    }
-
-    Create(user, callback) {
-        return this.$http.post('/api/user', {
-            "PhoneNumber": user.phonenumber,
-            "FirstName": user.firstName,
-            "LastName": user.lastName,
-            "Password": user.password,
-            "Email": user.email
-        })
-            .then(res => callback(res));
-    }
-    Update(user, callback) {
-        return this.$http.post('/api/user/update', {
-            "Id": user.id,
-            "PhoneNumber": user.phonenumber,
-            "FirstName": user.firstname,
-            "LastName": user.lastname,
-            "Password": user.password,
-            "Email": user.email,
-            "ProfileImageURL": user.profileImageURL
-        })
-            .then(res => callback(res));
-    }
-}
 
 
-class AuthenticationService {
-    constructor($http, $cookies, $rootScope, $base64) {
+(function () {
+    'use strict';
 
-        this.$http = $http;
-        this.$cookies = $cookies;
-        this.$rootScope = $rootScope;
-        this.keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-        this.$base64 = $base64;
-    }
+    angular
+        .module('services')
+        .factory('AnchorSmoothScrollService', AnchorSmoothScrollService)
 
-    Login(input, password, callback) {
-        this.$http.post('/api/authentication', { Input: input, Password: password })
-            .then(res => callback(res));
-    }
+    AnchorSmoothScrollService.$inject = [];
 
-    ForgotPass(email, callback) {
-        this.$http.get('/api/authentication/forgotpassword/' + email)
-            .then(res => callback(res));
-    }
-
-    ResendActivationCode(email, callback) {
-        this.$http.get('/api/authentication/newactivationcode/' + email)
-            .then(res => callback(res));
-    }
-
-    CheckActivationCode(activationCode, callback) {
-        this.$http.get('/api/authentication/' + activationCode)
-            .then(res => callback(res));
-    }
-
-    //Base64ToImage(source) {
-    //    var result = null;
-
-    //    if (typeof source !== 'string') {
-    //        return result;
-    //    }
-    //    var dataURL = this.$base64.decode(source);
-    //    var mime = dataURL.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/);
-
-    //    if (mime && mime.length) {
-    //        result = new File([""], "", { type: mime[1] })
-    //        result.dataURL = dataURL;
-    //    }
-
-    //    return result;
-    //}
-    SetCredentials(user) {
-
-        var input = user.email + ':' + user.id;
-        var authdata = this.Base64Encode(input);
-
-        this.$rootScope.globals = {
-            currentUser: {
-                id: user.id,
-                email: user.email,
-                firstname: user.firstname,
-                phonenumber: user.phonenumber,
-                lastname: user.lastname,
-                name: user.firstname + ' ' + user.lastname,
-                profileImageURL: user.profileImageURL,
-                authdata: authdata
-            }
+    function AnchorSmoothScrollService() {
+        var service = {
+            ScrollTo: ScrollTo
         };
 
-        this.$http.defaults.headers.common['Authorization'] = 'Basic ' + authdata;
+        return service;
 
-        var cookieExp = new Date();
-        cookieExp.setDate(cookieExp.getDate() + 7);
-        this.$cookies.putObject('globals', this.$rootScope.globals, { expires: cookieExp });
-    }
+        function ScrollTo(eID) {
 
-    ClearCredentials() {
-        this.$rootScope.globals = {};
-        this.$cookies.remove('globals');
-        this.$http.defaults.headers.common.Authorization = 'Basic';
-    }
-
-    Base64Encode(input) {
-        var output = "";
-        var chr1, chr2, chr3 = "";
-        var enc1, enc2, enc3, enc4 = "";
-        var i = 0;
-
-        do {
-            chr1 = input.charCodeAt(i++);
-            chr2 = input.charCodeAt(i++);
-            chr3 = input.charCodeAt(i++);
-
-            enc1 = chr1 >> 2;
-            enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-            enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
-            enc4 = chr3 & 63;
-
-            if (isNaN(chr2)) {
-                enc3 = enc4 = 64;
-            } else if (isNaN(chr3)) {
-                enc4 = 64;
+            var startY = currentYPosition();
+            var stopY = elmYPosition(eID);
+            var distance = stopY > startY ? stopY - startY : startY - stopY;
+            if (distance < 100) {
+                scrollTo(0, stopY); return;
+            }
+            var speed = Math.round(distance / 20);
+            if (speed >= 20) speed = 20;
+            var step = Math.round(distance / 25);
+            var leapY = stopY > startY ? startY + step : startY - step;
+            var timer = 0;
+            if (stopY > startY) {
+                for (var i = startY; i < stopY; i += step) {
+                    setTimeout("window.scrollTo(0, " + leapY + ")", timer * speed);
+                    leapY += step; if (leapY > stopY) leapY = stopY; timer++;
+                } return;
+            }
+            for (var j = startY; j > stopY; j -= step) {
+                setTimeout("window.scrollTo(0, " + leapY + ")", timer * speed);
+                leapY -= step; if (leapY < stopY) leapY = stopY; timer++;
             }
 
-            output = output +
-                this.keyStr.charAt(enc1) +
-                this.keyStr.charAt(enc2) +
-                this.keyStr.charAt(enc3) +
-                this.keyStr.charAt(enc4);
-            chr1 = chr2 = chr3 = "";
-            enc1 = enc2 = enc3 = enc4 = "";
-        } while (i < input.length);
+            function currentYPosition() {
+                if (self.pageYOffset) return self.pageYOffset;
+                if (document.documentElement && document.documentElement.scrollTop)
+                    return document.documentElement.scrollTop;
+                if (document.body.scrollTop) return document.body.scrollTop;
+                return 0;
+            }
 
-        return output;
-    };
+            function elmYPosition(eID) {
+                var elm = document.getElementById(eID);
+                var y = elm.offsetTop;
+                var node = elm;
+                while (node.offsetParent && node.offsetParent !== document.body) {
+                    node = node.offsetParent;
+                    y += node.offsetTop;
+                } return y;
+            }
+
+        };
+    }
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('services')
+        .factory('UserService', UserService)
+
+    UserService.$inject = ['$http'];
+
+    function UserService($http) {
+        var service = {
+            Create: Create,
+            Update: Update
+        };
+
+        return service;
+
+        function Create(user, callback) {
+            $http.post('/api/user', {
+                "PhoneNumber": user.phonenumber,
+                "FirstName": user.firstName,
+                "LastName": user.lastName,
+                "Password": user.password,
+                "Email": user.email
+            }).then(function (res) {
+                return callback(res);
+            })
+        }
+        function Update(user, callback) {
+             $http.post('/api/user/update', {
+                "Id": user.id,
+                "PhoneNumber": user.phonenumber,
+                "FirstName": user.firstname,
+                "LastName": user.lastname,
+                "Password": user.password,
+                "Email": user.email,
+                "ProfileImageURL": user.profileImageURL
+             }).then(function (res) {
+                 return callback(res);
+             })
+        }
+    }
+})();
+(function () {
+    'use strict';
+
+    angular
+        .module('services')
+        .factory('AuthenticationService', AuthenticationService)
+
+    AuthenticationService.$inject = ['$http', '$cookies', '$rootScope', '$base64'];
+
+    function AuthenticationService($http, $cookies, $rootScope, $base64) {
+        var service = {
+            Login: Login,
+            ForgotPass: ForgotPass,
+            ResendActivationCode: ResendActivationCode,
+            CheckActivationCode: CheckActivationCode,
+            SetCredentials: SetCredentials,
+            ClearCredentials: ClearCredentials
+        };
+
+        return service;
+
+        function Login(input, password, callback) {
+            $http.post('/api/authentication', { Input: input, Password: password })
+                .then(function (res) {return callback(res)});
+        }
+
+        function ForgotPass(email, callback) {
+            $http.get('/api/authentication/forgotpassword/' + email)
+                .then(function (res) { return callback(res) });
+        }
+
+        function ResendActivationCode(email, callback) {
+            $http.get('/api/authentication/newactivationcode/' + email)
+                .then(function (res) { return callback(res) });
+        }
+
+        function CheckActivationCode(activationCode, callback) {
+            $http.get('/api/authentication/' + activationCode)
+                .then(function (res) { return callback(res) });
+        }
+
+        function SetCredentials(user) {
+
+            var input = user.email + ':' + user.id;
+            var authdata = Base64Encode(input);
+
+            $rootScope.globals = {
+                currentUser: {
+                    id: user.id,
+                    email: user.email,
+                    firstname: user.firstname,
+                    phonenumber: user.phonenumber,
+                    lastname: user.lastname,
+                    name: user.firstname + ' ' + user.lastname,
+                    profileImageURL: user.profileImageURL,
+                    authdata: authdata
+                }
+            };
+
+            $http.defaults.headers.common['Authorization'] = 'Basic ' + authdata;
+
+            var cookieExp = new Date();
+            cookieExp.setDate(cookieExp.getDate() + 7);
+            $cookies.putObject('globals', $rootScope.globals, { expires: cookieExp });
+        }
+
+        function ClearCredentials() {
+            $rootScope.globals = {};
+            $cookies.remove('globals');
+            $http.defaults.headers.common.Authorization = 'Basic';
+        }
+
+        function Base64Encode(input) {
+            var output = "";
+            var chr1, chr2, chr3 = "";
+            var enc1, enc2, enc3, enc4 = "";
+            var i = 0;
+
+            do {
+                chr1 = input.charCodeAt(i++);
+                chr2 = input.charCodeAt(i++);
+                chr3 = input.charCodeAt(i++);
+
+                enc1 = chr1 >> 2;
+                enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+                enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+                enc4 = chr3 & 63;
+
+                if (isNaN(chr2)) {
+                    enc3 = enc4 = 64;
+                } else if (isNaN(chr3)) {
+                    enc4 = 64;
+                }
+                var keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+                output = output +
+                    keyStr.charAt(enc1) +
+                    keyStr.charAt(enc2) +
+                    keyStr.charAt(enc3) +
+                    keyStr.charAt(enc4);
+                chr1 = chr2 = chr3 = "";
+                enc1 = enc2 = enc3 = enc4 = "";
+            } while (i < input.length);
+
+            return output;
+        };
 
     //Base64Decode(input) {
 
@@ -685,10 +696,10 @@ class AuthenticationService {
     //    input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
 
     //    do {
-    //        enc1 = this.keyStr.indexOf(input.charAt(i++));
-    //        enc2 = this.keyStr.indexOf(input.charAt(i++));
-    //        enc3 = this.keyStr.indexOf(input.charAt(i++));
-    //        enc4 = this.keyStr.indexOf(input.charAt(i++));
+    //        enc1 = keyStr.indexOf(input.charAt(i++));
+    //        enc2 = keyStr.indexOf(input.charAt(i++));
+    //        enc3 = keyStr.indexOf(input.charAt(i++));
+    //        enc4 = keyStr.indexOf(input.charAt(i++));
 
     //        chr1 = (enc1 << 2) | (enc2 >> 4);
     //        chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
@@ -710,29 +721,92 @@ class AuthenticationService {
 
     //    return output;
     //}
-};
+
+            //Base64ToImage(source) {
+    //    var result = null;
+
+    //    if (typeof source !== 'string') {
+    //        return result;
+    //    }
+    //    var dataURL = $base64.decode(source);
+    //    var mime = dataURL.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/);
+
+    //    if (mime && mime.length) {
+    //        result = new File([""], "", { type: mime[1] })
+    //        result.dataURL = dataURL;
+    //    }
+
+    //    return result;
+    //}
+    }
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('services')
+        .factory('DictionaryService', DictionaryService)
+
+    DictionaryService.$inject = ['$http'];
+
+    function DictionaryService($http) {
+        var service = {
+            GetServiceTypes: GetServiceTypes
+        };
+
+        return service;
+
+        function GetServiceTypes(callback) {
+            $http.get('/api/dictionary/servicetypes')
+                .then(function (res) { return callback(res) });
+        }
+    }
+})();
 
 
+(function () {
+    'use strict';
 
-class DictionaryService {
-	constructor($http) {
-		this.$http = $http;
-	}
+    angular
+        .module('services')
+        .factory('ProfileService', ProfileService)
 
-    GetServiceTypes(callback) {
-        this.$http.get('/api/dictionary/servicetypes')
-            .then(res => callback(res));
-	}
-}
-'use strict';
-﻿
-angular.module('services', ['ngRoute','ngCookies'])
-    .service('UserService', UserService)
-    .service('AuthenticationService', AuthenticationService)
-    .service('AnchorSmoothScrollService', AnchorSmoothScrollService)
-    .service('ProfileService', ProfileService)
-    .service('DictionaryService', DictionaryService)
+    ProfileService.$inject = ['$http','$interval'];
 
+    function ProfileService($http, $interval) {
+        var service = {
+            GetUserMessages: getUserMessages,
+            SendChatMessage: SendChatMessage,
+            UpdateOnlineStatus: UpdateOnlineStatus
+        };
+
+        return service;
+
+        function getUserMessages(id, callback) {
+            $http.get('/api/profile/usermessages/' + id)
+                .then(function (res) { return callback(res) });
+        }
+
+        function SendChatMessage(message, callback) {
+            $http.post('/api/profile', {
+                "Id": message.id,
+                "UserIdFrom": message.userIdFrom,
+                "UserIdTo": message.userIdTo,
+                "Body": message.body,
+                "CreateDateTime": message.createDateTime,
+            })
+                .then(function (res) { return callback(res) });
+        }
+
+        function UpdateOnlineStatus(id) {
+            $interval(function () {
+                $http.put('/api/profile/updateonlinestatus/' + id)
+                    .then();
+            }, 60000);
+        }
+    }
+})();
 
 
 angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
@@ -764,7 +838,7 @@ angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
 
                     if (response.data.responseCode === 200) {
                         AuthenticationService.SetCredentials(response.data);
-                        HubUtility.initConnection();
+                        HubUtility.InitConnection();
                         toastr.success('Authentication succeeded', 'Have fun!');
                         $location.path('/');
                     }
@@ -861,8 +935,8 @@ angular.module('myApp.register', ['ngRoute', 'services', 'toastr', 'directives']
 
 
 angular.module('myApp.home', ['directives'])
-    .controller('homeCtrl', ['$scope', 'DictionaryService', '$location',
-        function ($scope, DictionaryService, $location) {
+    .controller('homeCtrl', ['$scope', 'DictionaryService', 'toastr', '$location',
+        function ($scope, DictionaryService, toastr, $location) {
 
             $scope.city = null;
             $scope.options = {
@@ -886,7 +960,6 @@ angular.module('myApp.home', ['directives'])
 
             $scope.search = function () {
 
-                var ss = $scope.placeId;
                 $location.path('/search/').search({
                     propertyType: $scope.propertyType.model,
                     serviceType: $scope.serviceType.model,
@@ -897,27 +970,27 @@ angular.module('myApp.home', ['directives'])
             }
 
 
-        DictionaryService.GetServiceTypes(function (response) {
+            DictionaryService.GetServiceTypes(function (response) {
 
-            if (response.status === 200) {
+                if (response.status === 200) {
 
-                $scope.serviceType = {};
-                $scope.serviceType.availableOptions = [];
+                    $scope.serviceType = {};
+                    $scope.serviceType.availableOptions = [];
 
-                angular.forEach(response.data, function (value, key) {
-                    $scope.serviceType.availableOptions.push({ "id": key, "name": value });
-                });
+                    angular.forEach(response.data, function (value, key) {
+                        $scope.serviceType.availableOptions.push({ "id": key, "name": value });
+                    });
 
-                $scope.serviceType.model = $scope.serviceType.availableOptions[0].id;
-            }
-            else {
-                toastr.error('Error code: ' + response.status, "Error", {
-                    "timeOut": "5000",
-                    "extendedTImeout": "0"
-                });
-            }
-        });
-    }]);
+                    $scope.serviceType.model = $scope.serviceType.availableOptions[0].id;
+                }
+                else {
+                    toastr.error('Error code: ' + response.status, "Error", {
+                        "timeOut": "5000",
+                        "extendedTImeout": "0"
+                    });
+                }
+            });
+        }]);
 
 angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 'base64', 'utilities'])
     .controller('profileCtrl',
@@ -926,13 +999,13 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
 
             $scope.user = angular.copy($rootScope.globals.currentUser);
 
-            HubUtility.messageSent(function (msg) {
+            HubUtility.MessageSent(function (msg) {
                 $scope.userMessages.push(msg);
                 $scope.$apply();
                 ScrollChatDown();
             });
 
-            HubUtility.onlineStatusUpdated(function (msg) {
+            HubUtility.OnlineStatusUpdated(function (msg) {
                 $scope.chatUsers.forEach(function (user) {
                         user.lastOnlineDateTime = msg[user.id.toString()] || user.lastOnlineDateTime;
                 });
@@ -979,7 +1052,7 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
                 $timeout(function () {
                     ScrollChatDown();
                     if ($rootScope.isSmallResolution) {
-                        AnchorSmoothScrollService.scrollTo('chat-header', -70);
+                        AnchorSmoothScrollService.ScrollTo('chat-header', -70);
                     }
                 }, 500);
             }
@@ -1044,14 +1117,14 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
             }
 
             $scope.updateProfile = function (ev) {
-                debugger;
+
                 $scope.dataLoading = true;
                 $scope.user.profileImageURL = $rootScope.globals.currentUser.profileImageURL;
                 UserService.Update($scope.user, function (response) {
 
                     if (response.data.responseCode === 200) {
                         AuthenticationService.SetCredentials(response.data);
-                        $rootScope.name = $rootScope.globals.currentUser.name;
+
                         toastr.success('Your profile has been updated.', 'Success!');
                         $scope.user.password = '';
                     }
@@ -1074,8 +1147,6 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
 
 angular.module('myApp.mapSearch', [])
     .controller('mapSearchCtrl', ['$scope', '$location', '$timeout', function ($scope, $location, $timeout) {
-
-
 
         $scope.options = {
             country: 'ukr',
@@ -1116,12 +1187,10 @@ angular.module('myApp.mapSearch', [])
         $scope.choosePropertyType = function (opt) {
 
             var index = $scope.propertyType.model.indexOf(opt.id);
-            if (index >= 0) {
+            if (index >= 0)
                 $scope.propertyType.model.splice(index, 1);
-            }
             else
                 $scope.propertyType.model.push(opt.id)
-            console.log($scope.propertyType.model);
         }
 
         $(".dropdown dt").on('click', function () {
@@ -1137,89 +1206,61 @@ angular.module('myApp.mapSearch', [])
             if (!$clicked.parents().hasClass("dropdown")) $(".dropdown dd ul").hide();
         });
 
-        $timeout(function () {
-            var myLatlng = { lat: parseFloat(params.lat), lng: parseFloat(params.lng) };
+        var locations = [
+            { lat: -31.563910, lng: 147.154312 },
+            { lat: -33.718234, lng: 150.363181 },
+            { lat: -33.727111, lng: 150.371124 },
+            { lat: -33.848588, lng: 151.209834 },
+            { lat: -33.851702, lng: 151.216968 },
+            { lat: -34.671264, lng: 150.863657 },
+            { lat: -35.304724, lng: 148.662905 },
+            { lat: -36.817685, lng: 175.699196 },
+            { lat: -36.828611, lng: 175.790222 },
+            { lat: -37.750000, lng: 145.116667 },
+            { lat: -37.759859, lng: 145.128708 },
+            { lat: -37.765015, lng: 145.133858 },
+            { lat: -37.770104, lng: 145.143299 },
+            { lat: -37.773700, lng: 145.145187 },
+            { lat: -37.774785, lng: 145.137978 },
+            { lat: -37.819616, lng: 144.968119 },
+            { lat: -38.330766, lng: 144.695692 },
+            { lat: -39.927193, lng: 175.053218 },
+            { lat: -41.330162, lng: 174.865694 },
+            { lat: -42.734358, lng: 147.439506 },
+            { lat: -42.734358, lng: 147.501315 },
+            { lat: -42.735258, lng: 147.438000 },
+            { lat: -43.999792, lng: 170.463352 }
+        ]
 
-            var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 14,
-                center: myLatlng
-            });
+        function createMap(_lat, _lng, locations) {
+            $timeout(function () {
+                var myLatlng = { lat: _lat, lng: _lng };
 
-            //var marker = new google.maps.Marker({
-            //    position: myLatlng,
-            //    map: map,
-            //    title: 'Click to zoom'
-            //});
-
-            //map.addListener('center_changed', function () {
-            //    // 3 seconds after the center of the map has changed, pan back to the
-            //    // marker.
-            //    window.setTimeout(function () {
-            //        map.panTo(marker.getPosition());
-            //    }, 3000);
-            //});
-
-            //map.addListener('idle', function () {
-
-            //    window.setTimeout(function () {
-            //        map.panTo(marker.getPosition());
-            //    }, 3000);
-            //});
-
-            //map.addListener('center_changed', function () {
-            //    // 3 seconds after the center of the map has changed, pan back to the
-            //    // marker.
-            //    window.setTimeout(function () {
-            //        map.panTo(marker.getPosition());
-            //    }, 3000);
-            //});
-
-
-            var locations = [
-                { lat: -31.563910, lng: 147.154312 },
-                { lat: -33.718234, lng: 150.363181 },
-                { lat: -33.727111, lng: 150.371124 },
-                { lat: -33.848588, lng: 151.209834 },
-                { lat: -33.851702, lng: 151.216968 },
-                { lat: -34.671264, lng: 150.863657 },
-                { lat: -35.304724, lng: 148.662905 },
-                { lat: -36.817685, lng: 175.699196 },
-                { lat: -36.828611, lng: 175.790222 },
-                { lat: -37.750000, lng: 145.116667 },
-                { lat: -37.759859, lng: 145.128708 },
-                { lat: -37.765015, lng: 145.133858 },
-                { lat: -37.770104, lng: 145.143299 },
-                { lat: -37.773700, lng: 145.145187 },
-                { lat: -37.774785, lng: 145.137978 },
-                { lat: -37.819616, lng: 144.968119 },
-                { lat: -38.330766, lng: 144.695692 },
-                { lat: -39.927193, lng: 175.053218 },
-                { lat: -41.330162, lng: 174.865694 },
-                { lat: -42.734358, lng: 147.439506 },
-                { lat: -42.734358, lng: 147.501315 },
-                { lat: -42.735258, lng: 147.438000 },
-                { lat: -43.999792, lng: 170.463352 }
-            ]
-
-            // Create an array of alphabetical characters used to label the markers.
-            var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-            // Add some markers to the map.
-            // Note: The code uses the JavaScript Array.prototype.map() method to
-            // create an array of markers based on a given "locations" array.
-            // The map() method here has nothing to do with the Google Maps API.
-            var markers = locations.map(function (location, i) {
-                return new google.maps.Marker({
-                    position: location,
-                    label: labels[i % labels.length]
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 14,
+                    center: myLatlng
                 });
-            });
 
-            // Add a marker clusterer to manage the markers.
-            var markerCluster = new MarkerClusterer(map, markers,
-                { imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m' });
-        }, 1000)
-       
+                // Create an array of alphabetical characters used to label the markers.
+                var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-      
+                var markers = locations.map(function (location, i) {
+                    return new google.maps.Marker({
+                        position: location,
+                        label: labels[i % labels.length]
+                    });
+                });
+
+                // Add a marker clusterer to manage the markers.
+                var markerCluster = new MarkerClusterer(map, markers,
+                    { imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m' });
+            }, 1000)
+        }
+
+        createMap(parseFloat(params.lat), parseFloat(params.lng), locations);
+
+        $scope.$watch('city', function () {
+            if ($scope.form.city.$$attr.lat && $scope.form.city.$$attr.lng)
+                createMap($scope.form.city.$$attr.lat, $scope.form.city.$$attr.lng, locations);
+        })
     }]);

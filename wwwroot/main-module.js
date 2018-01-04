@@ -51,16 +51,13 @@ angular
 
             $rootScope.isSmallResolution = $window.innerWidth <= 992;
 
-            $interval(function () {
-                if ($rootScope.globals.currentUser)
-                    ProfileService.UpdateOnlineStatus($rootScope.globals.currentUser.id);
-            }, 60000);
-
             $rootScope.globals = $cookies.getObject('globals') || {};
+
             if ($rootScope.globals.currentUser) {
 
                 $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata;
-                HubUtility.initConnection();
+                HubUtility.InitConnection();
+                ProfileService.UpdateOnlineStatus($rootScope.globals.currentUser.id);
             }
 
             function onScroll() {
@@ -70,13 +67,11 @@ angular
 
             $rootScope.$on('$locationChangeStart', function (event, next, current) {
 
-                $rootScope.loggedIn = $rootScope.globals.currentUser;
-
-                if ($rootScope.loggedIn)
+                if ($rootScope.globals.currentUser)
                     $rootScope.name = $rootScope.globals.currentUser.name;
 
-                var isRestrictedPage = $.inArray($location.path(), ['/', '/login', '/register', '/forgotpassword']) >= 0;
-                if (!isRestrictedPage && !$rootScope.loggedIn)
+                var isRestrictedPage = $.inArray($location.path(), ['/profile']) >= 0;
+                if (isRestrictedPage && !$rootScope.globals.currentUser)
                     $location.path('/login');
 
                 if (!$rootScope.isSmallResolution && $location.path() === '/profile')
@@ -91,29 +86,23 @@ angular
     .controller('mainCtrl', ['$scope', '$rootScope', '$location', '$timeout', 'AnchorSmoothScrollService', 'AuthenticationService', 'HubUtility',
         function ($scope, $rootScope, $location, $timeout, AnchorSmoothScrollService, AuthenticationService, HubUtility) {
 
-            HubUtility.messageSent(function (msg) {
-                alert('new message at the mainCtrl');
-            });
-
-            HubUtility.onlineStatusUpdated(function (msg) {});
-
-
             $scope.gotoElement = function (eID) {
 
                 if ($rootScope.isSmallResolution) {
                     $location.path('/profile');
                     $timeout(function () {
-                        AnchorSmoothScrollService.scrollTo(eID);
+                        AnchorSmoothScrollService.ScrollTo(eID);
                     }, 500);
                     $('.navbar-collapse').collapse('hide');
                 }
                 else {
-                    AnchorSmoothScrollService.scrollTo(eID);
+                    AnchorSmoothScrollService.ScrollTo(eID);
                 }
             };
 
             $scope.logout = function () {
                 AuthenticationService.ClearCredentials();
+                HubUtility.Disconnect();
                 $location.path('/login');
             }
         }])

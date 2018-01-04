@@ -10,9 +10,8 @@
                     ngModel: '=',
                     options: '=?',
                     details: '=?',
-                    placeid: "=placeid",
                     lat: "=lat",
-                    long: "=long"
+                    lng: "=lng"
                 },
 
                 link: function (scope, element, attr, ctrl) {
@@ -62,17 +61,18 @@
                         if (scope.gPlace === undefined) {
                             scope.gPlace = new google.maps.places.Autocomplete(element[0], {});
                         }
+
                         google.maps.event.addListener(scope.gPlace, 'place_changed', function () {
 
                             var result = scope.gPlace.getPlace();
 
-                            attr.$set('placeid', result.place_id);
-                            attr.$set('lat', result.geometry.location.lat());
-                            attr.$set('lng', result.geometry.location.lng());
-
                             if (result !== undefined) {
+
                                 if (result.address_components !== undefined) {
                                     ctrl.$setValidity('notexists', false);
+
+                                    attr.$set('lat', result.geometry.location.lat());
+                                    attr.$set('lng', result.geometry.location.lng());
 
                                     scope.$apply(function () {
 

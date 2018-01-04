@@ -28,7 +28,7 @@ angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
 
                     if (response.data.responseCode === 200) {
                         AuthenticationService.SetCredentials(response.data);
-                        HubUtility.initConnection();
+                        HubUtility.InitConnection();
                         toastr.success('Authentication succeeded', 'Have fun!');
                         $location.path('/');
                     }

@@ -1,6 +1,6 @@
 angular.module('myApp.home', ['directives'])
-    .controller('homeCtrl', ['$scope', 'DictionaryService', '$location',
-        function ($scope, DictionaryService, $location) {
+    .controller('homeCtrl', ['$scope', 'DictionaryService', 'toastr', '$location',
+        function ($scope, DictionaryService, toastr, $location) {
 
             $scope.city = null;
             $scope.options = {
@@ -24,7 +24,6 @@ angular.module('myApp.home', ['directives'])
 
             $scope.search = function () {
 
-                var ss = $scope.placeId;
                 $location.path('/search/').search({
                     propertyType: $scope.propertyType.model,
                     serviceType: $scope.serviceType.model,
@@ -35,24 +34,24 @@ angular.module('myApp.home', ['directives'])
             }
 
 
-        DictionaryService.GetServiceTypes(function (response) {
+            DictionaryService.GetServiceTypes(function (response) {
 
-            if (response.status === 200) {
+                if (response.status === 200) {
 
-                $scope.serviceType = {};
-                $scope.serviceType.availableOptions = [];
+                    $scope.serviceType = {};
+                    $scope.serviceType.availableOptions = [];
 
-                angular.forEach(response.data, function (value, key) {
-                    $scope.serviceType.availableOptions.push({ "id": key, "name": value });
-                });
+                    angular.forEach(response.data, function (value, key) {
+                        $scope.serviceType.availableOptions.push({ "id": key, "name": value });
+                    });
 
-                $scope.serviceType.model = $scope.serviceType.availableOptions[0].id;
-            }
-            else {
-                toastr.error('Error code: ' + response.status, "Error", {
-                    "timeOut": "5000",
-                    "extendedTImeout": "0"
-                });
-            }
-        });
-    }]);
+                    $scope.serviceType.model = $scope.serviceType.availableOptions[0].id;
+                }
+                else {
+                    toastr.error('Error code: ' + response.status, "Error", {
+                        "timeOut": "5000",
+                        "extendedTImeout": "0"
+                    });
+                }
+            });
+        }]);

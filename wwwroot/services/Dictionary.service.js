@@ -1,10 +1,22 @@
-﻿class DictionaryService {
-	constructor($http) {
-		this.$http = $http;
-	}
+﻿(function () {
+    'use strict';
 
-    GetServiceTypes(callback) {
-        this.$http.get('/api/dictionary/servicetypes')
-            .then(res => callback(res));
-	}
-}
+    angular
+        .module('services')
+        .factory('DictionaryService', DictionaryService)
+
+    DictionaryService.$inject = ['$http'];
+
+    function DictionaryService($http) {
+        var service = {
+            GetServiceTypes: GetServiceTypes
+        };
+
+        return service;
+
+        function GetServiceTypes(callback) {
+            $http.get('/api/dictionary/servicetypes')
+                .then(function (res) { return callback(res) });
+        }
+    }
+})();

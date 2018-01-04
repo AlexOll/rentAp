@@ -1,29 +1,43 @@
-﻿class UserService {
-    constructor($http) {
-        this.$http = $http;
-    }
+﻿(function () {
+    'use strict';
 
-    Create(user, callback) {
-        return this.$http.post('/api/user', {
-            "PhoneNumber": user.phonenumber,
-            "FirstName": user.firstName,
-            "LastName": user.lastName,
-            "Password": user.password,
-            "Email": user.email
-        })
-            .then(res => callback(res));
-    }
-    Update(user, callback) {
-        return this.$http.post('/api/user/update', {
-            "Id": user.id,
-            "PhoneNumber": user.phonenumber,
-            "FirstName": user.firstname,
-            "LastName": user.lastname,
-            "Password": user.password,
-            "Email": user.email,
-            "ProfileImageURL": user.profileImageURL
-        })
-            .then(res => callback(res));
-    }
-}
+    angular
+        .module('services')
+        .factory('UserService', UserService)
 
+    UserService.$inject = ['$http'];
+
+    function UserService($http) {
+        var service = {
+            Create: Create,
+            Update: Update
+        };
+
+        return service;
+
+        function Create(user, callback) {
+            $http.post('/api/user', {
+                "PhoneNumber": user.phonenumber,
+                "FirstName": user.firstName,
+                "LastName": user.lastName,
+                "Password": user.password,
+                "Email": user.email
+            }).then(function (res) {
+                return callback(res);
+            })
+        }
+        function Update(user, callback) {
+             $http.post('/api/user/update', {
+                "Id": user.id,
+                "PhoneNumber": user.phonenumber,
+                "FirstName": user.firstname,
+                "LastName": user.lastname,
+                "Password": user.password,
+                "Email": user.email,
+                "ProfileImageURL": user.profileImageURL
+             }).then(function (res) {
+                 return callback(res);
+             })
+        }
+    }
+})();

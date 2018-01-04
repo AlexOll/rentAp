@@ -1,113 +1,108 @@
-﻿class AuthenticationService {
-    constructor($http, $cookies, $rootScope, $base64) {
+﻿(function () {
+    'use strict';
 
-        this.$http = $http;
-        this.$cookies = $cookies;
-        this.$rootScope = $rootScope;
-        this.keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-        this.$base64 = $base64;
-    }
+    angular
+        .module('services')
+        .factory('AuthenticationService', AuthenticationService)
 
-    Login(input, password, callback) {
-        this.$http.post('/api/authentication', { Input: input, Password: password })
-            .then(res => callback(res));
-    }
+    AuthenticationService.$inject = ['$http', '$cookies', '$rootScope', '$base64'];
 
-    ForgotPass(email, callback) {
-        this.$http.get('/api/authentication/forgotpassword/' + email)
-            .then(res => callback(res));
-    }
-
-    ResendActivationCode(email, callback) {
-        this.$http.get('/api/authentication/newactivationcode/' + email)
-            .then(res => callback(res));
-    }
-
-    CheckActivationCode(activationCode, callback) {
-        this.$http.get('/api/authentication/' + activationCode)
-            .then(res => callback(res));
-    }
-
-    //Base64ToImage(source) {
-    //    var result = null;
-
-    //    if (typeof source !== 'string') {
-    //        return result;
-    //    }
-    //    var dataURL = this.$base64.decode(source);
-    //    var mime = dataURL.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/);
-
-    //    if (mime && mime.length) {
-    //        result = new File([""], "", { type: mime[1] })
-    //        result.dataURL = dataURL;
-    //    }
-
-    //    return result;
-    //}
-    SetCredentials(user) {
-
-        var input = user.email + ':' + user.id;
-        var authdata = this.Base64Encode(input);
-
-        this.$rootScope.globals = {
-            currentUser: {
-                id: user.id,
-                email: user.email,
-                firstname: user.firstname,
-                phonenumber: user.phonenumber,
-                lastname: user.lastname,
-                name: user.firstname + ' ' + user.lastname,
-                profileImageURL: user.profileImageURL,
-                authdata: authdata
-            }
+    function AuthenticationService($http, $cookies, $rootScope, $base64) {
+        var service = {
+            Login: Login,
+            ForgotPass: ForgotPass,
+            ResendActivationCode: ResendActivationCode,
+            CheckActivationCode: CheckActivationCode,
+            SetCredentials: SetCredentials,
+            ClearCredentials: ClearCredentials
         };
 
-        this.$http.defaults.headers.common['Authorization'] = 'Basic ' + authdata;
+        return service;
 
-        var cookieExp = new Date();
-        cookieExp.setDate(cookieExp.getDate() + 7);
-        this.$cookies.putObject('globals', this.$rootScope.globals, { expires: cookieExp });
-    }
+        function Login(input, password, callback) {
+            $http.post('/api/authentication', { Input: input, Password: password })
+                .then(function (res) {return callback(res)});
+        }
 
-    ClearCredentials() {
-        this.$rootScope.globals = {};
-        this.$cookies.remove('globals');
-        this.$http.defaults.headers.common.Authorization = 'Basic';
-    }
+        function ForgotPass(email, callback) {
+            $http.get('/api/authentication/forgotpassword/' + email)
+                .then(function (res) { return callback(res) });
+        }
 
-    Base64Encode(input) {
-        var output = "";
-        var chr1, chr2, chr3 = "";
-        var enc1, enc2, enc3, enc4 = "";
-        var i = 0;
+        function ResendActivationCode(email, callback) {
+            $http.get('/api/authentication/newactivationcode/' + email)
+                .then(function (res) { return callback(res) });
+        }
 
-        do {
-            chr1 = input.charCodeAt(i++);
-            chr2 = input.charCodeAt(i++);
-            chr3 = input.charCodeAt(i++);
+        function CheckActivationCode(activationCode, callback) {
+            $http.get('/api/authentication/' + activationCode)
+                .then(function (res) { return callback(res) });
+        }
 
-            enc1 = chr1 >> 2;
-            enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-            enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
-            enc4 = chr3 & 63;
+        function SetCredentials(user) {
 
-            if (isNaN(chr2)) {
-                enc3 = enc4 = 64;
-            } else if (isNaN(chr3)) {
-                enc4 = 64;
-            }
+            var input = user.email + ':' + user.id;
+            var authdata = Base64Encode(input);
 
-            output = output +
-                this.keyStr.charAt(enc1) +
-                this.keyStr.charAt(enc2) +
-                this.keyStr.charAt(enc3) +
-                this.keyStr.charAt(enc4);
-            chr1 = chr2 = chr3 = "";
-            enc1 = enc2 = enc3 = enc4 = "";
-        } while (i < input.length);
+            $rootScope.globals = {
+                currentUser: {
+                    id: user.id,
+                    email: user.email,
+                    firstname: user.firstname,
+                    phonenumber: user.phonenumber,
+                    lastname: user.lastname,
+                    name: user.firstname + ' ' + user.lastname,
+                    profileImageURL: user.profileImageURL,
+                    authdata: authdata
+                }
+            };
 
-        return output;
-    };
+            $http.defaults.headers.common['Authorization'] = 'Basic ' + authdata;
+
+            var cookieExp = new Date();
+            cookieExp.setDate(cookieExp.getDate() + 7);
+            $cookies.putObject('globals', $rootScope.globals, { expires: cookieExp });
+        }
+
+        function ClearCredentials() {
+            $rootScope.globals = {};
+            $cookies.remove('globals');
+            $http.defaults.headers.common.Authorization = 'Basic';
+        }
+
+        function Base64Encode(input) {
+            var output = "";
+            var chr1, chr2, chr3 = "";
+            var enc1, enc2, enc3, enc4 = "";
+            var i = 0;
+
+            do {
+                chr1 = input.charCodeAt(i++);
+                chr2 = input.charCodeAt(i++);
+                chr3 = input.charCodeAt(i++);
+
+                enc1 = chr1 >> 2;
+                enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+                enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+                enc4 = chr3 & 63;
+
+                if (isNaN(chr2)) {
+                    enc3 = enc4 = 64;
+                } else if (isNaN(chr3)) {
+                    enc4 = 64;
+                }
+                var keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+                output = output +
+                    keyStr.charAt(enc1) +
+                    keyStr.charAt(enc2) +
+                    keyStr.charAt(enc3) +
+                    keyStr.charAt(enc4);
+                chr1 = chr2 = chr3 = "";
+                enc1 = enc2 = enc3 = enc4 = "";
+            } while (i < input.length);
+
+            return output;
+        };
 
     //Base64Decode(input) {
 
@@ -126,10 +121,10 @@
     //    input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
 
     //    do {
-    //        enc1 = this.keyStr.indexOf(input.charAt(i++));
-    //        enc2 = this.keyStr.indexOf(input.charAt(i++));
-    //        enc3 = this.keyStr.indexOf(input.charAt(i++));
-    //        enc4 = this.keyStr.indexOf(input.charAt(i++));
+    //        enc1 = keyStr.indexOf(input.charAt(i++));
+    //        enc2 = keyStr.indexOf(input.charAt(i++));
+    //        enc3 = keyStr.indexOf(input.charAt(i++));
+    //        enc4 = keyStr.indexOf(input.charAt(i++));
 
     //        chr1 = (enc1 << 2) | (enc2 >> 4);
     //        chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
@@ -151,6 +146,22 @@
 
     //    return output;
     //}
-};
 
+            //Base64ToImage(source) {
+    //    var result = null;
 
+    //    if (typeof source !== 'string') {
+    //        return result;
+    //    }
+    //    var dataURL = $base64.decode(source);
+    //    var mime = dataURL.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/);
+
+    //    if (mime && mime.length) {
+    //        result = new File([""], "", { type: mime[1] })
+    //        result.dataURL = dataURL;
+    //    }
+
+    //    return result;
+    //}
+    }
+})();

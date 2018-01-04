@@ -6,13 +6,13 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
 
             $scope.user = angular.copy($rootScope.globals.currentUser);
 
-            HubUtility.messageSent(function (msg) {
+            HubUtility.MessageSent(function (msg) {
                 $scope.userMessages.push(msg);
                 $scope.$apply();
                 ScrollChatDown();
             });
 
-            HubUtility.onlineStatusUpdated(function (msg) {
+            HubUtility.OnlineStatusUpdated(function (msg) {
                 $scope.chatUsers.forEach(function (user) {
                         user.lastOnlineDateTime = msg[user.id.toString()] || user.lastOnlineDateTime;
                 });
@@ -59,7 +59,7 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
                 $timeout(function () {
                     ScrollChatDown();
                     if ($rootScope.isSmallResolution) {
-                        AnchorSmoothScrollService.scrollTo('chat-header', -70);
+                        AnchorSmoothScrollService.ScrollTo('chat-header', -70);
                     }
                 }, 500);
             }
@@ -124,14 +124,14 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
             }
 
             $scope.updateProfile = function (ev) {
-                debugger;
+
                 $scope.dataLoading = true;
                 $scope.user.profileImageURL = $rootScope.globals.currentUser.profileImageURL;
                 UserService.Update($scope.user, function (response) {
 
                     if (response.data.responseCode === 200) {
                         AuthenticationService.SetCredentials(response.data);
-                        $rootScope.name = $rootScope.globals.currentUser.name;
+
                         toastr.success('Your profile has been updated.', 'Success!');
                         $scope.user.password = '';
                     }

@@ -3,7 +3,8 @@
     <form name="form" role="search" ng-submit="search()">
         <div class="d-inline-block col-lg-2 col-md-4 col-sm-6">
             <h5 class="my-3">I'm searching for:</h5>
-            <select class="home-select-single" ng-model="serviceType.model" ng-options="opt.id as opt.name for opt in serviceType.availableOptions"></select>
+            <select class="home-select-single" ng-model="serviceType.model"
+                    ng-options="opt.id as opt.name for opt in serviceType.availableOptions"></select>
         </div>
         <div class="d-inline-block col-lg-2 col-md-4 col-sm-6">
 
@@ -29,7 +30,7 @@
         <div class="d-inline-block col-lg-2 col-md-4 col-sm-6">
             <h5 class="my-3">City, Country:</h5>
             <input ng-required="form.city.$dirty" type="text" name="city" id="city" class="home-input form-control" ng-autocomplete ng-model="city" options="options"
-                   placeid="" lng="" lat=""
+                   lng="" lat=""
                    placeholder="e.g. Kiev, Kyiv city, Ukraine" />
             <span ng-show="form.city.$dirty && !form.city.$error.notexists" class="error-span">Location is not exist<br /></span>
         </div>
