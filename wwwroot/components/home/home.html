@@ -4,15 +4,15 @@
             <div class="list-group">
                 <form name="form" role="search" ng-submit="search()">
                     <h5 class="my-3">I'm searching for:</h5>
-                    <select class="home-select-single" ng-model="serviceType.model"
+                    <select class="input-base select-single" ng-model="serviceType.model"
                             ng-options="opt.id as opt.name for opt in serviceType.availableOptions"></select>
 
                     <h5 class="my-3">Property type:</h5>
-                    <select class="home-select-multiple" ng-extended-select ng-model="propertyType.model" size="{{propertyType.availableOptions.length+1}}"
+                    <select class="input-base select-multiple" ng-extended-select ng-model="propertyType.model" size="{{propertyType.availableOptions.length+1}}"
                             ng-options="opt.id as opt.name for opt in propertyType.availableOptions" multiple></select>
 
-                    <h5 class="my-3">City, Country:</h5>
-                    <input ng-required="form.city.$dirty" type="text" name="city" id="city" class="home-input form-control" ng-autocomplete ng-model="city" options="options"
+                    <h5 class="my-3">City:</h5>
+                    <input ng-required="form.city.$dirty" type="text" name="city" id="city" class="input-base form-control" ng-autocomplete ng-model="city" options="options"
                            lng="" lat=""
                            placeholder="e.g. Kiev, Kyiv city, Ukraine" />
                     <span ng-show="form.city.$dirty && !form.city.$error.notexists" class="error-span">Location is not exist<br /></span>

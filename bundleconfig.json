@@ -14,6 +14,7 @@
         "wwwroot/directives/ngImageCompress.directive.js",
         "wwwroot/directives/setHeight.directive.js",
         "wwwroot/directives/uniqueField.directive.js",
+        "wwwroot/directives/multipleDropdown.directive.js",
 
         "wwwroot/services/_service.module.js",
         "wwwroot/services/AnchorSmoothScroll.service.js",

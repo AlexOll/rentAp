@@ -1,108 +1,106 @@
 @import url(https://fonts.googleapis.com/css?family=Raleway);
 
-.home-select-single {
+.input-base {
     font-family: 'Raleway', sans-serif;
     font-size: 20px;
-    margin: 0 auto;
     color: #EC6F66;
+    margin: 2px;
     width: 100%;
-    cursor: pointer;
     border-radius: 0;
     border: 0;
-    height: 40px;
-    text-indent: 1px;
     padding: 5px 10px;
-    -webkit-appearance: none;
-    -moz-appearance: none;
+    text-indent: 1px;
 }
 
-    .home-select-single:hover {
+.select-single {
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    height: 40px;
+}
+
+    .select-single:hover {
         background-color: transparent;
         color: white;
     }
 
-    .home-select-single option {
+    .select-single option {
         background-color: #4F6877;
         cursor: pointer;
         color: white;
     }
 
 
-.home-select-multiple {
-    font-family: 'Raleway', sans-serif;
-    font-size: 20px;
-    color: #EC6F66;
-    width: 100%;
+.select-multiple {
     cursor: pointer;
-    border-radius: 0;
-    border: 0;
-    text-indent: 1px;
-    padding: 5px 10px;
     overflow-y: hidden;
-    background-image: none;
 }
 
-    .home-select-multiple option {
+    .select-multiple option {
         color: #EC6F66;
         height: 20px;
         cursor: pointer;
         margin: 2px
     }
 
-        .home-select-multiple option:hover {
+        .select-multiple option:hover {
             background-color: #4F6877;
             color: white;
         }
 
-.home-input {
-    font-family: 'Raleway', sans-serif;
-    font-size: 20px;
-    margin: 0 auto;
-    color: #EC6F66;
+.dropdown {
+    height: 40px;
+    margin: 2px;
     width: 100%;
-    border-radius: 0;
-    border: 0;
-    height: 40px;
-    text-indent: 1px;
-    padding: 5px 10px;
 }
 
-
-
-.dropdown dd {
-    position: relative;
-}
-
-.dropdown dt {
-    font-size: 20px;
-    color: #EC6F66;
-    background-color: white;
-    display: block;
-    height: 40px;
-    text-indent: 1px;
-    padding: 5px 10px;
-}
-
-    .dropdown dt a span,
-    .multiSel span {
-        font-family: 'Raleway', sans-serif;
-        font-size: 20px;
-        color: #EC6F66;
-        cursor: pointer;
-        display: inline-block;
+    .dropdown dd {
+        position: relative;
     }
 
-.dropdown dd ul {
-    background-color: #4F6877;
-    border: 0;
-    color: #fff;
-    display: none;
-    left: 0px;
-    padding: 2px 15px 2px 5px;
-    position: absolute;
-    top: 2px;
-    width: 100%;
-    list-style: none;
-    z-index: 1;
+    .dropdown dt {
+        font-size: 20px;
+        color: #EC6F66;
+        background-color: white;
+        display: block;
+        height: 40px;
+        text-indent: 1px;
+        padding: 5px 10px;
+    }
+
+        .dropdown dt a span,
+        .multiSel span {
+            font-family: 'Raleway', sans-serif;
+            font-size: 20px;
+            color: #EC6F66;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+    .dropdown dd ul {
+        background-color: #4F6877;
+        border: 0;
+        color: #fff;
+        display: none;
+        left: 0px;
+        padding: 2px 15px 2px 5px;
+        position: absolute;
+        top: 2px;
+        width: 100%;
+        list-style: none;
+        z-index: 1;
+    }
+
+.input-single {
+    height: 40px;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
+input[type=number] {
+    -moz-appearance: textfield;
+    height: 40px;
+}

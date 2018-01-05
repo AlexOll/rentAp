@@ -90,7 +90,6 @@
                             }
                         })
 
-                        //function to get retrieve the autocompletes first result using the AutocompleteService 
                         var getPlace = function (result) {
                             var autocompleteService = new google.maps.places.AutocompleteService();
                             if (result.name.length > 0) {
@@ -120,7 +119,6 @@
 
                                                             scope.details = detailsResult;
 
-                                                            //on focusout the value reverts, need to set it again.
                                                             var watchFocusOut = element.on('focusout', function (event) {
                                                                 element.val(detailsResult.formatted_address);
                                                                 element.unbind('focusout')
@@ -140,10 +138,10 @@
                             element.val(location);
                         };
 
-                        //watch options provided to directive
                         scope.watchOptions = function () {
                             return scope.options
                         };
+
                         scope.$watch(scope.watchOptions, function () {
                             initOpts()
                         }, true);
