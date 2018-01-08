@@ -64,9 +64,12 @@ namespace RentApp.Managers
 
         internal void UpdateOnlineStatus(Guid value)
         {
-            var now = DateTime.Now;
-            UserCache.CachedItems[value].LastEntranceDateTime = now;
-            Task.Factory.StartNew(() => UpdateLastEntranceAsync(now));
+            if (UserCache.CachedItems.ContainsKey(value))
+            {
+                var now = DateTime.Now;
+                UserCache.CachedItems[value].LastEntranceDateTime = now;
+                Task.Factory.StartNew(() => UpdateLastEntranceAsync(now));
+            }
         }
 
         private async Task UpdateLastEntranceAsync(DateTime now)

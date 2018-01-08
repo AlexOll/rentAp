@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RentApp.Models.DbModels
 {
-    public class User : IDbModel, IUser
+    public class User : IDbModel, IEmailItem
     {
         [Key]
         public Guid Id { get; set; }
@@ -20,5 +20,6 @@ namespace RentApp.Models.DbModels
         public DateTime UpdateDate { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime LastEntranceDateTime { get; set; }
+
     }
 }

@@ -10,6 +10,7 @@ angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
                     if (response.data.responseCode === 200) {
 
                         AuthenticationService.SetCredentials(response.data);
+                        HubUtility.InitConnection();
                         toastr.success('Activation code submitted', 'Have fun!');
                         $location.url('/');
                     }

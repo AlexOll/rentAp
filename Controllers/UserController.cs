@@ -36,7 +36,7 @@ namespace RentApp.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] User item)
+        public async Task<IActionResult> Create([FromBody] CreateUserRequest item)
         {
             if (item == null)
             {

@@ -19,7 +19,7 @@ namespace RentApp.Managers
             _userRepository = userRepository;
         }
 
-        internal BaseResponse Create(IUser item)
+        internal BaseResponse Create(CreateUserRequest item)
         {
             var isEmailExist = UserCache.CachedItems.Values.Any(a => a.Email == item.Email);
 
@@ -32,21 +32,11 @@ namespace RentApp.Managers
                 };
             }
 
-            var isPhoneNumberExist = UserCache.CachedItems.Values.Any(a => a.Phonenumber == item.Phonenumber);
+            var newUser = (User)item;
 
-            if (isPhoneNumberExist)
-            {
-                return new BaseResponse
-                {
-                    Message = "Phone number allready exists",
-                    ResponseCode = StatusCodes.Status406NotAcceptable
-                };
-            }
+            _userRepository.Create(newUser);
 
-            item.ActivationCode = Guid.NewGuid();
-            _userRepository.Create(item as User);
-
-            var emailManager = new EmailUtility(item);
+            var emailManager = new EmailUtility(newUser);
             emailManager.SendActivationEmail();
 
             return new BaseResponse();

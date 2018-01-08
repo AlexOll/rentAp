@@ -25,14 +25,20 @@
     <script src="lib/popper.js/dist/umd/popper.min.js"></script>
     <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="lib/angular-base64/angular-base64.min.js"></script>
-    <script src="js/signalr-client-1.0.0-alpha2-final.js"></script>
-    <script src="js/signalr-msgpackprotocol-1.0.0-alpha2-final.js"></script>
 
     <script src="js/bundle.js"></script>
     <script src="main-module.js"></script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPz5tHh4Ud-JwAeIfW47dixWkq8XtyxZE&libraries=places"></script>
+    <script>
+        if (typeof Promise === 'undefined') {
+            document.write('<script src="js/signalr-clientES5-1.0.0-alpha2-final.js"><\/script>');
+        }
+        else {
+            document.write('<script src="js/signalr-client-1.0.0-alpha2-final.js"><\/script>');
+        }
+    </script>
 
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPz5tHh4Ud-JwAeIfW47dixWkq8XtyxZE&libraries=places"></script>
     <script sync defer src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
 
     <base href="/">

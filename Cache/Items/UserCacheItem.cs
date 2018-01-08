@@ -5,7 +5,7 @@ using RentApp.Models.DbModels;
 
 namespace RentApp.Models.Cache
 {
-    public class UserCacheItem : IUser
+    public class UserCacheItem : IEmailItem
     {
         public Guid Id { get; set; }
         public string Email { get; set; }

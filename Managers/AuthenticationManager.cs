@@ -57,7 +57,7 @@ namespace RentApp.Managers
                 foundUser.Password = newPassword;
 
                 var emailManager = new EmailUtility(foundUser);
-                emailManager.SendNewPasswordForUser(newPassword);
+                emailManager.SendNewPasswordForUser();
 
                 _userRepository.Update(foundUser.CreateDbModel());
             }

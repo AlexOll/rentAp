@@ -19,7 +19,6 @@
     <Compile Remove="Cache\Items\UserOnlineCacheItem.cs" />
     <Compile Remove="Hubs\ConnectionMapping.cs" />
     <Compile Remove="Hubs\OnlineStatusHub.cs" />
-    <Compile Remove="Models\RequestModels\CreateUserRequest.cs" />
   </ItemGroup>
 
   <ItemGroup>

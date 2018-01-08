@@ -14,17 +14,13 @@ angular.module('myApp.register', ['ngRoute', 'services', 'toastr', 'directives']
                         $location.path('/');
                     }
                     else {
-                        alert = $mdDialog.alert({
-                            title: "Can't register you're account!",
-                            textContent: response.data.message,
-                            ok: 'Close',
-                            clickOutsideToClose: true,
-                            targetEvent: ev
+                        toastr.error(response.data.message, "Error", {
+                            "timeOut": "5000",
+                            "extendedTImeout": "0"
                         });
-                        $mdDialog.show(alert);
                     }
+                    $scope.dataLoading = false;
                 })
-                $scope.dataLoading = false;
             }
         }]);
 
