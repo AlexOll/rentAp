@@ -7,6 +7,7 @@
         "wwwroot/utilities/_utilities.module.js",
         "wwwroot/utilities/Guid.utility.js",
         "wwwroot/utilities/Hub.utility.js",
+        "wwwroot/utilities/Image.utility.js",
 
         "wwwroot/directives/_directives.module.js",
         "wwwroot/directives/ngAutocomplete.directive.js",

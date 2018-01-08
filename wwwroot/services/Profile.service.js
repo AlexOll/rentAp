@@ -6,7 +6,7 @@
         .module('services')
         .factory('ProfileService', ProfileService)
 
-    ProfileService.$inject = ['$http','$interval'];
+    ProfileService.$inject = ['$http', '$interval'];
 
     function ProfileService($http, $interval) {
         var service = {
@@ -34,9 +34,10 @@
         }
 
         function UpdateOnlineStatus(id) {
-            $interval(function () {
+            var interval = $interval(function () {
                 $http.put('/api/profile/updateonlinestatus/' + id)
-                    .then();
+                    .then(null,
+                    function () { $interval.cancel(interval); });
             }, 60000);
         }
     }

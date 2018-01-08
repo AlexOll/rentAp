@@ -147,21 +147,6 @@
     //    return output;
     //}
 
-            //Base64ToImage(source) {
-    //    var result = null;
-
-    //    if (typeof source !== 'string') {
-    //        return result;
-    //    }
-    //    var dataURL = $base64.decode(source);
-    //    var mime = dataURL.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/);
-
-    //    if (mime && mime.length) {
-    //        result = new File([""], "", { type: mime[1] })
-    //        result.dataURL = dataURL;
-    //    }
-
-    //    return result;
-    //}
+           
     }
 })();
