@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RentApp.Models.DbModels
 {
-    public class User : IDbModel, IEmailItem
+    public class User : IEmailItem
     {
         [Key]
         public Guid Id { get; set; }

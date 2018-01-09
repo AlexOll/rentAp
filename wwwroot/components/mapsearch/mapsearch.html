@@ -36,15 +36,15 @@
 
         <div class="col-sm-3 search-flats-div" set-height="0.8">
 
-            <div class="row mb-1" ng-repeat="location in realEstateObjects">
+            <div class="row mb-1" ng-repeat="location in locations">
                 <div class="col-md-8">
-                    <img class="w-100" set-height="0.2" ng-src="{{getImageLocation(location.image)}}">
+                    <img class="w-100" set-height="0.2" ng-src="{{location.photoURLs[0] || '../../img/flat/noImage.jpg'}}">
                 </div>
                 <div class="col-md-4">
                     <a href="#">{{location.address}}</a>
                     <br />
                     <h5>price: {{location.price}}</h5>
-                    {{location.additionalInfo}}
+                    {{location.description}}
                 </div>
             </div>
         </div>

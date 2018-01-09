@@ -2,12 +2,6 @@ angular.module('myApp.home', ['directives'])
     .controller('homeCtrl', ['$scope', 'DictionaryService', 'toastr', '$location',
         function ($scope, DictionaryService, toastr, $location) {
 
-            $scope.city = null;
-            $scope.options = {
-                country: 'ukr',
-                types: '(cities)'
-            };
-
             $scope.propertyType = {
                 model: [],
                 availableOptions: [
@@ -20,7 +14,6 @@ angular.module('myApp.home', ['directives'])
                     { id: 7, name: 'Other' }
                 ]
             };
-
 
             $scope.search = function () {
 

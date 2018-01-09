@@ -1,12 +1,9 @@
-﻿using RentApp.Models.RequestModels;
-using RentApp.Models.ResponseModels;
-using RentApp.Models.Structs;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace RentApp.Models.DbModels
 {
-    public class Message : IDbModel
+    public class Message
     {
         [Key]
         public Guid Id { get; set; }

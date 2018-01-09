@@ -24,37 +24,39 @@
                         var initOpts = function () {
 
                             opts = {}
-                            if (scope.options) {
+                            scope.options = {
+                                country: 'ukr',
+                                types: '(cities)'
+                            };
 
-                                if (scope.options.watchEnter !== true) {
-                                    watchEnter = false
-                                } else {
-                                    watchEnter = true
-                                }
+                            if (scope.options.watchEnter !== true) {
+                                watchEnter = false
+                            } else {
+                                watchEnter = true
+                            }
 
-                                if (scope.options.types) {
-                                    opts.types = []
-                                    opts.types.push(scope.options.types)
-                                    scope.gPlace.setTypes(opts.types)
-                                } else {
-                                    scope.gPlace.setTypes([])
-                                }
+                            if (scope.options.types) {
+                                opts.types = []
+                                opts.types.push(scope.options.types)
+                                scope.gPlace.setTypes(opts.types)
+                            } else {
+                                scope.gPlace.setTypes([])
+                            }
 
-                                if (scope.options.bounds) {
-                                    opts.bounds = scope.options.bounds
-                                    scope.gPlace.setBounds(opts.bounds)
-                                } else {
-                                    scope.gPlace.setBounds(null)
-                                }
+                            if (scope.options.bounds) {
+                                opts.bounds = scope.options.bounds
+                                scope.gPlace.setBounds(opts.bounds)
+                            } else {
+                                scope.gPlace.setBounds(null)
+                            }
 
-                                if (scope.options.country) {
-                                    opts.componentRestrictions = {
-                                        country: scope.options.country
-                                    }
-                                    scope.gPlace.setComponentRestrictions(opts.componentRestrictions)
-                                } else {
-                                    scope.gPlace.setComponentRestrictions(null)
+                            if (scope.options.country) {
+                                opts.componentRestrictions = {
+                                    country: scope.options.country
                                 }
+                                scope.gPlace.setComponentRestrictions(opts.componentRestrictions)
+                            } else {
+                                scope.gPlace.setComponentRestrictions(null)
                             }
                         }
 
@@ -146,8 +148,8 @@
                             initOpts()
                         }, true);
 
-                    },1000);   
-                 
+                    }, 1000);
+
                 }
             };
         })

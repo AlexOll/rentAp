@@ -1,4 +1,5 @@
-﻿using RentApp.Models.DbModels;
+﻿using RentApp.Models.Cache;
+using RentApp.Models.DbModels;
 using System;
 
 namespace RentApp.Models.ResponseModels
@@ -19,7 +20,7 @@ namespace RentApp.Models.ResponseModels
         {
             Id = model.Id;
             Description = model.Description;
-            Cost = model.Cost;
+            Cost = model.Price;
             Area = model.Area;
             RoomsCount = model.RoomsCount;
             CreateDate = model.CreateDate;

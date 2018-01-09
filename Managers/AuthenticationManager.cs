@@ -31,7 +31,7 @@ namespace RentApp.Managers
 
                 var emailManager = new EmailUtility(foundUser);
                 emailManager.SendActivationEmail();
-                
+
                 _userRepository.Update(foundUser.CreateDbModel());
 
                 return new BaseResponse();
@@ -70,6 +70,7 @@ namespace RentApp.Managers
             if (foundUser != null)
             {
                 foundUser.IsActivated = true;
+                foundUser.LastEntranceDateTime = DateTime.Now;
                 _userRepository.Update(foundUser.CreateDbModel());
                 return (AuthenticationResponse)foundUser;
             }
@@ -92,7 +93,11 @@ namespace RentApp.Managers
             if (foundUser != null)
             {
                 if (foundUser.IsActivated)
+                {
+                    foundUser.LastEntranceDateTime = DateTime.Now;
+                    _userRepository.Update(foundUser.CreateDbModel());
                     return (AuthenticationResponse)foundUser;
+                }
                 else
                     return new BaseResponse
                     {
@@ -100,11 +105,12 @@ namespace RentApp.Managers
                         ResponseCode = StatusCodes.Status406NotAcceptable
                     };
             }
-            return new BaseResponse
-            {
-                Message = "Account not exists",
-                ResponseCode = StatusCodes.Status404NotFound
-            };
+            else
+                return new BaseResponse
+                {
+                    Message = "Account not exists",
+                    ResponseCode = StatusCodes.Status404NotFound
+                };
         }
     }
 }
