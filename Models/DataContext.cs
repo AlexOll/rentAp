@@ -14,6 +14,7 @@ namespace RentApp.Models
         public DbSet<Flat> Flats { get; set; }
 	    public DbSet<FlatServiceType> FlatServiceTypes { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<RealEstateOffer> RealEstateOffers { get; set; }
         public DbSet<RealEstateObject> RealEstateObjects { get; set; }
         public DbSet<BaseRealEstateDetailes> RealEstateDetailes { get; set; }
 
