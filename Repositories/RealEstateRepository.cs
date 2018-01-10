@@ -5,6 +5,7 @@ using RentApp.Models;
 using Microsoft.EntityFrameworkCore;
 using RentApp.Models.DbModels;
 using RentApp.Cache;
+using RentApp.Managers;
 
 namespace RentApp.Repositories
 {
@@ -53,6 +54,19 @@ namespace RentApp.Repositories
             RealEstateObject item = GetById(id); ;
             using (_context)
             {
+                List<RealEstateOffer> offers = _context.RealEstateOffers
+                    .Include(o => o.RealEstateObject)
+                    .Where(o => o.RealEstateObject == item)
+                    .ToList();
+                foreach (var offer in offers)
+                {
+                    offer.IsAlive = false;
+                    _context.RealEstateOffers.Attach(offer);
+                    _context.Entry(offer).State = EntityState.Modified;
+                    _context.SaveChanges();
+                    RealEstateOfferCache.AddOrUpdate(offer);
+                }
+
                 item.IsAlive = false;
                 _context.RealEstateObjects.Attach(item);
                 _context.Entry(item).State = EntityState.Modified;
