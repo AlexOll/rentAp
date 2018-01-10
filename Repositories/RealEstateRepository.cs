@@ -5,7 +5,6 @@ using RentApp.Models;
 using Microsoft.EntityFrameworkCore;
 using RentApp.Models.DbModels;
 using RentApp.Cache;
-using RentApp.Managers;
 
 namespace RentApp.Repositories
 {
@@ -25,6 +24,7 @@ namespace RentApp.Repositories
                 return _context.RealEstateObjects
                     .Where(o => o.IsAlive)
                     .Include(o => o.RealEstateDetailes)
+                    .Include(o => o.Photos)
                     .ToList();
             }
         }
@@ -35,6 +35,7 @@ namespace RentApp.Repositories
             {
                 return _context.RealEstateObjects
                     .Include(o => o.RealEstateDetailes)
+                    .Include(o => o.Photos)
                     .FirstOrDefault(o => o.Id == id);
             }
         }

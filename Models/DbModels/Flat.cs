@@ -22,7 +22,7 @@ namespace RentApp.Models.DbModels
         public DateTime UpdateDate { get; set; }
         public DateTime LastRepairDate { get; set; }
         public DateTime ReleaseDate { get; set; }
-        public List<FlatsPhoto> PhotoIds { get; set; }
+        public List<RealEstatePhoto> PhotoIds { get; set; }
         public bool IsAlive { get; set; }
 
         public static explicit operator FlatResponse(Flat model)

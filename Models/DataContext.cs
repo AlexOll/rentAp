@@ -17,6 +17,7 @@ namespace RentApp.Models
         public DbSet<RealEstateOffer> RealEstateOffers { get; set; }
         public DbSet<RealEstateObject> RealEstateObjects { get; set; }
         public DbSet<BaseRealEstateDetailes> RealEstateDetailes { get; set; }
+        public DbSet<RealEstatePhoto> RealEstatePhotos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

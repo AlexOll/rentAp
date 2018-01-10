@@ -25,6 +25,7 @@ namespace RentApp.Repositories
                     .Where(o => o.IsAlive)
                     .Include(o => o.RealEstateObject)
                     .Include(o => o.RealEstateObject.RealEstateDetailes)
+                    .Include(o => o.RealEstateObject.Photos)
                     .ToList();
             }
         }
@@ -37,6 +38,7 @@ namespace RentApp.Repositories
                     .Where(o => o.IsAlive)
                     .Include(o => o.RealEstateObject)
                     .Include(o => o.RealEstateObject.RealEstateDetailes)
+                    .Include(o => o.RealEstateObject.Photos)
                     .FirstOrDefault(o => o.Id == id);
             }
         }

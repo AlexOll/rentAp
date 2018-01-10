@@ -89,14 +89,20 @@ namespace RentApp.Controllers
             RealEstateObject obj1 = new RealEstateObject
             {
                 Description = "Description 1",
+                Address = "Kyiv, Lva Tolstogo sq. 1",
                 Area = 66,
-                PlaceId = "dsad fds fdsf dsf sd",
+                Lat = -37.765015,
+                Lng = 145.133858,
                 PropertyType = PropertyType.Appartment,
                 RealEstateDetailes = det1,
                 CreateDate = DateTime.Now,
                 UpdateDate = DateTime.Now,
                 IsAlive = true
             };
+            RealEstatePhoto p1 = new RealEstatePhoto { Url = "../../img/flat/noImage.jpg", RealEstateId = obj1.Id };
+            RealEstatePhoto p2 = new RealEstatePhoto { Url = "../../img/flat/noImage.jpg", RealEstateId = obj1.Id };
+            RealEstatePhoto p3 = new RealEstatePhoto { Url = "../../img/flat/noImage.jpg", RealEstateId = obj1.Id };
+            obj1.Photos = new List<RealEstatePhoto> { p1, p2, p3 };
 
             RealEstateOffer offer1 = new RealEstateOffer
             {
