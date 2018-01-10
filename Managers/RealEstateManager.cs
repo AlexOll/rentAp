@@ -1,9 +1,7 @@
 ﻿using System;
 using RentApp.Repositories;
 using RentApp.Models.DbModels;
-using RentApp.Models.RequestModels;
 using RentApp.Models.ResponseModels;
-using RentApp.Cache;
 using System.Collections.Generic;
 
 namespace RentApp.Managers
@@ -29,7 +27,6 @@ namespace RentApp.Managers
 
         internal BaseResponse Create(RealEstateObject item)
         {
-            item.Id = Guid.NewGuid();
             item.CreateDate = DateTime.Now;
             item.UpdateDate = DateTime.Now;
 

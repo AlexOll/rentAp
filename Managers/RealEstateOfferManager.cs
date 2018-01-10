@@ -27,7 +27,6 @@ namespace RentApp.Managers
 
         internal BaseResponse Create(RealEstateOffer item)
         {
-            item.Id = Guid.NewGuid();
             item.CreateDate = DateTime.Now;
             item.UpdateDate = DateTime.Now;
 

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RentApp.Models.DbModels
 {
-    public class BaseRealEstateDetailes
+    public abstract class BaseRealEstateDetailes
     {
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
