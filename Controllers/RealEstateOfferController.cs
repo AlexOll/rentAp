@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RentApp.Managers;
 using RentApp.Models.DbModels;
+using RentApp.Models.RequestModels;
 using RentApp.Models.Structs;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,19 @@ namespace RentApp.Controllers
                 return NotFound();
             }
             return new ObjectResult(item);
+        }
+
+        [HttpPost, Route("filter")]
+        public async Task<IActionResult> GetByFilter([FromBody] OfferFilterRequest filter)
+        {
+            if (filter == null)
+            {
+                return BadRequest();
+            }
+
+            var result = await Task.Factory.StartNew(() => _offerManager.GetByFilter(filter));
+
+            return Ok(result);
         }
 
         [HttpPost]
@@ -114,6 +128,78 @@ namespace RentApp.Controllers
                 IsAlive = true
             };
             _offerManager.Create(offer1);
+
+            ////2
+            //AccommodationDetailes det2 = new AccommodationDetailes
+            //{
+            //    Floor = 2,
+            //    Balcony = true,
+            //    Terrace = false
+            //};
+            //RealEstateObject obj2 = new RealEstateObject
+            //{
+            //    Description = "Description 2",
+            //    Address = "Kyiv, Address 2",
+            //    Area = 55,
+            //    Lat = 50.397289,
+            //    Lng = 30.510895,
+            //    PropertyType = PropertyType.Appartment,
+            //    RealEstateDetailes = det2,
+            //    CreateDate = DateTime.Now,
+            //    UpdateDate = DateTime.Now,
+            //    IsAlive = true
+            //};
+            //RealEstatePhoto p21 = new RealEstatePhoto { Url = "../../img/flat/noImage.jpg", RealEstateId = obj2.Id };
+            //RealEstatePhoto p22 = new RealEstatePhoto { Url = "../../img/flat/noImage.jpg", RealEstateId = obj2.Id };
+            //RealEstatePhoto p23 = new RealEstatePhoto { Url = "../../img/flat/noImage.jpg", RealEstateId = obj2.Id };
+            //obj2.Photos = new List<RealEstatePhoto> { p21, p22, p23 };
+
+            //RealEstateOffer offer2 = new RealEstateOffer
+            //{
+            //    Price = 1500,
+            //    ServiceType = ServiceType.OfferSale,
+            //    RealEstateObject = obj2,
+            //    CreateDate = DateTime.Now,
+            //    UpdateDate = DateTime.Now,
+            //    IsAlive = true
+            //};
+            //_offerManager.Create(offer2);
+
+            ////3
+            //AccommodationDetailes det3 = new AccommodationDetailes
+            //{
+            //    Floor = 2,
+            //    Balcony = true,
+            //    Terrace = false
+            //};
+            //RealEstateObject obj3 = new RealEstateObject
+            //{
+            //    Description = "Description 3",
+            //    Address = "Kyiv, Address 3",
+            //    Area = 66,
+            //    Lat = 50.450750,
+            //    Lng = 30.525068,
+            //    PropertyType = PropertyType.Appartment,
+            //    RealEstateDetailes = det3,
+            //    CreateDate = DateTime.Now,
+            //    UpdateDate = DateTime.Now,
+            //    IsAlive = true
+            //};
+            //RealEstatePhoto p31 = new RealEstatePhoto { Url = "../../img/flat/noImage.jpg", RealEstateId = obj3.Id };
+            //RealEstatePhoto p32 = new RealEstatePhoto { Url = "../../img/flat/noImage.jpg", RealEstateId = obj3.Id };
+            //RealEstatePhoto p33 = new RealEstatePhoto { Url = "../../img/flat/noImage.jpg", RealEstateId = obj3.Id };
+            //obj3.Photos = new List<RealEstatePhoto> { p31, p32, p33 };
+
+            //RealEstateOffer offer3 = new RealEstateOffer
+            //{
+            //    Price = 1800,
+            //    ServiceType = ServiceType.OfferSale,
+            //    RealEstateObject = obj3,
+            //    CreateDate = DateTime.Now,
+            //    UpdateDate = DateTime.Now,
+            //    IsAlive = true
+            //};
+            //_offerManager.Create(offer3);
 
             return Ok(null);
         }
