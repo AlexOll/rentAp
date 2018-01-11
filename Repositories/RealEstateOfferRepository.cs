@@ -47,6 +47,7 @@ namespace RentApp.Repositories
         {
             using (_context)
             {
+                _context.RealEstateObjects.Attach(item.RealEstateObject);
                 _context.RealEstateOffers.Add(item);
                 _context.SaveChanges();
             }
