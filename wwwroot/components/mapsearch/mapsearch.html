@@ -10,7 +10,6 @@
             <div multiple-dropdown data="propertyType" sign="'select type'"></div>
         </div>
 
-
         <div class="d-inline-block col-lg-2 col-md-4 col-sm-6">
             <input ng-required="form.city.$dirty" type="text" name="city" id="city" class="input-base input-single form-control" ng-autocomplete ng-model="city" options="options"
                    lng="" lat=""
@@ -31,22 +30,24 @@
 
     <div class="row content">
         <div class="col-sm-9">
-            <div id="map" style="" set-height="0.8"></div>
+            <div id="map" style="height:100%"></div>
         </div>
 
-        <div class="col-sm-3 search-flats-div" set-height="0.8">
-
+        <div class="col-sm-3 search-flats-div">
             <div class="row mb-1" ng-repeat="location in locations">
                 <div class="col-md-8">
-                    <img class="w-100" set-height="0.2" ng-src="{{location.photoURLs[0] || '../../img/flat/noImage.jpg'}}">
+                    <a href="/flatdetails">
+                        <img class="w-100" ng-src="{{location.photoURLs[0] || '../../img/flat/noImage.jpg'}}">
+                    </a>
                 </div>
                 <div class="col-md-4">
-                    <a href="#">{{location.address}}</a>
+                    <a href="/flatdetails">{{location.address}}</a>
                     <br />
                     <h5>price: {{location.price}}</h5>
                     {{location.description}}
                 </div>
             </div>
+
         </div>
     </div>
 </div>

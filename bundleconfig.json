@@ -29,7 +29,8 @@
         "wwwroot/components/register/register.js",
         "wwwroot/components/home/home.js",
         "wwwroot/components/profile/profile.js",
-        "wwwroot/components/mapsearch/mapsearch.js"
+        "wwwroot/components/mapsearch/mapsearch.js",
+        "wwwroot/components/flatdetails/flatdetails.js"
 
       ],
     "minify": {

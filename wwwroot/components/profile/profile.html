@@ -13,7 +13,6 @@
         <br />
         <div class="collapse navbar-collapse navigation" id="navbar-div" ng-include src="'components/profile/profile-nav-bar.html'"></div>
     </div>
-
     <div id="profile-div" class="container-fluid p-0">
 
         <section class="resume-section d-column" id="messages">
@@ -24,14 +23,66 @@
         <section class="resume-section flex-column" id="favorites">
             <br />
             <div ng-include src="'components/profile/profile-favorites.html'"></div>
-            <!-- /.row -->
         </section>
 
         <section class="resume-section flex-column" id="editProfile">
             <div class="my-auto" ng-include src="'components/profile/profile-edit-form.html'"></div>
         </section>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <section class="resume-section flex-column" id="myRealEstate">
+            <br />
+            <h4 class="mb-3 smallresolution-show">Your Real Estate</h4>
+            <a class="btn btn-block btn-success" href="#">ADD NEW REAL ESTATE</a>
+            <br />
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card h-100">
+                        <button class="close-icon"></button>
+                        <a href="#"><img class="w-100" src="../../img/flat/noImage.jpg" alt=""></a>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="#">Adress One</a>
+                            </h5>
+                        </div><i class="fa fa-edit edit-button"></i>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card h-100">
+                        <button class="close-icon"></button>
+                        <a href="#"><img class="w-100" src="../../img/flat/noImage.jpg" alt=""></a>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="#">Adress Two</a>
+                            </h5>
+                        </div><i class="fa fa-edit edit-button"></i>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card h-100">
+                        <button class="close-icon"></button>
+                        <a href="#"><img class="w-100" src="../../img/flat/noImage.jpg" alt=""></a>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="#">Adress Three</a>
+                            </h5>
+                        </div><i class="fa fa-edit edit-button"></i>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card h-100">
+                        <button class="close-icon"></button>
+                        <a href="#"><img class="w-100" src="../../img/flat/noImage.jpg" alt=""></a>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="#">Adress Three</a>
+                            </h5>
+                        </div><i class="fa fa-edit edit-button"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <section class="resume-section flex-column" id="watchDog">
+        <section class="resume-section flex-column nopadding" id="watchDog">
             <div class="my-auto">
                 <h2 class="mb-5">Skills</h2>
                 <div class="subheading mb-3">Programming Languages &amp; Tools</div>

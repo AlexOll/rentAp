@@ -6,9 +6,13 @@
     <li class="nav-item" ng-class="(windowScrollY >= favoritesH && windowScrollY < editProfileH) ? 'pulse' : ''">
         <a ng-click="gotoElement('favorites')" href="">Favorites</a>
     </li>
-    <li class="nav-item" ng-class="(windowScrollY >= editProfileH && windowScrollY < watchDogH) ? 'pulse' : ''">
+    <li class="nav-item" ng-class="(windowScrollY >= editProfileH && windowScrollY < myRealEstate) ? 'pulse' : ''">
         <a ng-click="gotoElement('editProfile')" href="">Edit Profile</a>
     </li>
+    <li class="nav-item" ng-class="(windowScrollY >= myRealEstate && windowScrollY < watchDogH) ? 'pulse' : ''">
+        <a ng-click="gotoElement('myRealEstate')" href="">My Real Estate</a>
+    </li>
+    
     <li class="nav-item" ng-class="windowScrollY >= watchDogH ? 'pulse' : ''">
         <a ng-click="gotoElement('watchDog')" href="">Watch Dog</a>
     </li>

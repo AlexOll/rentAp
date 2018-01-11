@@ -14,11 +14,11 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
 
             HubUtility.OnlineStatusUpdated(function (msg) {
                 $scope.chatUsers.forEach(function (user) {
-                        user.lastOnlineDateTime = msg[user.id.toString()] || user.lastOnlineDateTime;
+                    user.lastOnlineDateTime = msg[user.id.toString()] || user.lastOnlineDateTime;
                 });
                 $scope.$apply();
             });
-            
+
 
             function ScrollChatDown() {
                 $timeout(function () {
@@ -29,12 +29,11 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
             }
 
             $timeout(function () {
-                if (!$rootScope.isSmallResolution) {
-                    $rootScope.windowScrollY = 0;
-                    $scope.favoritesH = angular.element(document.querySelector('#favorites'))[0].offsetTop;
-                    $scope.editProfileH = angular.element(document.querySelector('#editProfile'))[0].offsetTop;
-                    $scope.watchDogH = angular.element(document.querySelector('#watchDog'))[0].offsetTop;
-                }
+                $rootScope.windowScrollY = 0;
+                $scope.favoritesH = angular.element(document.querySelector('#favorites'))[0].offsetTop;
+                $scope.editProfileH = angular.element(document.querySelector('#editProfile'))[0].offsetTop;
+                $scope.myRealEstate = angular.element(document.querySelector('#myRealEstate'))[0].offsetTop;
+                $scope.watchDogH = angular.element(document.querySelector('#watchDog'))[0].offsetTop;
             }, 1000);
 
             ProfileService.GetUserMessages($scope.user.id, function (response) {

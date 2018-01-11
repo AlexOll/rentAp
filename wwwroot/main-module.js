@@ -12,6 +12,7 @@ angular
         'myApp.home',
         'myApp.profile',
         'myApp.mapSearch',
+        'myApp.flatdetails',
         'services',
         'utilities'
     ])
@@ -43,13 +44,17 @@ angular
                 templateUrl: 'components/mapsearch/mapsearch.html',
                 controller: 'mapSearchCtrl'
             })
+            .when('/flatdetails', {
+                templateUrl: 'components/flatdetails/flatdetails.html',
+                controller: 'flatdetailsCtrl'
+            })
             .otherwise({ redirectTo: '/' })
 
     }])
     .run(['$rootScope', '$location', '$cookies', '$http', '$window', '$interval', 'ProfileService', 'HubUtility',
         function ($rootScope, $location, $cookies, $http, $window, $interval, ProfileService, HubUtility) {
 
-            $rootScope.isSmallResolution = $window.innerWidth <= 992;
+
 
             $rootScope.globals = $cookies.getObject('globals') || {};
 
@@ -66,6 +71,8 @@ angular
             }
 
             $rootScope.$on('$locationChangeStart', function (event, next, current) {
+
+                $rootScope.isSmallResolution = $window.innerWidth <= 992;
 
                 if ($rootScope.globals.currentUser)
                     $rootScope.name = $rootScope.globals.currentUser.name;
@@ -87,17 +94,16 @@ angular
         function ($scope, $rootScope, $location, $timeout, AnchorSmoothScrollService, AuthenticationService, HubUtility) {
 
             $scope.gotoElement = function (eID) {
-
                 if ($rootScope.isSmallResolution) {
                     $location.path('/profile');
                     $timeout(function () {
                         AnchorSmoothScrollService.ScrollTo(eID);
                     }, 500);
-                    $('.navbar-collapse').collapse('hide');
                 }
                 else {
                     AnchorSmoothScrollService.ScrollTo(eID);
                 }
+                $('.navbar-collapse').collapse('hide');
             };
 
             $scope.logout = function () {

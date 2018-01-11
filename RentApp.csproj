@@ -55,7 +55,7 @@
 
   <ItemGroup>
     <None Include="wwwroot\components\forgotpassword\forgotpassword.js" />
-    <None Include="wwwroot\components\home\home.js" />
+    <None Include="wwwroot\components\flatdetails\flatdetails.js" />
     <None Include="wwwroot\components\login\login.js" />
     <None Include="wwwroot\components\profile\profile.js" />
     <None Include="wwwroot\components\register\register.js" />

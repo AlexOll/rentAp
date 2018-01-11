@@ -90,13 +90,27 @@ footer {
         text-transform: uppercase;
     }
 
+@media (max-width: 992px) {
+    .smallresolution-show {
+        display: block;
+    }
+}
+
+
+@media (min-width: 992px) {
+    .smallresolution-show {
+        display: none;
+    }
+}
+
 @media (min-width: 1329px) and (max-width: 1656px) {
     #profile-div {
         width: 85%;
         margin-left: 15%;
     }
 }
-@media (min-width: 992px) and (max-width: 1328px){
+
+@media (min-width: 992px) and (max-width: 1328px) {
     #profile-div {
         width: 75%;
         margin-left: 25%;
@@ -220,6 +234,7 @@ section.resume-section {
     cursor: pointer;
 }
 
-.search-flats-div{
-    overflow:auto;
+.search-flats-div {
+    overflow: auto;
+    height: 80vh;
 }

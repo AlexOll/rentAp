@@ -56,8 +56,9 @@ namespace RentApp.Managers
 
             UserCache.CachedItems.TryGetValue(message.UserIdTo, out UserCacheItem result);
 
-            await _hubContext.Clients.Client(result?.ConnectionId.ToString())
-                 .InvokeAsync("messageSent", (MessageResponse)message);
+            if (result != null && !string.IsNullOrEmpty(result?.ConnectionId))
+                await _hubContext.Clients.Client(result?.ConnectionId.ToString())
+                     .InvokeAsync("messageSent", (MessageResponse)message);
 
             return new BaseResponse();
         }

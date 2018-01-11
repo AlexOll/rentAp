@@ -1,10 +1,10 @@
-﻿<h2 ng-show="chatUsers.length==0" class="no-messages-h2" ng-cloak>No messages found</h2>
+﻿<h4 class="mb-3 smallresolution-show">Messages</h4>
+<h2 ng-show="chatUsers.length==0" class="no-messages-h2" ng-cloak>No messages found</h2>
 <table ng-show="chatUsers.length!=0" class="container clearfix chat-table" ng-cloak>
     <tr>
         <td class="people-list" id="people-list">
             <div class="search">
                 <input type="text" placeholder="search" />
-                <i class="fa fa-search"></i>
             </div>
             <ul class="list">
                 <li class="clearfix" ng-class="chater.id==chosenChater.id ? 'chosenChater' : ''" ng-repeat="chater in chatUsers" ng-click="chooseChater(chater)">
@@ -23,9 +23,8 @@
                 <div class="chat-about">
                     <div class="chat-with">chat with <b>{{chosenChater.name | uppercase}}</b></div>
                 </div>
-                <i class="fa fa-star"></i>
             </div>
-            <div id="chat-history" class="chat-history" set-height="0.6">
+            <div class="chat-history">
                 <ul>
                     <li ng-class="message.userIdTo == chosenChater.id ? 'clearfix' : ''" ng-repeat="message in userMessages | filter:chosenChater.id:strict">
                         <div class="message-data" ng-class="message.userIdTo == chosenChater.id ? 'align-right' : '' ">
