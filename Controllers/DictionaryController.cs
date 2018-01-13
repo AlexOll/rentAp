@@ -9,10 +9,10 @@ namespace RentApp.Controllers
     [Route("api/[controller]")]
     public class DictionaryController : ApiController
     {
-        [HttpGet, Route("messageTypes")]
-        public IActionResult GetMessageTypes()
+        [HttpGet, Route("propertytypes")]
+        public IActionResult GetPropertyTypes()
         {
-            return Ok(EnumUtility.GetDictionaryFromEnum<MessageType>());
+            return Ok(EnumUtility.GetDictionaryFromEnum<PropertyType>());
         }
 
         [HttpGet, Route("serviceTypes")]

@@ -11,7 +11,8 @@
     "angular-mocks": "~1.6.6",
     "angular-toastr": "~2.1.1",
     "bootstrap": "4.0.0-beta",
-    "angular-base64": "v2.0.5"
+    "angular-base64": "v2.0.5",
+    "font-awesome": "Font-Awesome#v4.7.0"
   },
   "resolutions": {
     "jquery": "1.9.1 - 3",

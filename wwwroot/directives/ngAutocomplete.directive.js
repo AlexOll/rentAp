@@ -25,8 +25,7 @@
 
                             opts = {}
                             scope.options = {
-                                country: 'ukr',
-                                types: '(cities)'
+                                country: 'ukr'
                             };
 
                             if (scope.options.watchEnter !== true) {

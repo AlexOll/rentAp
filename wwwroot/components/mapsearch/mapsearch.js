@@ -1,36 +1,31 @@
 angular.module('myApp.mapSearch', [])
-    .controller('mapSearchCtrl', ['$scope', '$location', '$timeout', function ($scope, $location, $timeout) {
+    .controller('mapSearchCtrl', ['$scope', '$location', '$timeout', 'DictionaryService','MapUtility',
+        function ($scope, $location, $timeout, DictionaryService,MapUtility) {
 
-        $scope.serviceType = {
-            model: 1,
-            availableOptions: [
-                { id: 1, name: 'Offer sale' },
-                { id: 2, name: 'Rental offer' },
-                { id: 3, name: 'Offer roommate' },
-                { id: 4, name: 'Sales demand' },
-                { id: 5, name: 'Demand rental' },
-                { id: 6, name: 'Demand for roommates' }
-            ]
-        };
-
-        $scope.propertyType = {
-            model: [],
-            availableOptions: [
-                { id: 1, name: 'Appartment' },
-                { id: 2, name: 'House' },
-                { id: 3, name: 'Land' },
-                { id: 4, name: 'Garage' },
-                { id: 5, name: 'Office' },
-                { id: 6, name: 'Commercial space' },
-                { id: 7, name: 'Other' }
-            ]
-        };
+        $scope.propertyType = {};
+        $scope.propertyType.availableOptions = [];
+        $scope.serviceType = {};
+        $scope.serviceType.availableOptions = [];
 
         var params = $location.search()
-
         $scope.city = params.city;
-        $scope.serviceType.model = parseInt(params.serviceType);
-        $scope.propertyType.model = params.propertyType == null ? [] : params.propertyType.map(Number);
+        $scope.propertyType.model = params.propertyType === null ? [] : params.propertyType;
+
+
+        DictionaryService.GetServiceTypes(function (response) {
+
+            angular.forEach(response.data, function (value, key) {
+                $scope.serviceType.availableOptions.push({ "id": key, "name": value });
+            });
+            $scope.serviceType.model = params.serviceType;
+        });
+
+        DictionaryService.GetPropertiesTypes(function (response) {
+
+            angular.forEach(response.data, function (value, key) {
+                $scope.propertyType.availableOptions.push({ "id": key, "name": value });
+            });
+        });
 
         var locations = $scope.locations = [
             { id: 11, address: 'Appartment', description: "Description", price: 500, photoURLs: ['../../img/flat/noImage.jpg', '../../img/flat/noImage.jpg', '../../img/flat/noImage.jpg'], lat: -31.563910, lng: 147.154312 },
@@ -58,41 +53,17 @@ angular.module('myApp.mapSearch', [])
             { id: 33, address: 'Appartment', description: "Description", price: 500, photoURLs: ['../../img/flat/noImage.jpg', '../../img/flat/noImage.jpg', '../../img/flat/noImage.jpg'], lat: -43.999792, lng: 170.463352 }
         ]
 
-        function createMap(_lat, _lng, locations) {
-            $timeout(function () {
-                var myLatlng = { lat: _lat, lng: _lng };
-
-                var map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 14,
-                    center: myLatlng
-                });
-
-                // Create an array of alphabetical characters used to label the markers.
-                var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-                var markers = locations.map(function (location, i) {
-                    return new google.maps.Marker({
-                        position: location,
-                        label: labels[i % labels.length]
-                    });
-                });
-
-                // Add a marker clusterer to manage the markers.
-                var markerCluster = new MarkerClusterer(map, markers,
-                    { imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m' });
-            }, 100)
-        }
-
-        createMap(parseFloat(params.lat), parseFloat(params.lng), locations);
+        MapUtility.CreateMap(
+            parseFloat(params.lat),
+            parseFloat(params.lng),
+            locations);
 
         $scope.$watch('city', function () {
             if ($scope.form.city.$$attr.lat && $scope.form.city.$$attr.lng)
-                createMap($scope.form.city.$$attr.lat, $scope.form.city.$$attr.lng, locations);
+                MapUtility.CreateMap(
+                    $scope.form.city.$$attr.lat,
+                    $scope.form.city.$$attr.lng,
+                    locations);
         })
 
-        //$scope.getImageLocation = function (source) {
-
-        //    var image = ImageUtility.Base64ToImage(source);
-        //    return image.dataURL;
-        //}
     }]);

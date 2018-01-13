@@ -6,7 +6,7 @@
         <a class="navbar-brand js-scroll-trigger">
             <span class="d-none d-lg-block">
                 <img ng-click="gotoElement('editProfile')" class="img-fluid img-profile rounded-circle mx-auto mb-2"
-                     ng-src="{{globals.currentUser.profileImageURL || '../../img/profile/profile.jpg'}}" />
+                     ng-src="{{globals.currentUser.profileImage.dataURL || '../../img/profile/profile.jpg'}}" />
             </span>
         </a>
         <br />
@@ -28,58 +28,9 @@
         <section class="resume-section flex-column" id="editProfile">
             <div class="my-auto" ng-include src="'components/profile/profile-edit-form.html'"></div>
         </section>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
         <section class="resume-section flex-column" id="myRealEstate">
-            <br />
-            <h4 class="mb-3 smallresolution-show">Your Real Estate</h4>
-            <a class="btn btn-block btn-success" href="#">ADD NEW REAL ESTATE</a>
-            <br />
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="card h-100">
-                        <button class="close-icon"></button>
-                        <a href="#"><img class="w-100" src="../../img/flat/noImage.jpg" alt=""></a>
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <a href="#">Adress One</a>
-                            </h5>
-                        </div><i class="fa fa-edit edit-button"></i>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card h-100">
-                        <button class="close-icon"></button>
-                        <a href="#"><img class="w-100" src="../../img/flat/noImage.jpg" alt=""></a>
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <a href="#">Adress Two</a>
-                            </h5>
-                        </div><i class="fa fa-edit edit-button"></i>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card h-100">
-                        <button class="close-icon"></button>
-                        <a href="#"><img class="w-100" src="../../img/flat/noImage.jpg" alt=""></a>
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <a href="#">Adress Three</a>
-                            </h5>
-                        </div><i class="fa fa-edit edit-button"></i>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card h-100">
-                        <button class="close-icon"></button>
-                        <a href="#"><img class="w-100" src="../../img/flat/noImage.jpg" alt=""></a>
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <a href="#">Adress Three</a>
-                            </h5>
-                        </div><i class="fa fa-edit edit-button"></i>
-                    </div>
-                </div>
-            </div>
+            <div ng-include src="'components/profile/profile-my-real-estate.html'"></div>
         </section>
 
         <section class="resume-section flex-column nopadding" id="watchDog">

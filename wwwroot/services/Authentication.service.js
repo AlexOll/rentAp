@@ -5,9 +5,9 @@
         .module('services')
         .factory('AuthenticationService', AuthenticationService)
 
-    AuthenticationService.$inject = ['$http', '$cookies', '$rootScope', '$base64'];
+    AuthenticationService.$inject = ['$http', '$cookies', '$rootScope', '$base64','ErrorService'];
 
-    function AuthenticationService($http, $cookies, $rootScope, $base64) {
+    function AuthenticationService($http, $cookies, $rootScope, $base64, ErrorService) {
         var service = {
             Login: Login,
             ForgotPass: ForgotPass,
@@ -21,22 +21,34 @@
 
         function Login(input, password, callback) {
             $http.post('/api/authentication', { Input: input, Password: password })
-                .then(function (res) {return callback(res)});
+                .then(
+                function (res) { return callback(res) },
+                function (res) { return ErrorService.ErrorCallback(res) }
+                );
         }
 
         function ForgotPass(email, callback) {
             $http.get('/api/authentication/forgotpassword/' + email)
-                .then(function (res) { return callback(res) });
+                .then(
+                function (res) { return callback(res) },
+                function (res) { return ErrorService.ErrorCallback(res) }
+                );
         }
 
         function ResendActivationCode(email, callback) {
             $http.get('/api/authentication/newactivationcode/' + email)
-                .then(function (res) { return callback(res) });
+                .then(
+                function (res) { return callback(res) },
+                function (res) { return ErrorService.ErrorCallback(res) }
+                );
         }
 
         function CheckActivationCode(activationCode, callback) {
             $http.get('/api/authentication/' + activationCode)
-                .then(function (res) { return callback(res) });
+                .then(
+                function (res) { return callback(res) },
+                function (res) { return ErrorService.ErrorCallback(res) }
+                );
         }
 
         function SetCredentials(user) {
@@ -102,51 +114,51 @@
             } while (i < input.length);
 
             return output;
-        };
+        }
 
-    //Base64Decode(input) {
+        //Base64Decode(input) {
 
-    //    var output = "";
-    //    var chr1, chr2, chr3 = "";
-    //    var enc1, enc2, enc3, enc4 = "";
-    //    var i = 0;
+        //    var output = "";
+        //    var chr1, chr2, chr3 = "";
+        //    var enc1, enc2, enc3, enc4 = "";
+        //    var i = 0;
 
-    //    // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
-    //    var base64test = /[^A-Za-z0-9\+\/\=]/g;
-    //    if (base64test.exec(input)) {
-    //        window.alert("There were invalid base64 characters in the input text.\n" +
-    //            "Valid base64 characters are A-Z, a-z, 0-9, '+', '/',and '='\n" +
-    //            "Expect errors in decoding.");
-    //    }
-    //    input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+        //    // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
+        //    var base64test = /[^A-Za-z0-9\+\/\=]/g;
+        //    if (base64test.exec(input)) {
+        //        window.alert("There were invalid base64 characters in the input text.\n" +
+        //            "Valid base64 characters are A-Z, a-z, 0-9, '+', '/',and '='\n" +
+        //            "Expect errors in decoding.");
+        //    }
+        //    input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
 
-    //    do {
-    //        enc1 = keyStr.indexOf(input.charAt(i++));
-    //        enc2 = keyStr.indexOf(input.charAt(i++));
-    //        enc3 = keyStr.indexOf(input.charAt(i++));
-    //        enc4 = keyStr.indexOf(input.charAt(i++));
+        //    do {
+        //        enc1 = keyStr.indexOf(input.charAt(i++));
+        //        enc2 = keyStr.indexOf(input.charAt(i++));
+        //        enc3 = keyStr.indexOf(input.charAt(i++));
+        //        enc4 = keyStr.indexOf(input.charAt(i++));
 
-    //        chr1 = (enc1 << 2) | (enc2 >> 4);
-    //        chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-    //        chr3 = ((enc3 & 3) << 6) | enc4;
+        //        chr1 = (enc1 << 2) | (enc2 >> 4);
+        //        chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+        //        chr3 = ((enc3 & 3) << 6) | enc4;
 
-    //        output = output + String.fromCharCode(chr1);
+        //        output = output + String.fromCharCode(chr1);
 
-    //        if (enc3 !== 64) {
-    //            output = output + String.fromCharCode(chr2);
-    //        }
-    //        if (enc4 !== 64) {
-    //            output = output + String.fromCharCode(chr3);
-    //        }
+        //        if (enc3 !== 64) {
+        //            output = output + String.fromCharCode(chr2);
+        //        }
+        //        if (enc4 !== 64) {
+        //            output = output + String.fromCharCode(chr3);
+        //        }
 
-    //        chr1 = chr2 = chr3 = "";
-    //        enc1 = enc2 = enc3 = enc4 = "";
+        //        chr1 = chr2 = chr3 = "";
+        //        enc1 = enc2 = enc3 = enc4 = "";
 
-    //    } while (i < input.length);
+        //    } while (i < input.length);
 
-    //    return output;
-    //}
+        //    return output;
+        //}
 
-           
+
     }
 })();

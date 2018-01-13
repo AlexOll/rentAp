@@ -19,21 +19,21 @@ namespace RentApp.Controllers
         }
 
         [HttpGet, Route("usermessages/{id}")]
-        public async Task<IActionResult> GetAllUserMessages(Guid id)
+        public async Task<IActionResult> GetUserMessages(Guid id)
         {
             var result = await
-                Task.Factory.StartNew(() => _profileManager.GetAllUserMessages(id));
+                Task.Factory.StartNew(() => _profileManager.GetUserMessages(id));
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendMessage([FromBody]SendMessageRequest message)
+        public async Task<IActionResult> SendChatMessage([FromBody]SendMessageRequest message)
         {
             if (message == null)
             {
                 return BadRequest();
             }
-            var result = await _profileManager.SendMessage(message);
+            var result = await _profileManager.SendChatMessage(message);
 
             return Ok(result);
         }

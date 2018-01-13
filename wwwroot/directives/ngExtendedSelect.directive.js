@@ -15,7 +15,7 @@
                             $(this).parent().focus();
                             $(this).trigger('change');
                         });
-                    }, 0);
+                    }, 1000);
                 }
             }
         })

@@ -44,7 +44,11 @@ angular
                 templateUrl: 'components/mapsearch/mapsearch.html',
                 controller: 'mapSearchCtrl'
             })
-            .when('/flatdetails', {
+            .when('/flatdetails-new', {
+                templateUrl: 'components/flatdetails/flatdetails-new.html',
+                controller: 'flatdetailsCtrl'
+            })
+            .when('/flatdetails/:id/address-:address/price-:price', {
                 templateUrl: 'components/flatdetails/flatdetails.html',
                 controller: 'flatdetailsCtrl'
             })

@@ -8,6 +8,7 @@
         "wwwroot/utilities/Guid.utility.js",
         "wwwroot/utilities/Hub.utility.js",
         "wwwroot/utilities/Image.utility.js",
+        "wwwroot/utilities/Map.utility.js",
 
         "wwwroot/directives/_directives.module.js",
         "wwwroot/directives/ngAutocomplete.directive.js",
@@ -18,6 +19,7 @@
         "wwwroot/directives/multipleDropdown.directive.js",
 
         "wwwroot/services/_service.module.js",
+        "wwwroot/services/Error.service.js",
         "wwwroot/services/AnchorSmoothScroll.service.js",
         "wwwroot/services/User.service.js",
         "wwwroot/services/Authentication.service.js",

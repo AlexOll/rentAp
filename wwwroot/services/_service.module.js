@@ -3,8 +3,7 @@
 
     'use strict';
 
-    angular.module('services', ['ngRoute', 'ngCookies']);
-
+    angular.module('services', ['ngRoute', 'ngCookies'])
 })();
 
 

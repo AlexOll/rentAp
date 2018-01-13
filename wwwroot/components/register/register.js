@@ -15,7 +15,7 @@ angular.module('myApp.register', ['ngRoute', 'services', 'toastr', 'directives']
                     }
                     else {
                         toastr.error(response.data.message, "Error", {
-                            "timeOut": "5000",
+                            "timeOut": "3000",
                             "extendedTImeout": "0"
                         });
                     }

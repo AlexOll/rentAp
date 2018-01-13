@@ -34,17 +34,18 @@
         </div>
 
         <div class="col-sm-3 search-flats-div">
-            <div class="row mb-1" ng-repeat="location in locations">
+
+            <div class="row mb-1" ng-repeat="item in locations">
                 <div class="col-md-8">
                     <a href="/flatdetails">
-                        <img class="w-100" ng-src="{{location.photoURLs[0] || '../../img/flat/noImage.jpg'}}">
+                        <img class="w-100" ng-src="{{item.photoURLs[0] || '../../img/flat/noImage.jpg'}}">
                     </a>
                 </div>
                 <div class="col-md-4">
-                    <a href="/flatdetails">{{location.address}}</a>
+                    <a href="/flatdetails">{{item.address}}</a>
                     <br />
-                    <h5>price: {{location.price}}</h5>
-                    {{location.description}}
+                    <h5>price: {{item.price}}</h5>
+                    {{item.description}}
                 </div>
             </div>
 

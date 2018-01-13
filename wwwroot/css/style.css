@@ -15,7 +15,7 @@ html {
 }
 
 body {
-    padding-top: 56px;
+    padding-top: 52px;
     background-color: inherit;
 }
 
@@ -28,11 +28,6 @@ h4, h5 {
     border-radius: 0;
 }
 
-@media (max-width: 992px) {
-    body {
-        padding-top: 56px;
-    }
-}
 
 footer {
     background-color: #555;
@@ -238,3 +233,11 @@ section.resume-section {
     overflow: auto;
     height: 80vh;
 }
+
+/*.moving-div {
+    transition: all 2s ease-in-out;
+    transform: translate(0,-350px);
+    -webkit-transform: translate(0,-350px); 
+    -o-transform: translate(0,-350px); 
+    -moz-transform: translate(0,-350px);
+}*/

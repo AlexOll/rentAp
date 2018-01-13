@@ -1,6 +1,5 @@
 ﻿using RentApp.Models.Structs;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace RentApp.Models.DbModels

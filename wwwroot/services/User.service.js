@@ -5,9 +5,9 @@
         .module('services')
         .factory('UserService', UserService)
 
-    UserService.$inject = ['$http'];
+    UserService.$inject = ['$http', 'ErrorService'];
 
-    function UserService($http) {
+    function UserService($http, ErrorService) {
         var service = {
             Create: Create,
             Update: Update
@@ -22,12 +22,14 @@
                 "LastName": user.lastName,
                 "Password": user.password,
                 "Email": user.email
-            }).then(function (res) {
-                return callback(res);
             })
+                .then(
+                function (res) { return callback(res) },
+                function (res) { return ErrorService.ErrorCallback(res) }
+                )
         }
         function Update(user, callback) {
-             $http.post('/api/user/update', {
+            $http.post('/api/user/update', {
                 "Id": user.id,
                 "PhoneNumber": user.phonenumber,
                 "FirstName": user.firstname,
@@ -35,9 +37,11 @@
                 "Password": user.password,
                 "Email": user.email,
                 "ProfileImageURL": user.profileImageURL
-             }).then(function (res) {
-                 return callback(res);
-             })
+            })
+                .then(
+                function (res) { return callback(res) },
+                function (res) { return ErrorService.ErrorCallback(res) }
+                )
         }
     }
 })();

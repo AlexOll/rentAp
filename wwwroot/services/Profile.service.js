@@ -6,9 +6,9 @@
         .module('services')
         .factory('ProfileService', ProfileService)
 
-    ProfileService.$inject = ['$http', '$interval'];
+    ProfileService.$inject = ['$http', '$interval','ErrorService'];
 
-    function ProfileService($http, $interval) {
+    function ProfileService($http, $interval, ErrorService) {
         var service = {
             GetUserMessages: getUserMessages,
             SendChatMessage: SendChatMessage,
@@ -19,7 +19,10 @@
 
         function getUserMessages(id, callback) {
             $http.get('/api/profile/usermessages/' + id)
-                .then(function (res) { return callback(res) });
+                .then(
+                function (res) { return callback(res) },
+                function (res) { return ErrorService.ErrorCallback(res) }
+            )
         }
 
         function SendChatMessage(message, callback) {
@@ -30,13 +33,17 @@
                 "Body": message.body,
                 "CreateDateTime": message.createDateTime,
             })
-                .then(function (res) { return callback(res) });
+                .then(
+                function (res) { return callback(res) },
+                function (res) { return ErrorService.ErrorCallback(res) }
+                )
         }
 
         function UpdateOnlineStatus(id) {
             var interval = $interval(function () {
                 $http.put('/api/profile/updateonlinestatus/' + id)
-                    .then(null,
+                    .then(
+                    null,
                     function () { $interval.cancel(interval); });
             }, 60000);
         }

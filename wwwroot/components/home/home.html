@@ -11,7 +11,7 @@
                     <select class="input-base select-multiple" ng-extended-select ng-model="propertyType.model" size="{{propertyType.availableOptions.length+1}}"
                             ng-options="opt.id as opt.name for opt in propertyType.availableOptions" multiple></select>
 
-                    <h5 class="my-3">City:</h5>
+                    <h5 class="my-3">Location:</h5>
                     <input ng-required="form.city.$dirty" type="text" name="city" id="city" class="input-base form-control" ng-autocomplete ng-model="city" options="options"
                            lng="" lat=""
                            placeholder="e.g. Kiev, Kyiv city, Ukraine" />

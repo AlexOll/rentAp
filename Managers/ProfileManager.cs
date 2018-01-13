@@ -26,7 +26,7 @@ namespace RentApp.Managers
             _hubContext = hubContext;
         }
 
-        internal UserMessagesResponse GetAllUserMessages(Guid userId)
+        internal UserMessagesResponse GetUserMessages(Guid userId)
         {
             var messageList = MessageCache.CachedItems.Values
                 .Where(w => w.UserIdFrom == userId || w.UserIdTo == userId)
@@ -49,7 +49,7 @@ namespace RentApp.Managers
             return new UserMessagesResponse(messageList, userList);
         }
 
-        internal async Task<BaseResponse> SendMessage(SendMessageRequest messageRequest)
+        internal async Task<BaseResponse> SendChatMessage(SendMessageRequest messageRequest)
         {
             var message = messageRequest.CreateDbModel();
             _messageRepository.Create(message);

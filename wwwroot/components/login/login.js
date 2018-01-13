@@ -15,8 +15,8 @@ angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
                         $location.url('/');
                     }
                     else {
-                        toastr.error(response.data.message, "Error", {
-                            "timeOut": "5000",
+                        toastr.error(response.data.message, "Activation code failed", {
+                            "timeOut": "3000",
                             "extendedTImeout": "0"
                         });
                     }
@@ -42,10 +42,10 @@ angular.module('myApp.login', ['ngRoute', 'ngMaterial', 'services', 'toastr'])
                             targetEvent: ev
                         });
                         $mdDialog.show(alert);
-
-                        $scope.dataLoading = false;
                     }
                 });
+
+                $scope.dataLoading = false;
             }
 
         }]);

@@ -3,7 +3,7 @@
 
     angular
         .module('directives')
-        .directive('ngImageCompress', ['$q', '$rootScope', function ($q, $rootScope) {
+        .directive('ngImageCompress', ['$q', '$rootScope', 'toastr', function ($q, $rootScope, toastr) {
 
 
             var URL = window.URL || window.webkitURL;
@@ -70,11 +70,11 @@
             };
 
             var createImage = function (url, callback) {
-                var image = new Image();
-                image.onload = function () {
-                    callback(image);
+                var myImage = new Image();
+                myImage.onload = function () {
+                    callback(myImage);
                 };
-                image.src = url;
+                myImage.src = url;
             };
 
             var fileToDataURL = function (file) {
@@ -91,7 +91,7 @@
             return {
                 restrict: 'A',
                 scope: {
-                    //image: '=',
+                    image: '=',
                     resizeMaxHeight: '@?',
                     resizeMaxWidth: '@?',
                     resizeQuality: '@?',
@@ -111,23 +111,19 @@
 
                     var applyScope = function (imageResult) {
                         scope.$apply(function () {
-                            if (attrs.multiple) {
-                                //scope.image.push(imageResult);
-                            } else {
-                                $rootScope.globals.currentUser.profileImageURL = imageResult.compressed.dataURL;
-                                //scope.image = imageResult;
-                            }
+                            scope.image = imageResult.compressed;
                         });
                     };
 
-
+                    var currentPhotoQty = 0;
+                    var photoLimit = 8
                     element.bind('change', function (evt) {
-                        //when multiple always return an array of images
-                        if (attrs.multiple) {
-                            scope.image = [];
-                        }
-
                         var files = evt.target.files;
+                        if (currentPhotoQty + files.length > photoLimit) {
+                            toastr.info('Not more than ' + photoLimit + ' photos', 'Photo limit');
+                            return;
+                        }
+                        currentPhotoQty += files.length;
                         for (var i = 0; i < files.length; i++) {
                             //create a result object for each file in files
                             var imageResult = {

@@ -32,25 +32,17 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
                 $rootScope.windowScrollY = 0;
                 $scope.favoritesH = angular.element(document.querySelector('#favorites'))[0].offsetTop;
                 $scope.editProfileH = angular.element(document.querySelector('#editProfile'))[0].offsetTop;
-                $scope.myRealEstate = angular.element(document.querySelector('#myRealEstate'))[0].offsetTop;
+                $scope.myRealEstateH = angular.element(document.querySelector('#myRealEstate'))[0].offsetTop;
                 $scope.watchDogH = angular.element(document.querySelector('#watchDog'))[0].offsetTop;
             }, 1000);
 
             ProfileService.GetUserMessages($scope.user.id, function (response) {
 
-                if (response.data.responseCode === 200) {
-                    $scope.userMessages = response.data["messages"];
-                    $scope.chatUsers = response.data["users"];
-                    $scope.chosenChater = $scope.chatUsers[0];
+                $scope.userMessages = response.data["messages"];
+                $scope.chatUsers = response.data["users"];
+                $scope.chosenChater = $scope.chatUsers[0];
 
-                    ScrollChatDown();
-                }
-                else {
-                    toastr.error(response.data.message, "Error", {
-                        "timeOut": "5000",
-                        "extendedTImeout": "0"
-                    });
-                }
+                ScrollChatDown();
             });
 
             $scope.chooseChater = function (user) {
@@ -77,18 +69,10 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
 
                 ProfileService.SendChatMessage(message, function (response) {
 
-                    if (response.data.responseCode === 200) {
-                        $scope.userMessages.push(message);
-                        ScrollChatDown();
+                    $scope.userMessages.push(message);
+                    ScrollChatDown();
 
-                        $scope.newMessage = null;
-                    }
-                    else {
-                        toastr.error(response.data.message, "Error", {
-                            "timeOut": "5000",
-                            "extendedTImeout": "0"
-                        });
-                    }
+                    $scope.newMessage = null;
                 });
             }
 
@@ -125,7 +109,7 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
             $scope.updateProfile = function (ev) {
 
                 $scope.dataLoading = true;
-                $scope.user.profileImageURL = $rootScope.globals.currentUser.profileImageURL;
+                $scope.user.profileImageURL = $rootScope.globals.currentUser.profileImage.dataURL;
                 UserService.Update($scope.user, function (response) {
 
                     if (response.data.responseCode === 200) {
@@ -136,7 +120,7 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
                     }
                     else {
                         toastr.error(response.data.message, "Error", {
-                            "timeOut": "5000",
+                            "timeOut": "3000",
                             "extendedTImeout": "0"
                         });
                         $scope.user.password = '';
@@ -145,6 +129,21 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
                 $scope.dataLoading = false;
             }
 
+            $scope.myLocations = [
+                { id: 11, address: 'Rusakovskaya Naberezhnaya 1', description: "Description", price: 500, photoURL: '../../img/flat/noImage.jpg' },
+                { id: 12, address: 'Rusakovskaya Naberezhnaya 2', description: "Description", price: 500, photoURL: '../../img/flat/noImage.jpg' },
+                { id: 13, address: 'Rusakovskaya Naberezhnaya 3', description: "Description", price: 500, photoURL: '../../img/flat/noImage.jpg' },
+                { id: 14, address: 'Rusakovskaya Naberezhnaya 4', description: "Description", price: 500, photoURL: '../../img/flat/noImage.jpg' },
+            ]
+
+            $scope.deleteMyRealEstate = function (id) {
+                alert("delete "+id)
+            }
+
+            $scope.editMyRealEstate = function (id) {
+                alert("edit " + id)
+            }
+            
         }])
 
 
