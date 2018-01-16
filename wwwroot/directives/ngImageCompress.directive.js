@@ -115,15 +115,13 @@
                         });
                     };
 
-                    var currentPhotoQty = 0;
                     var photoLimit = 8
                     element.bind('change', function (evt) {
                         var files = evt.target.files;
-                        if (currentPhotoQty + files.length > photoLimit) {
+                        if (files.length > photoLimit) {
                             toastr.info('Not more than ' + photoLimit + ' photos', 'Photo limit');
                             return;
                         }
-                        currentPhotoQty += files.length;
                         for (var i = 0; i < files.length; i++) {
                             //create a result object for each file in files
                             var imageResult = {

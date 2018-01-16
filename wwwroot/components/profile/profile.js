@@ -32,7 +32,7 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
                 $rootScope.windowScrollY = 0;
                 $scope.favoritesH = angular.element(document.querySelector('#favorites'))[0].offsetTop;
                 $scope.editProfileH = angular.element(document.querySelector('#editProfile'))[0].offsetTop;
-                $scope.myRealEstateH = angular.element(document.querySelector('#myRealEstate'))[0].offsetTop;
+                $scope.myOffersH = angular.element(document.querySelector('#myOffers'))[0].offsetTop;
                 $scope.watchDogH = angular.element(document.querySelector('#watchDog'))[0].offsetTop;
             }, 1000);
 
@@ -136,11 +136,11 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
                 { id: 14, address: 'Rusakovskaya Naberezhnaya 4', description: "Description", price: 500, photoURL: '../../img/flat/noImage.jpg' },
             ]
 
-            $scope.deleteMyRealEstate = function (id) {
+            $scope.deleteOffer = function (id) {
                 alert("delete "+id)
             }
 
-            $scope.editMyRealEstate = function (id) {
+            $scope.editOffer = function (id) {
                 alert("edit " + id)
             }
             

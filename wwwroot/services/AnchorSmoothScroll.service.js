@@ -14,10 +14,10 @@
 
         return service;
 
-        function ScrollTo(eID) {
+        function ScrollTo(eID,delta=0) {
 
             var startY = currentYPosition();
-            var stopY = elmYPosition(eID);
+            var stopY = elmYPosition(eID) + delta;
             var distance = stopY > startY ? stopY - startY : startY - stopY;
             if (distance < 100) {
                 scrollTo(0, stopY); return;

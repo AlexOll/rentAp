@@ -7,15 +7,17 @@ namespace RentApp.Models.Structs
     {
         [Description("Offer sale")]
         OfferSale = 1,
-        [Description("Rental offer")]
-        OfferRental,
+        [Description("Long-time rental offer")]
+        LTOfferRental,
+        [Description("Short-time rental offer")]
+        STOfferRental,
         [Description("Offer rommate")]
         OfferRoommate,
-        [Description("Sales demand")]
-        DemandSale,
-        [Description("Demand rental")]
-        DemandRental,
-        [Description("Demand for roommates")]
-        DemandRoommate
+        //[Description("Sales demand")]
+        //DemandSale
+        //[Description("Demand rental")]
+        //DemandRental,
+        //[Description("Demand for roommates")]
+        //DemandRoommate
     }
 }

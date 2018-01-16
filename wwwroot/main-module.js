@@ -13,6 +13,7 @@ angular
         'myApp.profile',
         'myApp.mapSearch',
         'myApp.flatdetails',
+        'myApp.newoffer',
         'services',
         'utilities'
     ])
@@ -44,9 +45,9 @@ angular
                 templateUrl: 'components/mapsearch/mapsearch.html',
                 controller: 'mapSearchCtrl'
             })
-            .when('/flatdetails-new', {
-                templateUrl: 'components/flatdetails/flatdetails-new.html',
-                controller: 'flatdetailsCtrl'
+            .when('/new-offer', {
+                templateUrl: 'components/newoffer/newoffer.html',
+                controller: 'newOfferCtrl'
             })
             .when('/flatdetails/:id/address-:address/price-:price', {
                 templateUrl: 'components/flatdetails/flatdetails.html',
@@ -55,12 +56,10 @@ angular
             .otherwise({ redirectTo: '/' })
 
     }])
-    .run(['$rootScope', '$location', '$cookies', '$http', '$window', '$interval', 'ProfileService', 'HubUtility',
-        function ($rootScope, $location, $cookies, $http, $window, $interval, ProfileService, HubUtility) {
+    .run(['$rootScope', '$location', 'CookieUtility', '$http', '$window', '$interval', 'ProfileService', 'HubUtility',
+        function ($rootScope, $location, CookieUtility, $http, $window, $interval, ProfileService, HubUtility) {
 
-
-
-            $rootScope.globals = $cookies.getObject('globals') || {};
+            $rootScope.globals = CookieUtility.GetByName('globals');
 
             if ($rootScope.globals.currentUser) {
 
@@ -116,7 +115,7 @@ angular
                 $location.path('/login');
             }
         }])
-    .animation('.reveal-animation', function () {
+    .animation('.reveal-animation',function () {
         return {
             enter: function (element, done) {
                 jQuery(element).hide().fadeIn(1000, done);

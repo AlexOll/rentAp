@@ -49,7 +49,8 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
             <a class="navbar-brand" href="/">Rent App</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" 
+                    aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -57,7 +58,7 @@
                 <ul class="navbar-nav ml-auto nav navbar-right">
 
                     <li class="nav-item" ng-show="globals.currentUser">
-                        <a class="nav-link" href="/profile"><b> {{globals.currentUser.name}}'s profile</b></a>
+                        <a class="nav-link" href="/profile" ng-cloak><b> {{globals.currentUser.name}}'s profile</b></a>
                         <div class="smallresolution-show" ng-include src="'components/profile/profile-nav-bar.html'"></div>
                     </li>
                     <li class="nav-item" ng-show="!globals.currentUser">

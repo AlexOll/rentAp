@@ -1,40 +1,42 @@
 ﻿// Configure bundling and minification for the project.
 // More info at https://go.microsoft.com/fwlink/?LinkId=808241
 [
-    {
+  {
     "outputFileName": "wwwroot/js/bundle.js",
-      "inputFiles": [
-        "wwwroot/utilities/_utilities.module.js",
-        "wwwroot/utilities/Guid.utility.js",
-        "wwwroot/utilities/Hub.utility.js",
-        "wwwroot/utilities/Image.utility.js",
-        "wwwroot/utilities/Map.utility.js",
+    "inputFiles": [
+      "wwwroot/utilities/_utilities.module.js",
+      "wwwroot/utilities/Guid.utility.js",
+      "wwwroot/utilities/Hub.utility.js",
+      "wwwroot/utilities/Image.utility.js",
+      "wwwroot/utilities/Map.utility.js",
+      "wwwroot/utilities/Cookie.utility.js",
 
-        "wwwroot/directives/_directives.module.js",
-        "wwwroot/directives/ngAutocomplete.directive.js",
-        "wwwroot/directives/ngExtendedSelect.directive.js",
-        "wwwroot/directives/ngImageCompress.directive.js",
-        "wwwroot/directives/setHeight.directive.js",
-        "wwwroot/directives/uniqueField.directive.js",
-        "wwwroot/directives/multipleDropdown.directive.js",
+      "wwwroot/directives/_directives.module.js",
+      "wwwroot/directives/ngAutocomplete.directive.js",
+      "wwwroot/directives/ngExtendedSelect.directive.js",
+      "wwwroot/directives/ngImageCompress.directive.js",
+      "wwwroot/directives/setHeight.directive.js",
+      "wwwroot/directives/uniqueField.directive.js",
+      "wwwroot/directives/multipleDropdown.directive.js",
 
-        "wwwroot/services/_service.module.js",
-        "wwwroot/services/Error.service.js",
-        "wwwroot/services/AnchorSmoothScroll.service.js",
-        "wwwroot/services/User.service.js",
-        "wwwroot/services/Authentication.service.js",
-        "wwwroot/services/Dictionary.service.js",
-        "wwwroot/services/Profile.service.js",
+      "wwwroot/services/_service.module.js",
+      "wwwroot/services/Error.service.js",
+      "wwwroot/services/AnchorSmoothScroll.service.js",
+      "wwwroot/services/User.service.js",
+      "wwwroot/services/Authentication.service.js",
+      "wwwroot/services/Dictionary.service.js",
+      "wwwroot/services/Profile.service.js",
 
-        "wwwroot/components/login/login.js",
-        "wwwroot/components/forgotpassword/forgotpassword.js",
-        "wwwroot/components/register/register.js",
-        "wwwroot/components/home/home.js",
-        "wwwroot/components/profile/profile.js",
-        "wwwroot/components/mapsearch/mapsearch.js",
-        "wwwroot/components/flatdetails/flatdetails.js"
+      "wwwroot/components/login/login.js",
+      "wwwroot/components/forgotpassword/forgotpassword.js",
+      "wwwroot/components/register/register.js",
+      "wwwroot/components/home/home.js",
+      "wwwroot/components/profile/profile.js",
+      "wwwroot/components/mapsearch/mapsearch.js",
+      "wwwroot/components/flatdetails/flatdetails.js",
+      "wwwroot/components/newoffer/newoffer.js"
 
-      ],
+    ],
     "minify": {
       "enabled": true,
       "renameLocals": true

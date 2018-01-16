@@ -1,11 +1,11 @@
 ﻿<br />
-<h4 class="mb-3 smallresolution-show">Your Real Estate</h4>
-<a class="btn btn-block btn-success" href="/flatdetails-new">ADD NEW REAL ESTATE</a>
+<h4 class="mb-3 smallresolution-show">Your Real Estate Offers</h4>
+<a class="btn btn-block btn-success" href="/new-offer">ADD OFFER</a>
 <br />
 <div class="row">
     <div class="col-md-3" ng-repeat="item in myLocations">
         <div class="card h-100">
-            <button class="close-icon" ng-click="deleteMyRealEstate(item.id)"></button>
+            <button class="close-icon" ng-click="deleteOffer(item.id)"></button>
             <a href="/flatdetails/{{item.id}}/address-{{item.address}}/price-{{item.price}}">
                 <img class="w-100" ng-src="{{item.photoURL || '../../img/flat/noImage.jpg'}}">
             </a>
@@ -14,7 +14,7 @@
                     <a href="/flatdetails/{{item.id}}/address-{{item.address}}/price-{{item.price}}">{{item.address}}</a>
                 </h5>
                 <h5>price: {{item.price}}</h5>
-            </div><i class="fa fa-edit edit-button" ng-click="editMyRealEstate(item.id)"></i>
+            </div><i class="fa fa-edit edit-button" ng-click="editOffer(item.id)"></i>
         </div>
     </div>
 </div>

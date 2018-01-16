@@ -107,7 +107,7 @@ namespace RentApp.Controllers
             RealEstateOffer offer1 = new RealEstateOffer
             {
                 Price = 6666,
-                ServiceType = ServiceType.OfferRental,
+                ServiceType = ServiceType.LTOfferRental,
                 RealEstateObject = obj1,
                 CreateDate = DateTime.Now,
                 UpdateDate = DateTime.Now,

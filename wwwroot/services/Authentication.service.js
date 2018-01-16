@@ -5,9 +5,9 @@
         .module('services')
         .factory('AuthenticationService', AuthenticationService)
 
-    AuthenticationService.$inject = ['$http', '$cookies', '$rootScope', '$base64','ErrorService'];
+    AuthenticationService.$inject = ['$http', 'CookieUtility', '$rootScope', '$base64','ErrorService'];
 
-    function AuthenticationService($http, $cookies, $rootScope, $base64, ErrorService) {
+    function AuthenticationService($http, CookieUtility, $rootScope, $base64, ErrorService) {
         var service = {
             Login: Login,
             ForgotPass: ForgotPass,
@@ -71,14 +71,12 @@
 
             $http.defaults.headers.common['Authorization'] = 'Basic ' + authdata;
 
-            var cookieExp = new Date();
-            cookieExp.setDate(cookieExp.getDate() + 7);
-            $cookies.putObject('globals', $rootScope.globals, { expires: cookieExp });
+            CookieUtility.PutObjectByName('globals', $rootScope.globals);
         }
 
         function ClearCredentials() {
             $rootScope.globals = {};
-            $cookies.remove('globals');
+            CookieUtility.RemoveByName('globals');
             $http.defaults.headers.common.Authorization = 'Basic';
         }
 
