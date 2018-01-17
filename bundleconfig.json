@@ -26,6 +26,7 @@
       "wwwroot/services/Authentication.service.js",
       "wwwroot/services/Dictionary.service.js",
       "wwwroot/services/Profile.service.js",
+      "wwwroot/services/Offer.service.js",
 
       "wwwroot/components/login/login.js",
       "wwwroot/components/forgotpassword/forgotpassword.js",
