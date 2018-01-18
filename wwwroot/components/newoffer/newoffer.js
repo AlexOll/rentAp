@@ -1,5 +1,5 @@
 angular.module('myApp.newoffer', [])
-    .controller('newOfferCtrl', ['$scope', 'toastr', 'MapUtility', 'CookieUtility', 'DictionaryService', 'AnchorSmoothScrollService','$timeout',
+    .controller('newOfferCtrl', ['$scope', 'toastr', 'MapUtility', 'CookieUtility', 'DictionaryService', 'AnchorSmoothScrollService', '$timeout',
         function ($scope, toastr, MapUtility, CookieUtility, DictionaryService, AnchorSmoothScrollService, $timeout) {
 
             $scope.serviceType = {};
@@ -8,6 +8,8 @@ angular.module('myApp.newoffer', [])
             $scope.propertyType.availableOptions = [];
 
             var search = CookieUtility.GetByName('search');
+            $scope.city = search.geoResult == null ? "" : search.geoResult.city;
+            $scope.geoResult = search.geoResult;
 
             DictionaryService.GetServiceTypes(function (response) {
 
@@ -30,12 +32,8 @@ angular.module('myApp.newoffer', [])
                 if ($scope.newImage)
                     if ($scope.uploadedImages.length >= photoLimit)
                         toastr.info('Not more than ' + photoLimit + ' photos', 'Photo limit');
-                    else {
+                    else
                         $scope.uploadedImages.push($scope.newImage);
-                        //$timeout(function () {
-                        //    AnchorSmoothScrollService.ScrollTo('apartment',-100);
-                        //}, 3000);
-                    }
             })
 
             $scope.deletePhoto = function (image) {
@@ -51,25 +49,38 @@ angular.module('myApp.newoffer', [])
                 }
             }
 
-            var UkraineCoordinates = { lat: 48.3794, lng: 31.1656 };
+            if (search.geoResult) {
+                let _location = [{ lat: search.geoResult.lat, lng: search.geoResult.lng }]
+                MapUtility.CreateMap(
+                    _location[0].lat,
+                    _location[0].lng,
+                    _location)
+            }
 
-            MapUtility.CreateMap(
-                UkraineCoordinates.lat,
-                UkraineCoordinates.lng,
-                [],
-                5);
+            else {
+                var UkraineCoordinates = { lat: 48.3794, lng: 31.1656 };
 
-            $scope.$watch('city', function () {
-                if ($scope.form.city.$$attr.lat && $scope.form.city.$$attr.lng) {
-                    var location = [{ lat: $scope.form.city.$$attr.lat, lng: $scope.form.city.$$attr.lng }]
+                MapUtility.CreateMap(
+                    UkraineCoordinates.lat,
+                    UkraineCoordinates.lng,
+                    [],
+                    5);
+            }
+
+
+
+            $scope.$watch('geoResult', function () {
+                if ($scope.geoResult) {
+                    let _location = [{
+                        lat: $scope.geoResult.lat || $scope.geoResult.geometry.location.lat(),
+                        lng: $scope.geoResult.lng || $scope.geoResult.geometry.location.lng(),
+                    }]
+
                     MapUtility.CreateMap(
-                        $scope.form.city.$$attr.lat,
-                        $scope.form.city.$$attr.lng,
-                        location);
-                    $scope.form.city.$$attr.lat = null;
-                    $scope.form.city.$$attr.lng = null;
-                    //$scope.myClass = "moving-div";
+                        _location[0].lat,
+                        _location[0].lng,
+                        _location);
                 }
-
             })
+
         }]);

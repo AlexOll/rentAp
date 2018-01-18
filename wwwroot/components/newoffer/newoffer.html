@@ -3,7 +3,7 @@
     <br />
     <h4 class="mb-3">Add new Offer</h4>
 
-    <form name="form" ng-submit="updateProfile($event)" role="form">
+    <form name="form" ng-submit="updateProfile($event)">
 
         <div class="row mb-2">
             <div class="col-sm-4">
@@ -20,56 +20,43 @@
                 <input type="number" required class="input-base input-single form-control" ng-model="priceFrom" placeholder="Type price:*" />
             </div>
         </div>
-
+        <div class="upload-btn-wrapper">
+            <button class="upload-btn btn-primary">Upload Photos</button>
+            <input type="file" accept="image/*" image="newImage" multiple
+                   resize-max-height="800" resize-max-width="800" resize-quality="0.7" resize-type="image/jpeg" ng-image-compress />
+        </div>
+        <div class="row mb-3" ng-show="uploadedImages.length>0">
+            <div class="col-md-6">
+                <div class="col-md-12">
+                    <button class="close-icon" ng-click="deletePhoto(uploadedImages[0])"></button>
+                    <img ng-src="{{uploadedImages[0].dataURL}}" style="width:100%;margin-bottom:-6px">
+                </div>
+            </div>
+            <div class="col-md-6 row">
+                <div class="col-md-3" ng-repeat="image in uploadedImages.slice(1,uploadedImages.length)">
+                    <button class="close-icon" ng-click="deletePhoto(image)"></button>
+                    <img class="demo w3-opacity w3-hover-opacity-off"
+                         ng-src="{{image.dataURL || '../../img/flat/noImage.jpg'}}" style="width:100%;cursor:pointer;" ng-click="setMainPhoto(image)">
+                </div>
+            </div>
+        </div>
         <div class="row content">
             <div class="col-sm-4">
-                <div class="form-group"
-                     ng-class="{ 'has-error': (form.city.$dirty && form.city.$error.required) || !form.city.$error.notexists}">
+                <div class="form-group">
 
-                    <input ng-required="form.city.$dirty" type="text" name="city" id="city" class="input-base input-single form-control" ng-autocomplete ng-model="city" options="options"
-                           lng="" lat=""
-                           placeholder="Enter location:*" />
-                    <span ng-show="form.city.$dirty && !form.city.$error.notexists" class="error-span">Location is not exist<br /></span>
+                    <input type="text" class="input-base input-single form-control" name="city"
+                           ng-autocomplete ng-model="city" geo-result="geoResult" placeholder="Enter location:*" />
+                    <span ng-show="form.city.$dirty && form.city.$error.notexists" class="error-span">Location is not exist<br /></span>
+
                 </div>
             </div>
             <div class="col-sm-8">
                 <div class="mb-1" id="map" style="height:50vh"></div>
             </div>
         </div>
-        <div class="upload-btn-wrapper">
-            <button class="upload-btn btn-primary">Upload your photo</button>
-            <input type="file" accept="image/*" image="newImage" multiple
-                   resize-max-height="800" resize-max-width="800" resize-quality="0.7" resize-type="image/jpeg" ng-image-compress />
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="col-md-12">
-                    <img ng-src="{{uploadedImages[0].dataURL}}" style="width:100%;margin-bottom:-6px">
-                </div>
-            </div>
-            <div class="col-md-6 row">
-                <div class="col-md-3" ng-repeat="image in uploadedImages.slice(1,uploadedImages.length)">
-                    <img class="demo w3-opacity w3-hover-opacity-off"
-                         ng-src="{{image.dataURL || '../../img/flat/noImage.jpg'}}" style="width:100%;cursor:pointer;" ng-click="setMainPhoto(image)">
-                </div>
-            </div>
-        </div>
-
-
-        <!--<div class="w3-container" id="apartment">
-            <div class="w3-display-container mySlides">
-                <img ng-src="{{uploadedImages[0].dataURL}}" style="width:100%;margin-bottom:-6px">
-            </div>
-        </div>
-        <div class="w3-row-padding w3-section">
-            <div class="w3-col s3 mb-1" ng-repeat="image in uploadedImages.slice(1,uploadedImages.length)">
-                <img class="demo w3-opacity w3-hover-opacity-off"
-                     ng-src="{{image.dataURL || '../../img/flat/noImage.jpg'}}" style="width:100%;cursor:pointer" ng-click="setMainPhoto(image)">
-            </div>
-        </div>-->
 
         <details class="mb-3">
-            <summary class="btn btn-block mb-2">Fill in additional info to avoid most popular questions</summary>
+            <summary class="btn btn-block mb-2">Additional info</summary>
             <div class="row mb-3">
                 <div class="col-sm-2">
                     <input type="number" class="input-base input-single form-control" placeholder="Rooms quantity" min="1" max="9" />
@@ -81,15 +68,17 @@
                     <input type="number" class="input-base input-single form-control" placeholder="Total area" min="1" maxlength="999" />
                 </div>
                 <div class="col-sm-3">
-                    <input type="number" class="input-base input-single form-control" placeholder="Additional payments" min="1" maxlength="99999" />
+                    <input type="number" name="payments" id="payments" class="input-base input-single form-control" placeholder="Additional payments" />
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-sm-4">
-                    <input placeholder="Will be available FROM:" class="input-base input-single form-control" type="text" onfocus="(this.type='date')" />
+                    <input placeholder="Will be available FROM:" class="input-base input-single form-control" type="text"
+                           onfocus="(this.type='date')" />
                 </div>
                 <div class="col-sm-4">
-                    <input placeholder="Will be available TILL:" class="input-base input-single form-control" type="text" onfocus="(this.type='date')" />
+                    <input placeholder="Will be available TILL:" class="input-base input-single form-control" type="text"
+                           onfocus="(this.type='date')" />
                 </div>
             </div>
             <div class="row mb-3">
@@ -116,38 +105,8 @@
             </div>
         </details>
 
-        <!--<div ng-class="myClass">
-                <div class="form-group"
-             ng-class="{ 'has-error': (form.lastName.$dirty && form.lastName.$error.required) || form.lastName.$error.pattern}">
-
-            <input type="text" name="lastName" id="lastName" class="form-control" ng-model="user.lastname"
-                   required ng-pattern="/^[a-zA-Z0-9]+$/" placeholder="type your Last name" />
-            <span ng-show="form.lastName.$dirty && form.lastName.$error.required" class="error-span">Last name is required<br /></span>
-            <span ng-show="form.lastName.$error.pattern" class="error-span">Only letter and/or number characters<br /></span>
-        </div>
-
-        <div class="form-group"
-             ng-class="{ 'has-error': form.phonenumber.$error.pattern || form.phonenumber.$error.duplicate}">
-
-            <input type="text" name="phonenumber" id="phonenumber" class="form-control" ng-model="user.phonenumber"
-                   unique-field ng-pattern="/^[a-zA-Z0-9]+$/" required maxlength="30" placeholder="type your Phone Number for authenification" />
-
-            <span ng-show="form.phonenumber.$error.pattern" class="error-span">Only letter and/or number characters<br /></span>
-            <span ng-show="form.phonenumber.$error.duplicate" class="error-span" ng-cloak>Phone Number is already registered<br /></span>
-        </div>
-
-        <div class="form-group"
-             ng-class="{ 'has-error': (form.password.$dirty && form.password.$error.required) || form.password.$error.pattern }">
-
-            <input type="password" name="password" id="password" ng-pattern="/^[a-zA-Z0-9]+$/" maxlength="20"
-                   class="form-control" ng-model="user.password" required placeholder="Submit form with your password" />
-            <span ng-show="form.password.$dirty && form.password.$error.required" class="error-span">Password is required<br /></span>
-            <span ng-show="form.password.$error.pattern" class="error-span">Only letter and/or number characters<br /></span>
-        </div>
-
-            </div>-->
         <div class="form-actions">
-            <button type="submit" ng-disabled="form.$invalid || dataLoading " class="btn btn-block">Update</button>
+            <button type="submit" ng-disabled="form.$invalid || dataLoading || !geoResult || !propertyType.model" class="btn btn-block btn-success">ADD OFFER</button>
             <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
         </div>
 

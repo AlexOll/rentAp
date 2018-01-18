@@ -12,12 +12,11 @@
                             ng-options="opt.id as opt.name for opt in propertyType.availableOptions" multiple></select>
 
                     <h5 class="my-3">Location:</h5>
-                    <input ng-required="form.city.$dirty" type="text" name="city" id="city" class="input-base form-control" ng-autocomplete ng-model="city" options="options"
-                           lng="" lat=""
-                           placeholder="e.g. Kiev, Kyiv city, Ukraine" />
-                    <span ng-show="form.city.$dirty && !form.city.$error.notexists" class="error-span">Location is not exist<br /></span>
+                    <input ng-required="form.city.$dirty" type="text" name="city" id="city" class="input-base form-control" ng-autocomplete
+                           ng-model="city" geo-result="geoResult" placeholder="e.g. Kiev, Kyiv city, Ukraine" />
+                    <span ng-show="form.city.$dirty && form.city.$error.notexists" class="error-span">Location is not exist<br /></span>
                     <br />
-                    <button type="submit" ng-disabled="!(form.city.$dirty && form.city.$error.notexists)" class="btn btn-primary">Search</button>
+                    <button type="submit" ng-disabled="!(geoResult)" class="btn btn-primary">Search</button>
                 </form>
             </div>
         </div>

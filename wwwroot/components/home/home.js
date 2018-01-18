@@ -7,7 +7,8 @@ angular.module('myApp.home', ['directives'])
             $scope.propertyType = {};
             $scope.propertyType.availableOptions = [];
 
-            var search = CookieUtility.GetByName('search');;
+            var search = CookieUtility.GetByName('search');
+            $scope.geoResult = $scope.city = search.geoResult === null ? "" : search.geoResult.city;
 
             DictionaryService.GetServiceTypes(function (response) {
 
@@ -26,22 +27,18 @@ angular.module('myApp.home', ['directives'])
             });
 
             $scope.search = function () {
-
+                let geometry = $scope.geoResult.geometry;
                 search.propertyType = $scope.propertyType.model;
                 search.serviceType = $scope.serviceType.model;
-                search.city = $scope.city;
-                search.lat = $scope.form.city.$$attr.lat;
-                search.lng = $scope.form.city.$$attr.lng;
+                search.geoResult = search.geoResult || {};
+                search.geoResult.city = $scope.geoResult.formatted_address || $scope.city;
+                if (geometry) {
+                    search.geoResult.lat = geometry.location.lat();
+                    search.geoResult.lng = geometry.location.lng();
+                }
 
                 CookieUtility.PutObjectByName('search', search);
 
                 $location.path('/search');
-                //$location.path('/search/').search({
-                //    propertyType: $scope.propertyType.model,
-                //    serviceType: $scope.serviceType.model,
-                //    city: $scope.city,
-                //    lat: $scope.form.city.$$attr.lat,
-                //    lng: $scope.form.city.$$attr.lng,
-                //});
             }
         }]);

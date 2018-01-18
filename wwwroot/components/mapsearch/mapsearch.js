@@ -7,12 +7,8 @@ angular.module('myApp.mapSearch', [])
             $scope.serviceType = {};
             $scope.serviceType.availableOptions = [];
 
-            //var params = $location.search()
-            //$scope.city = params.city;
-            //$scope.propertyType.model = params.propertyType === null ? [] : params.propertyType;
-
             var search = CookieUtility.GetByName('search');
-            $scope.city = search.city;
+            $scope.city = search.geoResult == null ? "" : search.geoResult.city;
 
             DictionaryService.GetServiceTypes(function (response) {
 
@@ -57,16 +53,17 @@ angular.module('myApp.mapSearch', [])
             ]
 
             MapUtility.CreateMap(
-                parseFloat(search.lat),
-                parseFloat(search.lng),
+                parseFloat(search.geoResult.lat),
+                parseFloat(search.geoResult.lng),
                 locations);
 
-            $scope.$watch('city', function () {
-                if ($scope.form.city.$$attr.lat && $scope.form.city.$$attr.lng)
+            $scope.$watch('geoResult', function () {
+                if ($scope.geoResult) {
                     MapUtility.CreateMap(
-                        $scope.form.city.$$attr.lat,
-                        $scope.form.city.$$attr.lng,
+                        $scope.geoResult.geometry.location.lat(),
+                        $scope.geoResult.geometry.location.lng(),
                         locations);
+                }
             })
 
         }]);
