@@ -129,7 +129,6 @@ namespace RentApp.Controllers
             };
             _offerManager.Create(offer1);
 
-            ////2
             //AccommodationDetailes det2 = new AccommodationDetailes
             //{
             //    Floor = 2,
@@ -165,7 +164,6 @@ namespace RentApp.Controllers
             //};
             //_offerManager.Create(offer2);
 
-            ////3
             //AccommodationDetailes det3 = new AccommodationDetailes
             //{
             //    Floor = 2,

@@ -1,4 +1,5 @@
-﻿using RentApp.Models.DbModels;
+﻿using RentApp.Cache;
+using RentApp.Models.DbModels;
 using RentApp.Models.RequestModels;
 using RentApp.Models.ResponseModels;
 using RentApp.Repositories;
@@ -30,8 +31,29 @@ namespace RentApp.Managers
         internal IEnumerable<OfferFilterResponse> GetByFilter(OfferFilterRequest filter)
         {
             double coordDelta = 0.3;
+            
+            var offers = RealEstateOfferCache.CachedItems.Values
+                .Where(o => o.IsAlive
+                     && o.ServiceType == filter.ServiceType
+                     && Math.Abs(o.RealEstateObject.Lat - filter.Lat) <= coordDelta
+                     && Math.Abs(o.RealEstateObject.Lng - filter.Lng) <= coordDelta);
 
-            return _offerRepository.GetByFilter(filter, coordDelta).Select(o => (OfferFilterResponse)o).ToList();
+            if (filter.PropertyTypeList.Any())
+            {
+                offers = offers.Where(o => filter.PropertyTypeList.Contains(o.RealEstateObject.PropertyType));
+            }
+
+            if (filter.PriceFrom.HasValue)
+            {
+                offers = offers.Where(o => o.Price >= filter.PriceFrom);
+            }
+
+            if (filter.PriceTo.HasValue)
+            {
+                offers = offers.Where(o => o.Price <= filter.PriceTo);
+            }
+
+            return offers.Select(o => (OfferFilterResponse)o);
         }
 
         internal BaseResponse Create(RealEstateOffer item)

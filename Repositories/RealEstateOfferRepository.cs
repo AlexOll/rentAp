@@ -2,7 +2,6 @@
 using RentApp.Cache;
 using RentApp.Models;
 using RentApp.Models.DbModels;
-using RentApp.Models.RequestModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,38 +40,6 @@ namespace RentApp.Repositories
                     .Include(o => o.RealEstateObject.RealEstateDetailes)
                     .Include(o => o.RealEstateObject.Photos)
                     .FirstOrDefault(o => o.Id == id);
-            }
-        }
-
-        public IEnumerable<RealEstateOffer> GetByFilter(OfferFilterRequest filter, double coordDelta)
-        {
-            using (_context)
-            {
-                IQueryable<RealEstateOffer> query = _context.RealEstateOffers
-                    .Where(o => o.IsAlive
-                        && o.ServiceType == filter.ServiceType
-                        && Math.Abs(o.RealEstateObject.Lat - filter.Lat) <= coordDelta
-                        && Math.Abs(o.RealEstateObject.Lng - filter.Lng) <= coordDelta)
-                    .Include(o => o.RealEstateObject)
-                    .Include(o => o.RealEstateObject.RealEstateDetailes)
-                    .Include(o => o.RealEstateObject.Photos);
-
-                if (filter.PropertyTypeList.Count() > 0)
-                {
-                    query = query.Where(o => filter.PropertyTypeList.Contains(o.RealEstateObject.PropertyType));
-                }
-
-                if (filter.PriceFrom != null)
-                {
-                    query = query.Where(o => o.Price >= filter.PriceFrom);
-                }
-
-                if (filter.PriceTo != null)
-                {
-                    query = query.Where(o => o.Price <= filter.PriceTo);
-                }
-
-                return query.ToList();
             }
         }
 
