@@ -1,8 +1,10 @@
 ﻿using RentApp.Models.DbModels;
+using RentApp.Models.RequestModels;
 using RentApp.Models.ResponseModels;
 using RentApp.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RentApp.Managers
 {
@@ -23,6 +25,13 @@ namespace RentApp.Managers
         internal RealEstateOffer GetById(Guid id)
         {
             return _offerRepository.GetById(id);
+        }
+
+        internal IEnumerable<OfferFilterResponse> GetByFilter(OfferFilterRequest filter)
+        {
+            double coordDelta = 0.3;
+
+            return _offerRepository.GetByFilter(filter, coordDelta).Select(o => (OfferFilterResponse)o).ToList();
         }
 
         internal BaseResponse Create(RealEstateOffer item)
