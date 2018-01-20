@@ -76,6 +76,7 @@ angular
             $rootScope.$on('$locationChangeStart', function (event, next, current) {
 
                 $rootScope.isSmallResolution = $window.innerWidth <= 992;
+                $rootScope.isFooterHidden = $location.path().includes('/search');
 
                 if ($rootScope.globals.currentUser)
                     $rootScope.name = $rootScope.globals.currentUser.name;

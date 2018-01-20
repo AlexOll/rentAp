@@ -55,8 +55,14 @@
 
             var input = user.email + ':' + user.id;
             var authdata = Base64Encode(input);
+            if (user.profileImageURL) {
+                let img = new Image();
+                img.dataURL = user.profileImageURL;
+                user.profileImage = img
+            }
 
             $rootScope.globals = {
+
                 currentUser: {
                     id: user.id,
                     email: user.email,
@@ -64,7 +70,7 @@
                     phonenumber: user.phonenumber,
                     lastname: user.lastname,
                     name: user.firstname + ' ' + user.lastname,
-                    profileImageURL: user.profileImageURL,
+                    profileImage: user.profileImage,
                     authdata: authdata
                 }
             };
