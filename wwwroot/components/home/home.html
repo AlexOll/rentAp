@@ -16,10 +16,11 @@
                            ng-model="city" geo-result="geoResult" placeholder="e.g. Kiev, Kyiv city, Ukraine" />
                     <span ng-show="form.city.$dirty && form.city.$error.notexists" class="error-span">Location is not exist<br /></span>
                     <br />
-                    <button type="submit" ng-disabled="!(geoResult)" class="btn btn-primary">Search</button>
+                    <button type="submit" ng-disabled="!(geoResult)" class="btn btn-block btn-success h-100">Search</button>
                 </form>
             </div>
         </div>
+        
         <!-- /.col-lg-3 -->
         <div class="col-lg-9">
             <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">

@@ -8,7 +8,11 @@ angular.module('myApp.home', ['directives'])
             $scope.propertyType.availableOptions = [];
 
             var search = CookieUtility.GetByName('search');
-            $scope.geoResult = $scope.city = search.geoResult === null ? "" : search.geoResult.city;
+
+            if (search.geoResult !== undefined) {
+                $scope.city = search.geoResult.city;
+                $scope.geoResult = {};
+            }
 
             DictionaryService.GetServiceTypes(function (response) {
 

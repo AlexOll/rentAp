@@ -48,9 +48,9 @@ namespace RentApp.Managers
                 offers = offers.Where(o => o.Price >= filter.PriceFrom);
             }
 
-            if (filter.PriceTo.HasValue)
+            if (filter.PriceTill.HasValue)
             {
-                offers = offers.Where(o => o.Price <= filter.PriceTo);
+                offers = offers.Where(o => o.Price <= filter.PriceTill);
             }
 
             return offers.Select(o => (OfferFilterResponse)o);

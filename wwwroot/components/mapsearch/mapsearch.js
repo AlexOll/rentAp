@@ -8,8 +8,13 @@ angular.module('myApp.mapSearch', [])
             $scope.serviceType.availableOptions = [];
 
             var search = CookieUtility.GetByName('search');
+            if (search.geoResult) {
+                $scope.city = search.geoResult.city;
+            }
+            else {
+                $location.path('/');
+            }
 
-            $scope.city = search.geoResult == null ? "" : search.geoResult.city;
             $scope.propertyType.model = search.propertyType;
             $scope.serviceType.model = search.serviceType;
 
@@ -39,10 +44,48 @@ angular.module('myApp.mapSearch', [])
 
             $scope.$watch('geoResult', function () {
                 if ($scope.geoResult) {
+
+                    search.geoResult.lat = $scope.geoResult.geometry.location.lat();
+                    search.geoResult.lng = $scope.geoResult.geometry.location.lng();
+
                     MapUtility.CreateMap(
-                        $scope.geoResult.geometry.location.lat(),
-                        $scope.geoResult.geometry.location.lng(),
+                        search.geoResult.lat,
+                        search.geoResult.lng,
                         $scope.locations)
                 }
             });
+
+            $scope.search = function () {
+                let filter = {};
+                filter.serviceType = $scope.serviceType.model;
+                filter.lat = search.geoResult.lat;
+                filter.lng = search.geoResult.lng;
+                filter.propertyTypeList = $scope.propertyType.model;
+                filter.priceFrom = $scope.priceFrom;
+                filter.priceTill = $scope.priceTill;
+                
+                if ($scope.hasFilters) {
+                    filter.roomsQuantity = $scope.roomsQuantity;
+                    filter.floorNumber = $scope.floorNumber;
+                    filter.area = $scope.area;
+                    filter.payments = $scope.payments;
+                    filter.availableFrom = $scope.form.availableFrom.$viewValue;
+                    filter.availableTill = $scope.form.availableTill.$viewValue;
+                    filter.withFurniture = $scope.withFurniture;
+                    filter.withBalcony = $scope.withBalcony;
+                    filter.withParking = $scope.withParking;
+                    filter.allowPets = $scope.allowPets;
+                    filter.allowChildren = $scope.allowChildren;
+                }
+              
+
+                OfferService.GetByFilter(filter, function (response) {
+                    $scope.locations = response.data;
+                    MapUtility.CreateMap(
+                        parseFloat(search.geoResult.lat),
+                        parseFloat(search.geoResult.lng),
+                        $scope.locations);
+                });
+            }
+
         }]);

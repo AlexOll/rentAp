@@ -1,32 +1,92 @@
-﻿
+﻿<link rel="stylesheet" href="../../css/additional-info-div.css" />
 <div class="container-fluid">
     <br />
-    <form name="form" role="search" ng-submit="search()">
-        <div class="d-inline-block col-lg-2 col-md-4 col-sm-6">
-            <select class="input-base select-single" ng-model="serviceType.model"
-                    ng-options="opt.id as opt.name for opt in serviceType.availableOptions"></select>
-        </div>
-        <div class="d-inline-block col-lg-2 col-md-4 col-sm-6">
-            <div multiple-dropdown data="propertyType" sign="'select type'"></div>
+    <form name="form">
+        <div class="row">
+            <div class="d-inline-block col-md-2">
+                <select class="input-base select-single" ng-model="serviceType.model"
+                        ng-options="opt.id as opt.name for opt in serviceType.availableOptions"></select>
+            </div>
+            <div class="d-inline-block col-md-2">
+                <div multiple-dropdown data="propertyType" sign="'select type'"></div>
+            </div>
+            <div class="d-inline-block col-md-4">
+                <input ng-required="form.city.$dirty" type="text" name="city" id="city" class="input-base input-single form-control"
+                       ng-autocomplete ng-model="city" geo-result="geoResult" placeholder="Enter location:" />
+                <span ng-show="form.city.$dirty && form.city.$error.notexists" class="error-span">Location is not exist<br /></span>
+            </div>
+            <div class="d-inline-block col-md-1">
+                <input type="text" ng-required="" class="input-base input-single form-control" ng-model="priceFrom" placeholder="pr. from" />
+            </div>
+            <div class="d-inline-block col-md-1">
+                <input type="text" ng-required="" class="input-base input-single form-control" ng-model="priceTill" placeholder="pr. till" />
+            </div>
+            <div class="d-inline-block col-md-1 mb-1">
+                <button class="btn btn-block btn-info h-100" ng-click="hasFilters = !hasFilters">more filters</button>
+            </div>
+            <div class="d-inline-block col-md-1 mb-1">
+                <button type="submit" ng-disabled="form.$invalid" class="btn btn-block btn-success h-100" ng-click="search()"><b>SEARCH</b></button>
+            </div>
         </div>
 
-        <div class="d-inline-block col-lg-2 col-md-4 col-sm-6">
-            <input ng-required="form.city.$dirty" type="text" name="city" id="city" class="input-base input-single form-control" 
-                   ng-autocomplete ng-model="city" geo-result="geoResult" placeholder="Enter location:" />
-            <span ng-show="form.city.$dirty && form.city.$error.notexists" class="error-span">Location is not exist<br /></span>
-        </div>
-        <div class="d-inline-block col-lg-1 col-md-4 col-sm-6">
-            <input type="text" ng-required="" class="input-base input-single form-control" ng-model="priceFrom" placeholder="pr. from" />
-        </div>
-        <div class="d-inline-block col-lg-1 col-md-4 col-sm-6">
-            <input type="text" ng-required="" class="input-base input-single form-control" ng-model="priceTill" placeholder="pr. till" />
-        </div>
-        <div class="d-inline-block col-lg-1 col-md-4 col-sm-6">
-            <button type="submit" ng-disabled="!(form.city.$error.notexists)" class="btn btn-primary">Search</button>
+        <br />
+        <div ng-show="hasFilters">
+            <div class="row mb-3">
+                <div class="col-sm-2">
+                    <input type="number" class="input-base input-single form-control" name="roomsQuantity" placeholder="Rooms quantity" ng-model="roomsQuantity"
+                           ng-pattern="/^[1-9]{1}$/"/>
+                    <span ng-show="form.roomsQuantity.$error.pattern" class="error-span">Not a valid number!</span>
+
+                </div>
+                <div class="col-sm-2">
+                    <input type="number" class="input-base input-single form-control" name="floorNumber" ng-model="floorNumber" 
+                           placeholder="Floor number" ng-pattern="/^[1-9][0-9]{0,1}$/"/>
+                    <span ng-show="form.floorNumber.$error.pattern" class="error-span">Not a valid number!</span>
+                </div>
+                <div class="col-sm-3">
+                    <input type="number" class="input-base input-single form-control" placeholder="Total area, m&sup2;"
+                           name="area" ng-model="area" ng-pattern="/^[1-9][0-9]{0,2}(.[0-9]{1,2})?$/" />
+                    <span ng-show="form.area.$error.pattern" class="error-span">Not a valid number!</span>
+                </div>
+                <div class="col-sm-3">
+                    <input type="number" class="input-base input-single form-control" placeholder="Additional payments" 
+                           name="payments" ng-model="payments" ng-pattern="/^[1-9][0-9]{0,2}(.[0-9]{1,6})?$/"/>
+                    <span ng-show="form.payments.$error.pattern" class="error-span">Not a valid number!</span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-4">
+                    <input placeholder="Available FROM:" class="input-base input-single form-control" type="text"
+                           ng-model="availableFrom" name="availableFrom"
+                           onfocus="(this.type='date')" ng-pattern="/^(\d{4})-(\d{1,2})-(\d{1,2})$/" />
+                    <span ng-show="form.availableFrom.$error.pattern" class="error-span">Not a valid date!</span>
+                </div>
+                <div class="col-sm-4">
+                    <input placeholder="Available TILL:" class="input-base input-single form-control" type="text"
+                           ng-model="availableTill" name="availableTill"
+                           onfocus="(this.type='date')" ng-pattern="/^(\d{4})-(\d{1,2})-(\d{1,2})$/"  />
+                    <span ng-show="form.availableTill.$error.pattern" class="error-span">Not a valid date!</span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-2">
+                    <md-checkbox ng-model="withFurniture">With furniture</md-checkbox>
+                </div>
+                <div class="col-sm-2">
+                    <md-checkbox ng-model="withBalcony">With balcony</md-checkbox>
+                </div>
+                <div class="col-sm-2">
+                    <md-checkbox ng-model="withParking">With Parking</md-checkbox>
+                </div>
+                <div class="col-sm-2">
+                    <md-checkbox ng-model="allowPets">Allow Pets</md-checkbox>
+                </div>
+                <div class="col-sm-2">
+                    <md-checkbox ng-model="allowChildren">Allow Children</md-checkbox>
+                </div>
+            </div>
         </div>
     </form>
-    <br />
-
     <div class="row content">
         <div class="col-sm-9">
             <div id="map" style="height:100%"></div>
@@ -51,4 +111,5 @@
 
         </div>
     </div>
+
 </div>

@@ -40,7 +40,7 @@ namespace RentApp.Controllers
             return new ObjectResult(item);
         }
 
-        [HttpPost, Route("filter")]
+        [HttpPost, Route("search")]
         public async Task<IActionResult> GetByFilter([FromBody] OfferFilterRequest filter)
         {
             if (filter == null)

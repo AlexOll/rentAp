@@ -19,7 +19,7 @@
                 '<div class="mutliSelect">' +
                 '<ul>' +
                 '<li ng-repeat="opt in data.availableOptions" ng-click="choosePropertyType(opt)">' +
-                '<md-checkbox ng-checked="data.model.indexOf(opt.id) >= 0"> {{ opt.name }} </md-checkbox>' +
+                '<md-checkbox value="opt.id" ng-checked="data.model.indexOf(opt.id) >= 0"> {{ opt.name }} </md-checkbox>' +
                 '</li>' +
                 '</ul>' +
                 '</div>' +
