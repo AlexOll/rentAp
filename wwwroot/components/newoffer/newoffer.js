@@ -1,6 +1,6 @@
 angular.module('myApp.newoffer', [])
-    .controller('newOfferCtrl', ['$rootScope', '$scope', 'toastr', 'MapUtility', 'CookieUtility', 'DictionaryService', 'AnchorSmoothScrollService', '$timeout',
-        function ($rootScope, $scope, toastr, MapUtility, CookieUtility, DictionaryService, AnchorSmoothScrollService, $timeout) {
+    .controller('newOfferCtrl', ['$rootScope', '$scope', 'toastr', 'MapUtility', 'CookieUtility', 'DictionaryService', 'AnchorSmoothScrollService', '$timeout','OfferService',
+        function ($rootScope, $scope, toastr, MapUtility, CookieUtility, DictionaryService, AnchorSmoothScrollService, $timeout, OfferService) {
 
             $scope.serviceType = {};
             $scope.serviceType.availableOptions = [];
@@ -8,8 +8,11 @@ angular.module('myApp.newoffer', [])
             $scope.propertyType.availableOptions = [];
 
             var search = CookieUtility.GetByName('search');
-            $scope.city = search.geoResult == null ? "" : search.geoResult.city;
-            $scope.geoResult = search.geoResult;
+
+            if (search.geoResult) {
+                $scope.city = search.geoResult.city;
+                $scope.geoResult = search.geoResult;
+            }
 
             DictionaryService.GetServiceTypes(function (response) {
 
@@ -55,7 +58,6 @@ angular.module('myApp.newoffer', [])
                     _location[0].lng,
                     _location)
             }
-
             else {
                 var UkraineCoordinates = { lat: 48.3794, lng: 31.1656 };
 
@@ -81,7 +83,39 @@ angular.module('myApp.newoffer', [])
             })
 
             $scope.addOffer = function () {
+                debugger;
+                let offer = {};
+                offer.serviceType = $scope.serviceType.model;
+                offer.locationName = $scope.city;
+                offer.lat = $scope.geoResult.lat || $scope.geoResult.geometry.location.lat();
+                offer.lng = $scope.geoResult.lng || $scope.geoResult.geometry.location.lng();
+                offer.propertyType = $scope.propertyType.model;
+                offer.price = $scope.price;
+                offer.photoURLs = getDataURLS();
 
+                offer.roomsQuantity = $scope.roomsQuantity;
+                offer.floorNumber = $scope.floorNumber;
+                offer.area = $scope.area;
+                offer.payments = $scope.payments;
+                offer.availableFrom = $scope.form.availableFrom.$viewValue;
+                offer.availableTill = $scope.form.availableTill.$viewValue;
+                offer.withFurniture = $scope.withFurniture;
+                offer.withBalcony = $scope.withBalcony;
+                offer.withParking = $scope.withParking;
+                offer.allowPets = $scope.allowPets;
+                offer.allowChildren = $scope.allowChildren;
+                offer.description = $scope.description;
+
+                OfferService.Create(offer, function (response) {
+                    toastr.success('After moderating it will be posted', 'Offer created')
+                    $location.path('/profile');
+                });
             }
-
+            function getDataURLS() {
+                let dataURLs = [];
+                $scope.uploadedImages.forEach(function (image) {
+                    dataURLs.push(image.dataURL);
+                });
+                return dataURLs;
+            }
         }]);

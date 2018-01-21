@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 namespace RentApp.Controllers
 {
     [Route("api/[controller]")]
-    public class RealEstateOfferController : ApiController
+    public class OfferController : ApiController
     {
         private readonly RealEstateOfferManager _offerManager;
         private readonly RealEstateManager _realEstateManager;
 
-        public RealEstateOfferController(RealEstateOfferManager offerManager, RealEstateManager realEstateManager)
+        public OfferController(RealEstateOfferManager offerManager, RealEstateManager realEstateManager)
         {
             _offerManager = offerManager;
             _realEstateManager = realEstateManager;
@@ -54,15 +54,16 @@ namespace RentApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] RealEstateOffer item)
+        public async Task<IActionResult> Create([FromBody] CreateOfferRequest item)
         {
             if (item == null)
             {
                 return BadRequest();
             }
 
-            var result = await Task.Factory.StartNew(() => _offerManager.Create(item));
-            return Ok(result);
+            //var result = await Task.Factory.StartNew(() => _offerManager.Create(item));
+            //return Ok(result);
+            return Ok();
         }
 
         [HttpPut]

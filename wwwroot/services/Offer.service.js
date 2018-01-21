@@ -9,7 +9,8 @@
 
     function OfferService($http, ErrorService) {
         var service = {
-            GetByFilter: GetByFilter
+            GetByFilter: GetByFilter,
+            Create : Create
         };
 
         return service;
@@ -33,6 +34,35 @@
                 "withParking": search.withParking,
                 "allowPets": search.allowPets,
                 "allowChildren": search.allowChildren
+
+            }).then(
+                function (res) { return callback(res) },
+                function (res) { return ErrorService.ErrorCallback(res) }
+                )
+        }
+
+        function Create(offer, callback) {
+            $http.post('/api/offer', {
+                "serviceType": offer.serviceType,
+                "locationName": offer.locationName,
+                "lat": offer.lat,
+                "lng": offer.lng,
+                "propertyType": offer.propertyType,
+                "price": offer.priceFrom,
+                "photoURLs": offer.photoURLs,
+
+                "roomsQuantity": offer.roomsQuantity,
+                "floorNumber": offer.floorNumber,
+                "area": offer.area,
+                "payments": offer.payments,
+                "availableFrom": offer.availableFrom,
+                "availableTill": offer.availableTill,
+                "withFurniture": offer.withFurniture,
+                "withBalcony": offer.withBalcony,
+                "withParking": offer.withParking,
+                "allowPets": offer.allowPets,
+                "allowChildren": offer.allowChildren,
+                "description": offer.description
 
             }).then(
                 function (res) { return callback(res) },

@@ -4,14 +4,15 @@ using System.Collections.Generic;
 
 namespace RentApp.Models.RequestModels
 {
-    public class OfferFilterRequest
+    public class CreateOfferRequest
     {
         public ServiceType ServiceType { get; set; }
-        public List<PropertyType> PropertyTypeList { get; set; } = new List<PropertyType>();
+        public PropertyType PropertyType { get; set; }
+        public string LocationName { get; set; }
         public double Lat { get; set; }
         public double Lng { get; set; }
-        public int? PriceFrom { get; set; }
-        public int? PriceTill { get; set; }
+        public int Price { get; set; }
+        public List<string> PhotoURLs { get; set; } = new List<string>();
         public int? RoomsQuantity { get; set; }
         public int? FloorNumber { get; set; }
         public double? Area { get; set; }
@@ -23,5 +24,6 @@ namespace RentApp.Models.RequestModels
         public bool? WithParking { get; set; }
         public bool? AllowPets { get; set; }
         public bool? AllowChildren { get; set; }
+        public string Description { get; set; }
     }
 }
