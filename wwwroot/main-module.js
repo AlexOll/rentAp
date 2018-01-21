@@ -60,6 +60,7 @@ angular
         function ($rootScope, $location, CookieUtility, $http, $window, $interval, ProfileService, HubUtility) {
 
             $rootScope.globals = CookieUtility.GetByName('globals');
+            $rootScope.photoUploadLimit = 9;
 
             if ($rootScope.globals.currentUser) {
 

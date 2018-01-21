@@ -1,0 +1,56 @@
+﻿<div>
+    <div class="row mb-3">
+        <div class="col-sm-2">
+            <input type="number" class="input-base input-single form-control" name="roomsQuantity" placeholder="Rooms quantity" ng-model="roomsQuantity"
+                   ng-pattern="/^[1-9]{1}$/" />
+            <span ng-show="form.roomsQuantity.$error.pattern" class="error-span">Not a valid number!</span>
+
+        </div>
+        <div class="col-sm-2">
+            <input type="number" class="input-base input-single form-control" name="floorNumber" ng-model="floorNumber"
+                   placeholder="Floor number" ng-pattern="/^[1-9][0-9]{0,1}$/" />
+            <span ng-show="form.floorNumber.$error.pattern" class="error-span">Not a valid number!</span>
+        </div>
+        <div class="col-sm-3">
+            <input type="number" class="input-base input-single form-control" placeholder="Total area, m&sup2;"
+                   name="area" ng-model="area" ng-pattern="/^[1-9][0-9]{0,2}(.[0-9]{1,2})?$/" />
+            <span ng-show="form.area.$error.pattern" class="error-span">Not a valid number!</span>
+        </div>
+        <div class="col-sm-3">
+            <input type="number" class="input-base input-single form-control" placeholder="Additional payments"
+                   name="payments" ng-model="payments" ng-pattern="/^[1-9][0-9]{0,2}(.[0-9]{1,6})?$/" />
+            <span ng-show="form.payments.$error.pattern" class="error-span">Not a valid number!</span>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-sm-4">
+            <input placeholder="Available FROM:" class="input-base input-single form-control" type="text"
+                   ng-model="availableFrom" name="availableFrom"
+                   onfocus="(this.type='date')" ng-pattern="/^(\d{4})-(\d{1,2})-(\d{1,2})$/" />
+            <span ng-show="form.availableFrom.$error.pattern" class="error-span">Not a valid date!</span>
+        </div>
+        <div class="col-sm-4">
+            <input placeholder="Available TILL:" class="input-base input-single form-control" type="text"
+                   ng-model="availableTill" name="availableTill"
+                   onfocus="(this.type='date')" ng-pattern="/^(\d{4})-(\d{1,2})-(\d{1,2})$/" />
+            <span ng-show="form.availableTill.$error.pattern" class="error-span">Not a valid date!</span>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-sm-2">
+            <md-checkbox ng-model="withFurniture">With furniture</md-checkbox>
+        </div>
+        <div class="col-sm-2">
+            <md-checkbox ng-model="withBalcony">With balcony</md-checkbox>
+        </div>
+        <div class="col-sm-2">
+            <md-checkbox ng-model="withParking">With Parking</md-checkbox>
+        </div>
+        <div class="col-sm-2">
+            <md-checkbox ng-model="allowPets">Allow Pets</md-checkbox>
+        </div>
+        <div class="col-sm-2">
+            <md-checkbox ng-model="allowChildren">Allow Children</md-checkbox>
+        </div>
+    </div>
+</div>

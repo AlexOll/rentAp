@@ -1,6 +1,6 @@
 angular.module('myApp.newoffer', [])
-    .controller('newOfferCtrl', ['$scope', 'toastr', 'MapUtility', 'CookieUtility', 'DictionaryService', 'AnchorSmoothScrollService', '$timeout',
-        function ($scope, toastr, MapUtility, CookieUtility, DictionaryService, AnchorSmoothScrollService, $timeout) {
+    .controller('newOfferCtrl', ['$rootScope', '$scope', 'toastr', 'MapUtility', 'CookieUtility', 'DictionaryService', 'AnchorSmoothScrollService', '$timeout',
+        function ($rootScope, $scope, toastr, MapUtility, CookieUtility, DictionaryService, AnchorSmoothScrollService, $timeout) {
 
             $scope.serviceType = {};
             $scope.serviceType.availableOptions = [];
@@ -27,11 +27,10 @@ angular.module('myApp.newoffer', [])
             });
 
             $scope.uploadedImages = [];
-            var photoLimit = 8
             $scope.$watch('newImage', function (scope) {
                 if ($scope.newImage)
-                    if ($scope.uploadedImages.length >= photoLimit)
-                        toastr.info('Not more than ' + photoLimit + ' photos', 'Photo limit');
+                    if ($scope.uploadedImages.length >= $rootScope.photoUploadLimit)
+                        toastr.info('Not more than ' + $rootScope.photoUploadLimit + ' photos', 'Photo limit');
                     else
                         $scope.uploadedImages.push($scope.newImage);
             })
@@ -67,8 +66,6 @@ angular.module('myApp.newoffer', [])
                     5);
             }
 
-
-
             $scope.$watch('geoResult', function () {
                 if ($scope.geoResult) {
                     let _location = [{
@@ -82,5 +79,9 @@ angular.module('myApp.newoffer', [])
                         _location);
                 }
             })
+
+            $scope.addOffer = function () {
+
+            }
 
         }]);

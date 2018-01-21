@@ -1,4 +1,5 @@
 ﻿<link rel="stylesheet" href="../../css/flatdetails.css" />
+<link rel="stylesheet" href="../../css/additional-info-div.css" />
 <div class="container">
     <br />
     <h4 class="mb-3">Add new Offer</h4>
@@ -20,11 +21,12 @@
                 <input type="number" required class="input-base input-single form-control" ng-model="priceFrom" placeholder="Type price:*" />
             </div>
         </div>
-        <div class="upload-btn-wrapper">
+        <div class="upload-btn-wrapper" ng-show="uploadedImages.length<photoUploadLimit">
             <button class="upload-btn btn-primary">Upload Photos</button>
-            <input type="file" accept="image/*" image="newImage" multiple
+            <input type="file" accept="image/*" image="newImage" multiple ng-model="uploadedFiles"
                    resize-max-height="800" resize-max-width="800" resize-quality="0.7" resize-type="image/jpeg" ng-image-compress />
         </div>
+        {{uploadedFiles}}
         <div class="row mb-3" ng-show="uploadedImages.length>0">
             <div class="col-md-6">
                 <div class="col-md-12">
@@ -35,7 +37,7 @@
             <div class="col-md-6 row">
                 <div class="col-md-3" ng-repeat="image in uploadedImages.slice(1,uploadedImages.length)">
                     <button class="close-icon" ng-click="deletePhoto(image)"></button>
-                    <img class="demo w3-opacity w3-hover-opacity-off"
+                    <img class="demo w3-hover-opacity-off"
                          ng-src="{{image.dataURL || '../../img/flat/noImage.jpg'}}" style="width:100%;cursor:pointer;" ng-click="setMainPhoto(image)">
                 </div>
             </div>
@@ -57,47 +59,7 @@
 
         <details class="mb-3">
             <summary class="btn btn-block mb-2">Additional info</summary>
-            <div class="row mb-3">
-                <div class="col-sm-2">
-                    <input type="number" class="input-base input-single form-control" placeholder="Rooms quantity" min="1" max="9" />
-                </div>
-                <div class="col-sm-2">
-                    <input type="number" class="input-base input-single form-control" placeholder="Floor number" min="1" max="99" />
-                </div>
-                <div class="col-sm-3">
-                    <input type="number" class="input-base input-single form-control" placeholder="Total area" min="1" maxlength="999" />
-                </div>
-                <div class="col-sm-3">
-                    <input type="number" name="payments" class="input-base input-single form-control" placeholder="Additional payments" />
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-sm-4">
-                    <input placeholder="Available FROM:" class="input-base input-single form-control" type="text"
-                           onfocus="(this.type='date')" />
-                </div>
-                <div class="col-sm-4">
-                    <input placeholder="Available TILL:" class="input-base input-single form-control" type="text"
-                           onfocus="(this.type='date')" />
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-sm-2">
-                    <md-checkbox ng-model="withFurniture">With furniture</md-checkbox>
-                </div>
-                <div class="col-sm-2">
-                    <md-checkbox ng-model="withBalcony">With balcony</md-checkbox>
-                </div>
-                <div class="col-sm-2">
-                    <md-checkbox ng-model="withParking">With Parking</md-checkbox>
-                </div>
-                <div class="col-sm-2">
-                    <md-checkbox ng-model="allowPets">Allow Pets</md-checkbox>
-                </div>
-                <div class="col-sm-2">
-                    <md-checkbox ng-model="allowChildren">Allow Children</md-checkbox>
-                </div>
-            </div>
+            <div ng-include src="'components/_templates/additional-filter-div.html'"></div>
             <div class="row mb-3">
                 <div class="col-sm-10">
                     <textarea class="input-base form-control" rows="3" placeholder="Other description" ng-model="otherDescription"></textarea>
@@ -111,4 +73,7 @@
         </div>
 
     </form>
+    <br />
+    <br />
+    <br />
 </div>
