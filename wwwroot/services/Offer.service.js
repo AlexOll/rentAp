@@ -16,7 +16,7 @@
         return service;
 
         function GetByFilter(search, callback) {
-            $http.post('/api/realestateoffer/search', {
+            $http.post('/api/offer/search', {
                 "serviceType": search.serviceType,
                 "lat": search.lat,
                 "lng": search.lng,
