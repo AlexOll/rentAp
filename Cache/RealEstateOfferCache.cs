@@ -18,7 +18,7 @@ namespace RentApp.Cache
             }
         }
 
-        public RealEstateOfferCache(RealEstateOfferRepository offerRepository)
+        public RealEstateOfferCache(OfferRepository offerRepository)
         {
             _aliveOffers = offerRepository.GetAll().ToDictionary(x => x.Id, x => x);
         }

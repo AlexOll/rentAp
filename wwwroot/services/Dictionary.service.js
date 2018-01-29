@@ -9,14 +9,14 @@
 
     function DictionaryService($http, ErrorService) {
         var service = {
-            GetServiceTypes: GetServiceTypes,
+            GetOfferTypes: GetOfferTypes,
             GetPropertiesTypes: GetPropertiesTypes
         };
 
         return service;
 
-        function GetServiceTypes(callback) {
-            $http.get('/api/dictionary/servicetypes')
+        function GetOfferTypes(callback) {
+            $http.get('/api/dictionary/offertypes')
                 .then(function (res) { return callback(res) },
                 function (res) { return ErrorService.ErrorCallback(res) }
                 );

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using RentApp.Cache;
 using RentApp.Hubs;
 using RentApp.Models;
+using RentApp.RunModules;
 using System;
 using System.IO;
 using System.Reflection;
@@ -26,7 +27,6 @@ namespace RentApp
             //var connection = @"Server=(LocalDB)\MSSQLLocalDB;Database=RentApLocalDb;Integrated Security=True;Connect Timeout=30";
 
             services.AddDbContext<DataContext>(opt => opt.UseSqlServer(connection),ServiceLifetime.Transient);
-
             services.AddMvc();
             services.AddSignalR();
 

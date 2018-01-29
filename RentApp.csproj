@@ -31,8 +31,16 @@
     <Compile Remove="Migrations\20180109155100_3.Designer.cs" />
     <Compile Remove="Migrations\20180109155259_3.cs" />
     <Compile Remove="Migrations\20180109155259_3.Designer.cs" />
+    <Compile Remove="Models\DbModels\Flat.cs" />
+    <Compile Remove="Models\DbModels\FlatServiceType.cs" />
+    <Compile Remove="Models\DbModels\GarageDetailes.cs" />
     <Compile Remove="Models\DbModels\IDbModel.cs" />
+    <Compile Remove="Models\DtoModels\OfferFactory.cs" />
+    <Compile Remove="Models\DtoModels\Offers\OfferFactory.cs" />
+    <Compile Remove="Models\DtoModels\Offers\RoommateOffer.cs" />
+    <Compile Remove="Models\Interfaces\IOfferVisitor.cs" />
     <Compile Remove="Models\RequestModels\FlatRequest.cs" />
+    <Compile Remove="Models\ResponseModels\FlatResponse.cs" />
     <Compile Remove="Repositories\FlatRepository.cs" />
   </ItemGroup>
 

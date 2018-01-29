@@ -4,8 +4,8 @@ angular.module('myApp.mapSearch', [])
 
             $scope.propertyType = {};
             $scope.propertyType.availableOptions = [];
-            $scope.serviceType = {};
-            $scope.serviceType.availableOptions = [];
+            $scope.offerType = {};
+            $scope.offerType.availableOptions = [];
 
             var search = CookieUtility.GetByName('search');
             if (search.geoResult) {
@@ -16,12 +16,12 @@ angular.module('myApp.mapSearch', [])
             }
 
             $scope.propertyType.model = search.propertyType;
-            $scope.serviceType.model = search.serviceType;
+            $scope.offerType.model = search.offerType;
 
-            DictionaryService.GetServiceTypes(function (response) {
+            DictionaryService.GetOfferTypes(function (response) {
 
                 angular.forEach(response.data, function (value, key) {
-                    $scope.serviceType.availableOptions.push({ "id": key, "name": value });
+                    $scope.offerType.availableOptions.push({ "id": key, "name": value });
                 });
             });
 
@@ -57,7 +57,7 @@ angular.module('myApp.mapSearch', [])
 
             $scope.search = function () {
                 let filter = {};
-                filter.serviceType = $scope.serviceType.model;
+                filter.offerType = $scope.offerType.model;
                 filter.lat = search.geoResult.lat;
                 filter.lng = search.geoResult.lng;
                 filter.propertyTypeList = $scope.propertyType.model;

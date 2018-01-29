@@ -17,7 +17,7 @@
 
         function GetByFilter(search, callback) {
             $http.post('/api/offer/search', {
-                "serviceType": search.serviceType,
+                "offerType": search.offerType,
                 "lat": search.lat,
                 "lng": search.lng,
                 "propertyTypeList": search.propertyTypeList,
@@ -43,7 +43,7 @@
 
         function Create(offer, callback) {
             $http.post('/api/offer', {
-                "serviceType": offer.serviceType,
+                "offerType": offer.offerType,
                 "locationName": offer.locationName,
                 "lat": offer.lat,
                 "lng": offer.lng,

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Autofac.Features.Indexed;
+using Microsoft.AspNetCore.Mvc;
 using RentApp.Managers;
 using RentApp.Models.DbModels;
+using RentApp.Models.Interfaces;
 using RentApp.Models.RequestModels;
 using RentApp.Models.Structs;
 using System;
@@ -12,13 +14,12 @@ namespace RentApp.Controllers
     [Route("api/[controller]")]
     public class OfferController : ApiController
     {
-        private readonly RealEstateOfferManager _offerManager;
-        private readonly RealEstateManager _realEstateManager;
+        private readonly OfferManager _offerManager;
 
-        public OfferController(RealEstateOfferManager offerManager, RealEstateManager realEstateManager)
+
+        public OfferController(OfferManager offerManager)
         {
             _offerManager = offerManager;
-            _realEstateManager = realEstateManager;
         }
 
         [HttpGet]
@@ -61,9 +62,8 @@ namespace RentApp.Controllers
                 return BadRequest();
             }
 
-            //var result = await Task.Factory.StartNew(() => _offerManager.Create(item));
-            //return Ok(result);
-            return Ok();
+            var result = await Task.Factory.StartNew(() => _offerManager.Create(item));
+            return Ok(result);
         }
 
         [HttpPut]
@@ -122,7 +122,7 @@ namespace RentApp.Controllers
             RealEstateOffer offer1 = new RealEstateOffer
             {
                 Price = 6666,
-                ServiceType = ServiceType.LTOfferRental,
+                OfferType = OfferType.LongTermRent,
                 RealEstateObject = obj1,
                 CreateDate = DateTime.Now,
                 UpdateDate = DateTime.Now,

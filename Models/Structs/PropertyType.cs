@@ -14,9 +14,9 @@ namespace RentApp.Models.Structs
         Garage,
         [Description("Office")]
         Office,
-        [Description("CommercialSpace")]
+        [Description("Commercial Space")]
         CommercialSpace,
-        [Description("Other")]
-        Other
+        [Description("Room")]
+        Room
     }
 }

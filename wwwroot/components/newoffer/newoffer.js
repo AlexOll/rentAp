@@ -2,8 +2,8 @@ angular.module('myApp.newoffer', [])
     .controller('newOfferCtrl', ['$rootScope', '$scope', 'toastr', 'MapUtility', 'CookieUtility', 'DictionaryService', 'AnchorSmoothScrollService', '$timeout','OfferService',
         function ($rootScope, $scope, toastr, MapUtility, CookieUtility, DictionaryService, AnchorSmoothScrollService, $timeout, OfferService) {
 
-            $scope.serviceType = {};
-            $scope.serviceType.availableOptions = [];
+            $scope.offerType = {};
+            $scope.offerType.availableOptions = [];
             $scope.propertyType = {};
             $scope.propertyType.availableOptions = [];
 
@@ -14,12 +14,12 @@ angular.module('myApp.newoffer', [])
                 $scope.geoResult = search.geoResult;
             }
 
-            DictionaryService.GetServiceTypes(function (response) {
+            DictionaryService.GetOfferTypes(function (response) {
 
                 angular.forEach(response.data, function (value, key) {
-                    $scope.serviceType.availableOptions.push({ "id": key, "name": value });
+                    $scope.offerType.availableOptions.push({ "id": key, "name": value });
                 });
-                $scope.serviceType.model = search.serviceType || $scope.serviceType.availableOptions[0].id;
+                $scope.offerType.model = search.offerType || $scope.offerType.availableOptions[0].id;
             });
 
             DictionaryService.GetPropertiesTypes(function (response) {
@@ -85,7 +85,7 @@ angular.module('myApp.newoffer', [])
             $scope.addOffer = function () {
                 debugger;
                 let offer = {};
-                offer.serviceType = $scope.serviceType.model;
+                offer.offerType = $scope.offerType.model;
                 offer.locationName = $scope.city;
                 offer.lat = $scope.geoResult.lat || $scope.geoResult.geometry.location.lat();
                 offer.lng = $scope.geoResult.lng || $scope.geoResult.geometry.location.lng();

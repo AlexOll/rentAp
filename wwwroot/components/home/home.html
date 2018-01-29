@@ -4,8 +4,8 @@
             <div class="list-group">
                 <form name="form" role="search" ng-submit="search()">
                     <h5 class="my-3">I'm searching for:</h5>
-                    <select class="input-base select-single" ng-model="serviceType.model"
-                            ng-options="opt.id as opt.name for opt in serviceType.availableOptions"></select>
+                    <select class="input-base select-single" ng-model="offerType.model"
+                            ng-options="opt.id as opt.name for opt in offerType.availableOptions"></select>
 
                     <h5 class="my-3">Property type:</h5>
                     <select class="input-base select-multiple" ng-extended-select ng-model="propertyType.model" size="{{propertyType.availableOptions.length+1}}"

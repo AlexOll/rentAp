@@ -8,7 +8,7 @@ namespace RentApp.Models.DbModels
     {
         [Key]
         public Guid Id { get; set; }
-        public ServiceType ServiceType { get; set; }
+        public OfferType OfferType { get; set; }
         [Required]
         public RealEstateObject RealEstateObject { get; set; }
         public int Price { get; set; }

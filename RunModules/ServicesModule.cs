@@ -1,7 +1,12 @@
 ﻿using Autofac;
 using RentApp.Cache;
 using RentApp.Managers;
+using RentApp.Models.DtoModels.Offers;
+using RentApp.Models.DtoModels.Property;
+using RentApp.Models.Interfaces;
+using RentApp.Models.Structs;
 using RentApp.Repositories;
+using System;
 
 namespace RentApp.RunModules
 {
@@ -30,9 +35,10 @@ namespace RentApp.RunModules
             builder.RegisterType<RealEstateRepository>().AsSelf();
 
             builder.RegisterType<RealEstateOfferCache>().AsSelf();
-            builder.RegisterType<RealEstateOfferManager>().AsSelf();
-            builder.RegisterType<RealEstateOfferRepository>().AsSelf();
+            builder.RegisterType<OfferManager>().AsSelf();
+            builder.RegisterType<OfferRepository>().AsSelf();
 
+   
         }
     }
 }

@@ -1,7 +1,10 @@
-﻿using RentApp.Cache;
+﻿using Autofac.Features.Indexed;
+using RentApp.Cache;
 using RentApp.Models.DbModels;
+using RentApp.Models.Interfaces;
 using RentApp.Models.RequestModels;
 using RentApp.Models.ResponseModels;
+using RentApp.Models.Structs;
 using RentApp.Repositories;
 using System;
 using System.Collections.Generic;
@@ -9,13 +12,19 @@ using System.Linq;
 
 namespace RentApp.Managers
 {
-    public class RealEstateOfferManager
+    public class OfferManager
     {
-        private RealEstateOfferRepository _offerRepository;
+        private OfferRepository _offerRepository;
+        private readonly IIndex<OfferType, IOffer> _offerList;
+        private readonly IIndex<PropertyType, IProperty> _propertyList;
 
-        public RealEstateOfferManager(RealEstateOfferRepository offerRepository)
+        public OfferManager(OfferRepository offerRepository,
+            IIndex<OfferType, IOffer> offerList,
+            IIndex<PropertyType, IProperty> propertyList)
         {
             _offerRepository = offerRepository;
+            _offerList = offerList;
+            _propertyList = propertyList;
         }
 
         internal IEnumerable<RealEstateOffer> GetAll()
@@ -34,7 +43,7 @@ namespace RentApp.Managers
             
             var offers = RealEstateOfferCache.CachedItems.Values
                 .Where(o => o.IsAlive
-                     && o.ServiceType == filter.ServiceType
+                     && o.OfferType == filter.OfferType
                      && Math.Abs(o.RealEstateObject.Lat - filter.Lat) <= coordDelta
                      && Math.Abs(o.RealEstateObject.Lng - filter.Lng) <= coordDelta);
 
@@ -56,8 +65,26 @@ namespace RentApp.Managers
             return offers.Select(o => (OfferFilterResponse)o);
         }
 
+        internal BaseResponse Create(CreateOfferRequest item)
+        {
+            var offerFactory = new OfferFactory(item);
+
+            var offer = offerFactory.Offer;
+            var property = offerFactory.Property;
+
+            _offerRepository.Create(offer);
+
+            return new BaseResponse();
+        }
+
+
+
+
+
+
         internal BaseResponse Create(RealEstateOffer item)
         {
+
             item.CreateDate = DateTime.Now;
             item.UpdateDate = DateTime.Now;
 

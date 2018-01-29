@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace RentApp.Models.DbModels
 {
-    public class FlatServiceType
+    public class FlatOffer
     {
         public Guid Id { get; set; }
         public Guid FlatId { get; set; }
         public Flat Flat { get; set; }
-        public ServiceType ServiceType { get; set; }
+        public OfferType OfferType { get; set; }
     }
 }

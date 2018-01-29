@@ -11,8 +11,8 @@ namespace RentApp.Models
         }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<Flat> Flats { get; set; }
-	    public DbSet<FlatServiceType> FlatServiceTypes { get; set; }
+        //public DbSet<Flat> Flats { get; set; }
+	    //public DbSet<FlatOffer> FlatOffer { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<RealEstateOffer> RealEstateOffers { get; set; }
         public DbSet<RealEstateObject> RealEstateObjects { get; set; }
@@ -21,7 +21,7 @@ namespace RentApp.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<GarageDetailes>().ToTable("GarageDetailes");
+            //modelBuilder.Entity<GarageDetailes>().ToTable("GarageDetailes");
             modelBuilder.Entity<AccommodationDetailes>().ToTable("AccommodationDetailes");
         }
 

@@ -8,11 +8,11 @@ using System.Linq;
 
 namespace RentApp.Repositories
 {
-    public class RealEstateOfferRepository
+    public class OfferRepository
     {
         private readonly DataContext _context;
 
-        public RealEstateOfferRepository(DataContext context)
+        public OfferRepository(DataContext context)
         {
             _context = context;
         }

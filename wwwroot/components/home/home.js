@@ -2,8 +2,8 @@ angular.module('myApp.home', ['directives'])
     .controller('homeCtrl', ['$scope', 'DictionaryService', '$location', 'CookieUtility', '$timeout',
         function ($scope, DictionaryService, $location, CookieUtility, $timeout) {
 
-            $scope.serviceType = {};
-            $scope.serviceType.availableOptions = [];
+            $scope.offerType = {};
+            $scope.offerType.availableOptions = [];
             $scope.propertyType = {};
             $scope.propertyType.availableOptions = [];
 
@@ -14,12 +14,12 @@ angular.module('myApp.home', ['directives'])
                 $scope.geoResult = {};
             }
 
-            DictionaryService.GetServiceTypes(function (response) {
+            DictionaryService.GetOfferTypes(function (response) {
 
                 angular.forEach(response.data, function (value, key) {
-                    $scope.serviceType.availableOptions.push({ "id": key, "name": value });
+                    $scope.offerType.availableOptions.push({ "id": key, "name": value });
                 });
-                $scope.serviceType.model = search.serviceType || $scope.serviceType.availableOptions[0].id;
+                $scope.offerType.model = search.offerType || $scope.offerType.availableOptions[0].id;
             });
 
             DictionaryService.GetPropertiesTypes(function (response) {
@@ -33,7 +33,7 @@ angular.module('myApp.home', ['directives'])
             $scope.search = function () {
                 let geometry = $scope.geoResult.geometry;
                 search.propertyType = $scope.propertyType.model;
-                search.serviceType = $scope.serviceType.model;
+                search.offerType = $scope.offerType.model;
                 search.geoResult = search.geoResult || {};
                 search.geoResult.city = $scope.geoResult.formatted_address || $scope.city;
                 if (geometry) {

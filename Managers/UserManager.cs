@@ -84,7 +84,7 @@ namespace RentApp.Managers
             var foundUser = UserCache.CachedItems[item.Id];
 
             var imageUtility = new ImageUtility();
-            var imageId = imageUtility.UploadImage(foundUser.ProfileImageId, item.ProfileImageURL);
+            var imageId = imageUtility.UpdateImageId(foundUser.ProfileImageId, item.ProfileImageURL);
 
             foundUser.Firstname = item.Firstname;
             foundUser.Lastname = item.Lastname;
