@@ -5,12 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\DtoModels\**" />
     <Compile Remove="wwwroot\img\chat_avatars\**" />
     <Compile Remove="wwwroot\lib\**" />
+    <Content Remove="Models\DtoModels\**" />
     <Content Remove="wwwroot\img\chat_avatars\**" />
     <Content Remove="wwwroot\lib\**" />
+    <EmbeddedResource Remove="Models\DtoModels\**" />
     <EmbeddedResource Remove="wwwroot\img\chat_avatars\**" />
     <EmbeddedResource Remove="wwwroot\lib\**" />
+    <None Remove="Models\DtoModels\**" />
     <None Remove="wwwroot\img\chat_avatars\**" />
     <None Remove="wwwroot\lib\**" />
   </ItemGroup>
@@ -19,29 +23,40 @@
     <Compile Remove="Cache\FlatCache.cs" />
     <Compile Remove="Cache\Items\FlatCacheItem.cs" />
     <Compile Remove="Cache\Items\UserOnlineCacheItem.cs" />
+    <Compile Remove="Cache\RealEstateCache.cs" />
     <Compile Remove="Controllers\FlatController.cs" />
     <Compile Remove="Controllers\FlatFilterController.cs" />
+    <Compile Remove="Controllers\RealEstateController.cs" />
     <Compile Remove="Hubs\ConnectionMapping.cs" />
     <Compile Remove="Hubs\OnlineStatusHub.cs" />
     <Compile Remove="Managers\FlatFilterManager.cs" />
     <Compile Remove="Managers\FlatManager.cs" />
+    <Compile Remove="Managers\OfferFactory.cs" />
+    <Compile Remove="Managers\RealEstateManager.cs" />
     <Compile Remove="Migrations\20180109150342_2.cs" />
     <Compile Remove="Migrations\20180109150342_2.Designer.cs" />
     <Compile Remove="Migrations\20180109155100_3.cs" />
     <Compile Remove="Migrations\20180109155100_3.Designer.cs" />
     <Compile Remove="Migrations\20180109155259_3.cs" />
     <Compile Remove="Migrations\20180109155259_3.Designer.cs" />
+    <Compile Remove="Models\DbModels\AccommodationDetailes.cs" />
+    <Compile Remove="Models\DbModels\BaseRealEstateDetailes.cs" />
     <Compile Remove="Models\DbModels\Flat.cs" />
     <Compile Remove="Models\DbModels\FlatServiceType.cs" />
     <Compile Remove="Models\DbModels\GarageDetailes.cs" />
     <Compile Remove="Models\DbModels\IDbModel.cs" />
-    <Compile Remove="Models\DtoModels\OfferFactory.cs" />
-    <Compile Remove="Models\DtoModels\Offers\OfferFactory.cs" />
-    <Compile Remove="Models\DtoModels\Offers\RoommateOffer.cs" />
+    <Compile Remove="Models\DbModels\PropertyDBModel.cs" />
+    <Compile Remove="Models\DbModels\RealEstateObject.cs" />
+    <Compile Remove="Models\DbModels\RealEstateOffer.cs" />
+    <Compile Remove="Models\DbModels\RealEstatePhoto.cs" />
     <Compile Remove="Models\Interfaces\IOfferVisitor.cs" />
+    <Compile Remove="Models\Interfaces\IProperty.cs" />
+    <Compile Remove="Models\RequestModels\FlatFilterRequest.cs" />
     <Compile Remove="Models\RequestModels\FlatRequest.cs" />
     <Compile Remove="Models\ResponseModels\FlatResponse.cs" />
+    <Compile Remove="Models\Structs\ConstructionMaterialType.cs" />
     <Compile Remove="Repositories\FlatRepository.cs" />
+    <Compile Remove="Repositories\RealEstateRepository.cs" />
   </ItemGroup>
 
   <ItemGroup>

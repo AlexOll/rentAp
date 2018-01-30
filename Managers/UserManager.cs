@@ -7,6 +7,7 @@ using System.Linq;
 using RentApp.Utilities;
 using System;
 using RentApp.Models.Interfaces;
+using RentApp.Models.Structs;
 
 namespace RentApp.Managers
 {
@@ -83,7 +84,7 @@ namespace RentApp.Managers
 
             var foundUser = UserCache.CachedItems[item.Id];
 
-            var imageUtility = new ImageUtility();
+            var imageUtility = new ImageUtility(PhotoType.Profile);
             var imageId = imageUtility.UpdateImageId(foundUser.ProfileImageId, item.ProfileImageURL);
 
             foundUser.Firstname = item.Firstname;

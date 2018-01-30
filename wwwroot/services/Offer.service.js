@@ -44,11 +44,11 @@
         function Create(offer, callback) {
             $http.post('/api/offer', {
                 "offerType": offer.offerType,
-                "locationName": offer.locationName,
+                "address": offer.address,
                 "lat": offer.lat,
                 "lng": offer.lng,
                 "propertyType": offer.propertyType,
-                "price": offer.priceFrom,
+                "price": offer.price,
                 "photoURLs": offer.photoURLs,
 
                 "roomsQuantity": offer.roomsQuantity,

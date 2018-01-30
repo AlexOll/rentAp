@@ -19,7 +19,6 @@ namespace RentApp.Models.DtoModels.Property
         }
 
         public Guid Id { get; set; } = Guid.NewGuid();
-        public double? Area { get; set; }
         public double Lat { get; set; }
         public double Lng { get; set; }
         public string LocationName { get; set; }

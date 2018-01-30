@@ -1,4 +1,5 @@
 ﻿using RentApp.Models.Cache;
+using RentApp.Models.Structs;
 using RentApp.Utilities;
 using System;
 
@@ -25,7 +26,7 @@ namespace RentApp.Models.ResponseModels
             Lastname = model.Lastname;
             Name = model.Firstname+" "+ model.Lastname;
 
-            var imageUtility = new ImageUtility();
+            var imageUtility = new ImageUtility(PhotoType.Profile);
             ProfileImageURL = imageUtility.GetUploadedImageUrl(model.ProfileImageId);
 
             LastOnlineDateTime = model.LastEntranceDateTime;

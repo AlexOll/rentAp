@@ -1,8 +1,9 @@
 ﻿using RentApp.Models.DbModels;
+using RentApp.Models.Structs;
+using RentApp.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace RentApp.Models.ResponseModels
 {
@@ -16,18 +17,20 @@ namespace RentApp.Models.ResponseModels
         public double Lat { get; set; }
         public double Lng { get; set; }
 
-        public OfferFilterResponse(RealEstateOffer model)
+        public OfferFilterResponse(Offer model)
         {
             Id = model.Id;
-            Address = model.RealEstateObject.Address;
-            Description = model.RealEstateObject.Description;
+            Address = model.Address;
+            Description = model.Description;
             Price = model.Price;
-            PhotoURLs = model.RealEstateObject.Photos.Select(p => p.Url).ToList();
-            Lat = model.RealEstateObject.Lat;
-            Lng = model.RealEstateObject.Lng;
+            var imageUtility = new ImageUtility(PhotoType.Profile);
+
+            PhotoURLs = model.PropertyPhotos.Select(p => imageUtility.GetUploadedImageUrl(p.Id)).ToList();
+            Lat = model.Lat;
+            Lng = model.Lng;
         }
 
-        public static explicit operator OfferFilterResponse(RealEstateOffer model)
+        public static explicit operator OfferFilterResponse(Offer model)
         {
             return new OfferFilterResponse(model);
         }

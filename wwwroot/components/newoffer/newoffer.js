@@ -1,6 +1,6 @@
 angular.module('myApp.newoffer', [])
-    .controller('newOfferCtrl', ['$rootScope', '$scope', 'toastr', 'MapUtility', 'CookieUtility', 'DictionaryService', 'AnchorSmoothScrollService', '$timeout','OfferService',
-        function ($rootScope, $scope, toastr, MapUtility, CookieUtility, DictionaryService, AnchorSmoothScrollService, $timeout, OfferService) {
+    .controller('newOfferCtrl', ['$rootScope', '$scope', 'toastr', 'MapUtility', 'CookieUtility', 'DictionaryService', 'AnchorSmoothScrollService', '$timeout', 'OfferService', '$location',
+        function ($rootScope, $scope, toastr, MapUtility, CookieUtility, DictionaryService, AnchorSmoothScrollService, $timeout, OfferService, $location) {
 
             $scope.offerType = {};
             $scope.offerType.availableOptions = [];
@@ -83,10 +83,10 @@ angular.module('myApp.newoffer', [])
             })
 
             $scope.addOffer = function () {
-                debugger;
+
                 let offer = {};
                 offer.offerType = $scope.offerType.model;
-                offer.locationName = $scope.city;
+                offer.address = $scope.city;
                 offer.lat = $scope.geoResult.lat || $scope.geoResult.geometry.location.lat();
                 offer.lng = $scope.geoResult.lng || $scope.geoResult.geometry.location.lng();
                 offer.propertyType = $scope.propertyType.model;

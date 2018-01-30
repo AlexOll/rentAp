@@ -15,41 +15,34 @@ namespace RentApp.Managers
     public class OfferManager
     {
         private OfferRepository _offerRepository;
-        private readonly IIndex<OfferType, IOffer> _offerList;
-        private readonly IIndex<PropertyType, IProperty> _propertyList;
 
-        public OfferManager(OfferRepository offerRepository,
-            IIndex<OfferType, IOffer> offerList,
-            IIndex<PropertyType, IProperty> propertyList)
+        public OfferManager(OfferRepository offerRepository)
         {
             _offerRepository = offerRepository;
-            _offerList = offerList;
-            _propertyList = propertyList;
         }
 
-        internal IEnumerable<RealEstateOffer> GetAll()
-        {
-            return _offerRepository.GetAll();
-        }
+        //internal IEnumerable<RealEstateOffer> GetAll()
+        //{
+        //    return _offerRepository.GetAll();
+        //}
 
-        internal RealEstateOffer GetById(Guid id)
-        {
-            return _offerRepository.GetById(id);
-        }
+        //internal RealEstateOffer GetById(Guid id)
+        //{
+        //    return _offerRepository.GetById(id);
+        //}
 
         internal IEnumerable<OfferFilterResponse> GetByFilter(OfferFilterRequest filter)
         {
             double coordDelta = 0.3;
             
-            var offers = RealEstateOfferCache.CachedItems.Values
-                .Where(o => o.IsAlive
-                     && o.OfferType == filter.OfferType
-                     && Math.Abs(o.RealEstateObject.Lat - filter.Lat) <= coordDelta
-                     && Math.Abs(o.RealEstateObject.Lng - filter.Lng) <= coordDelta);
+            var offers = OfferCache.CachedItems.Values
+                .Where(o => o.OfferType == filter.OfferType
+                     && Math.Abs(o.Lat - filter.Lat) <= coordDelta
+                     && Math.Abs(o.Lng - filter.Lng) <= coordDelta);
 
             if (filter.PropertyTypeList.Any())
             {
-                offers = offers.Where(o => filter.PropertyTypeList.Contains(o.RealEstateObject.PropertyType));
+                offers = offers.Where(o => filter.PropertyTypeList.Contains(o.PropertyType));
             }
 
             if (filter.PriceFrom.HasValue)
@@ -65,44 +58,35 @@ namespace RentApp.Managers
             return offers.Select(o => (OfferFilterResponse)o);
         }
 
-        internal BaseResponse Create(CreateOfferRequest item)
+        internal BaseResponse Create(IOffer item)
         {
-            var offerFactory = new OfferFactory(item);
-
-            var offer = offerFactory.Offer;
-            var property = offerFactory.Property;
-
+            var offer = (Offer)item;
             _offerRepository.Create(offer);
 
             return new BaseResponse();
         }
 
+        //internal BaseResponse Create(RealEstateOffer item)
+        //{
 
+        //    item.CreateDate = DateTime.Now;
+        //    item.UpdateDate = DateTime.Now;
 
+        //    _offerRepository.Create(item);
 
+        //    return new BaseResponse();
+        //}
 
+        //internal BaseResponse Update(RealEstateOffer item)
+        //{
+        //    _offerRepository.Update(item);
+        //    return new BaseResponse();
+        //}
 
-        internal BaseResponse Create(RealEstateOffer item)
-        {
-
-            item.CreateDate = DateTime.Now;
-            item.UpdateDate = DateTime.Now;
-
-            _offerRepository.Create(item);
-
-            return new BaseResponse();
-        }
-
-        internal BaseResponse Update(RealEstateOffer item)
-        {
-            _offerRepository.Update(item);
-            return new BaseResponse();
-        }
-
-        internal BaseResponse Remove(Guid id)
-        {
-            _offerRepository.Remove(id);
-            return new BaseResponse();
-        }
+        //internal BaseResponse Remove(Guid id)
+        //{
+        //    _offerRepository.Remove(id);
+        //    return new BaseResponse();
+        //}
     }
 }

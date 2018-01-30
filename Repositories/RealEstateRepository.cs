@@ -65,7 +65,7 @@ namespace RentApp.Repositories
                     _context.RealEstateOffers.Attach(offer);
                     _context.Entry(offer).State = EntityState.Modified;
                     _context.SaveChanges();
-                    RealEstateOfferCache.AddOrUpdate(offer);
+                    OfferCache.AddOrUpdate(offer);
                 }
 
                 item.IsAlive = false;
