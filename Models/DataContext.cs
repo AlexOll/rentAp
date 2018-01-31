@@ -17,12 +17,19 @@ namespace RentApp.Models
         public DbSet<RealEstateOffer> RealEstateOffers { get; set; }
         public DbSet<RealEstateObject> RealEstateObjects { get; set; }
         public DbSet<BaseRealEstateDetailes> RealEstateDetailes { get; set; }
+        public DbSet<BaseOfferDetailes> OfferDetailes { get; set; }
         public DbSet<RealEstatePhoto> RealEstatePhotos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<GarageDetailes>().ToTable("GarageDetailes");
             modelBuilder.Entity<AccommodationDetailes>().ToTable("AccommodationDetailes");
+            modelBuilder.Entity<LandDetailes>().ToTable("LandDetailes");
+
+            modelBuilder.Entity<SaleOfferDetailes>().ToTable("SaleOfferDetailes");
+            modelBuilder.Entity<LTRentOfferDetailes>().ToTable("LTRentOfferDetailes");
+            modelBuilder.Entity<STRentOfferDetailes>().ToTable("STRentOfferDetailes");
+            modelBuilder.Entity<RoommateOfferDetailes>().ToTable("RoommateOfferDetailes");
         }
 
     }
