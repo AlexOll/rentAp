@@ -13,7 +13,6 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
             });
 
             HubUtility.OnlineStatusUpdated(function (msg) {
-                debugger;
                 $scope.chatUsers.forEach(function (user) {
                     user.lastOnlineDateTime = msg[user.id.toString()] || user.lastOnlineDateTime;
                 });

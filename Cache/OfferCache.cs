@@ -9,9 +9,9 @@ namespace RentApp.Cache
 {
     public class OfferCache
     {
-        private static Dictionary<Guid, IOffer> _aliveOffers;
+        private static Dictionary<Guid, Offer> _aliveOffers;
 
-        public static Dictionary<Guid, IOffer> CachedItems
+        public static Dictionary<Guid, Offer> CachedItems
         {
             get
             {
@@ -24,7 +24,7 @@ namespace RentApp.Cache
             _aliveOffers = offerRepository.GetAll().ToDictionary(x => x.Id, x => x);
         }
 
-        public static void AddOrUpdate(IOffer offer)
+        public static void AddOrUpdate(Offer offer)
         {
             if (_aliveOffers.ContainsKey(offer.Id))
             {

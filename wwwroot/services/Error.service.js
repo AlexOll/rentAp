@@ -15,7 +15,7 @@
         return service;
 
         function ErrorCallback(response) {
-            toastr.error('Error code: ' + response.status, "Error", {
+            toastr.error('Error code: ' + response.status, "Request failed", {
                 "timeOut": "3000",
                 "extendedTImeout": "0"
             });

@@ -69,7 +69,7 @@ namespace RentApp.Managers
             return existingImages;
         }
 
-        internal List<IOffer> GetByUserId(Guid id)
+        internal List<Offer> GetByUserId(Guid id)
         {
             return OfferCache.CachedItems.Values.Where(s => s.UserId == id).ToList();
         }

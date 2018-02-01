@@ -18,11 +18,12 @@
         return service;
 
         function GetByFilter(search, callback) {
+
             $http.post('/api/offer/search', {
                 "offerType": search.offerType,
-                "lat": search.lat,
-                "lng": search.lng,
-                "propertyTypeList": search.propertyTypeList,
+                "lat": search.lat || search.geoResult.lat,
+                "lng": search.lng || search.geoResult.lng,
+                "propertyTypeList": search.propertyType,
                 "priceFrom": search.priceFrom,
                 "priceTill": search.priceTill,
                 "roomsQuantity": search.roomsQuantity,

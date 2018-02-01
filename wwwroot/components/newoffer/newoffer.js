@@ -106,20 +106,20 @@ angular.module('myApp.newoffer', [])
                     OfferService.CheckIfImgsExist(imgSources, function (response) {
 
                         if (response.data.length) {
+                            let index = 0;
                             $scope.uploadedImages.forEach(function (image) {
-                                debugger;
-                                var index = response.data.indexOf(image.dataURL);
-                                if (index !== -1) {
+                                if (response.data.indexOf(image.dataURL) !== -1) {
                                     toastr.warning('Image was allready uploaded!', 'Warning!');
                                     $scope.uploadedImages.splice(index, 1);
                                 }
+                                index++;
                             })
 
                         }
                     });
             }
-            
-         
+
+
             var dublicateImages = [];
             $scope.$watchCollection('uploadedImages', function (image) {
 

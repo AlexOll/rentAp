@@ -25,7 +25,7 @@
                 $timeout(function () {
                     lockFunction();
                     locked = false;
-                }, 2000);
+                }, 500);
         }
     }
 })();

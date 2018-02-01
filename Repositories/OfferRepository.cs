@@ -17,14 +17,14 @@ namespace RentApp.Repositories
             _context = context;
         }
 
-        public List<IOffer> GetAll()
+        public List<Offer> GetAll()
         {
             using (_context)
             {
                 return _context.Offers
                     .Where(o => o.IsAlive)
                     .Include(o => o.PropertyPhotos)
-                    .ToList<IOffer>();
+                    .ToList();
             }
         }
 
