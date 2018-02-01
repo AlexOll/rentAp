@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using RentApp.Models.Structs;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 
 namespace RentApp.Utilities
 {
@@ -20,7 +22,7 @@ namespace RentApp.Utilities
 
         public ImageUtility(PhotoType PhotoType)
         {
-            switch(PhotoType)
+            switch (PhotoType)
             {
                 case PhotoType.Profile:
                     _currentRelativePath = ProfileRelativeImgPathPattern;
@@ -35,10 +37,34 @@ namespace RentApp.Utilities
 
             }
         }
+        private const string base64seperator = "base64";
+        public static List<string> ReturnDublicateImages(IEnumerable<string> imageList1, IEnumerable<string> imageList2)
+        {
+            var result = new List<string>();
+
+            try
+            {
+                var base64body1List = imageList1.Distinct().ToDictionary(x => x.Split(base64seperator)[1], x => x);
+                var base64body2List = imageList2.Distinct().ToDictionary(x => x.Split(base64seperator)[1], x => x);
+
+                base64body1List.Keys.ToList()
+                    .ForEach(f =>
+                    {
+                        if (base64body2List.ContainsKey(f))
+                            result.Add(base64body2List[f]);
+                    });
+            }
+            catch (Exception ex)
+            {
+                throw new BadImageFormatException("Check image source!", ex);
+            }
+
+            return result;
+        }
 
         internal Guid? UpdateImageId(Guid? oldImageId, string newImageSource)
         {
-            if(oldImageId.HasValue && newImageSource.Contains(oldImageId.ToString()))
+            if (oldImageId.HasValue && newImageSource.Contains(oldImageId.ToString()))
             {
                 return oldImageId;
             }
@@ -75,7 +101,6 @@ namespace RentApp.Utilities
             else
                 throw new BadImageFormatException();
         }
-
 
         internal string GetUploadedImageUrl(Guid? imageId)
         {

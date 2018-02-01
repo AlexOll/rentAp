@@ -10,7 +10,9 @@
     function OfferService($http, ErrorService) {
         var service = {
             GetByFilter: GetByFilter,
-            Create : Create
+            Create: Create,
+            GetByUserId: GetByUserId,
+            CheckIfImgsExist: CheckIfImgsExist
         };
 
         return service;
@@ -40,9 +42,24 @@
                 function (res) { return ErrorService.ErrorCallback(res) }
                 )
         }
+        function GetByUserId(id, callback) {
+            $http.get('/api/offer/' + id)
+                .then(
+                function (res) { return callback(res) },
+                function (res) { return ErrorService.ErrorCallback(res) }
+                )
+        }
+        function CheckIfImgsExist(imgSourceList, callback) {
+            $http.post('/api/offer/imgCheck', imgSourceList).then(
+                function (res) { return callback(res) },
+                function (res) { return ErrorService.ErrorCallback(res) }
+                )
+        }
+        
 
         function Create(offer, callback) {
             $http.post('/api/offer', {
+                "userId": offer.userId,
                 "offerType": offer.offerType,
                 "address": offer.address,
                 "lat": offer.lat,

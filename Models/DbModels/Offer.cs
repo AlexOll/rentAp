@@ -8,6 +8,7 @@ namespace RentApp.Models.DbModels
     public class Offer : IOffer
     {
         public Guid Id { get; set; }
+        public Guid UserId { get; set; }
         public OfferType OfferType { get; set; }
         public PropertyType PropertyType { get; set; }
         public string Address { get; set; }

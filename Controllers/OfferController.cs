@@ -7,6 +7,7 @@ using RentApp.Models.RequestModels;
 using RentApp.Models.Structs;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RentApp.Controllers
@@ -30,16 +31,32 @@ namespace RentApp.Controllers
         //    return Ok(result);
         //}
 
-        //[HttpGet("{id}")]
-        //public IActionResult GetById(Guid id)
-        //{
-        //    var item = _offerManager.GetById(id);
-        //    if (item == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return new ObjectResult(item);
-        //}
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(List<IOffer>), 200)]
+        public IActionResult GetByUserId(Guid id)
+        {
+            if (id == null || id == Guid.Empty)
+            {
+                return BadRequest();
+            }
+
+            var result = _offerManager.GetByUserId(id);
+
+            return Ok(result);
+        }
+        [HttpPost, Route("imgCheck")]
+        [ProducesResponseType(typeof(List<string>), 200)]
+        public IActionResult CheckIfImgsExist([FromBody]List<string> imgSourceList)
+        {
+            if (imgSourceList == null || !imgSourceList.Any())
+            {
+                return BadRequest();
+            }
+
+            var result = _offerManager.CheckImageExist(imgSourceList);
+
+            return Ok(result);
+        }
 
         [HttpPost, Route("search")]
         public async Task<IActionResult> GetByFilter([FromBody] OfferFilterRequest filter)
@@ -130,77 +147,77 @@ namespace RentApp.Controllers
         //    };
         //    _offerManager.Create(offer1);
 
-            //AccommodationDetailes det2 = new AccommodationDetailes
-            //{
-            //    Floor = 2,
-            //    Balcony = true,
-            //    Terrace = false
-            //};
-            //RealEstateObject obj2 = new RealEstateObject
-            //{
-            //    Description = "Description 2",
-            //    Address = "Kyiv, Address 2",
-            //    Area = 55,
-            //    Lat = 50.397289,
-            //    Lng = 30.510895,
-            //    PropertyType = PropertyType.Appartment,
-            //    RealEstateDetailes = det2,
-            //    CreateDate = DateTime.Now,
-            //    UpdateDate = DateTime.Now,
-            //    IsAlive = true
-            //};
-            //RealEstatePhoto p21 = new RealEstatePhoto { Url = "../../img/flat/noImage.jpg", RealEstateId = obj2.Id };
-            //RealEstatePhoto p22 = new RealEstatePhoto { Url = "../../img/flat/noImage.jpg", RealEstateId = obj2.Id };
-            //RealEstatePhoto p23 = new RealEstatePhoto { Url = "../../img/flat/noImage.jpg", RealEstateId = obj2.Id };
-            //obj2.Photos = new List<RealEstatePhoto> { p21, p22, p23 };
+        //AccommodationDetailes det2 = new AccommodationDetailes
+        //{
+        //    Floor = 2,
+        //    Balcony = true,
+        //    Terrace = false
+        //};
+        //RealEstateObject obj2 = new RealEstateObject
+        //{
+        //    Description = "Description 2",
+        //    Address = "Kyiv, Address 2",
+        //    Area = 55,
+        //    Lat = 50.397289,
+        //    Lng = 30.510895,
+        //    PropertyType = PropertyType.Appartment,
+        //    RealEstateDetailes = det2,
+        //    CreateDate = DateTime.Now,
+        //    UpdateDate = DateTime.Now,
+        //    IsAlive = true
+        //};
+        //RealEstatePhoto p21 = new RealEstatePhoto { Url = "../../img/flat/noImage.jpg", RealEstateId = obj2.Id };
+        //RealEstatePhoto p22 = new RealEstatePhoto { Url = "../../img/flat/noImage.jpg", RealEstateId = obj2.Id };
+        //RealEstatePhoto p23 = new RealEstatePhoto { Url = "../../img/flat/noImage.jpg", RealEstateId = obj2.Id };
+        //obj2.Photos = new List<RealEstatePhoto> { p21, p22, p23 };
 
-            //RealEstateOffer offer2 = new RealEstateOffer
-            //{
-            //    Price = 1500,
-            //    ServiceType = ServiceType.OfferSale,
-            //    RealEstateObject = obj2,
-            //    CreateDate = DateTime.Now,
-            //    UpdateDate = DateTime.Now,
-            //    IsAlive = true
-            //};
-            //_offerManager.Create(offer2);
+        //RealEstateOffer offer2 = new RealEstateOffer
+        //{
+        //    Price = 1500,
+        //    ServiceType = ServiceType.OfferSale,
+        //    RealEstateObject = obj2,
+        //    CreateDate = DateTime.Now,
+        //    UpdateDate = DateTime.Now,
+        //    IsAlive = true
+        //};
+        //_offerManager.Create(offer2);
 
-            //AccommodationDetailes det3 = new AccommodationDetailes
-            //{
-            //    Floor = 2,
-            //    Balcony = true,
-            //    Terrace = false
-            //};
-            //RealEstateObject obj3 = new RealEstateObject
-            //{
-            //    Description = "Description 3",
-            //    Address = "Kyiv, Address 3",
-            //    Area = 66,
-            //    Lat = 50.450750,
-            //    Lng = 30.525068,
-            //    PropertyType = PropertyType.Appartment,
-            //    RealEstateDetailes = det3,
-            //    CreateDate = DateTime.Now,
-            //    UpdateDate = DateTime.Now,
-            //    IsAlive = true
-            //};
-            //RealEstatePhoto p31 = new RealEstatePhoto { Url = "../../img/flat/noImage.jpg", RealEstateId = obj3.Id };
-            //RealEstatePhoto p32 = new RealEstatePhoto { Url = "../../img/flat/noImage.jpg", RealEstateId = obj3.Id };
-            //RealEstatePhoto p33 = new RealEstatePhoto { Url = "../../img/flat/noImage.jpg", RealEstateId = obj3.Id };
-            //obj3.Photos = new List<RealEstatePhoto> { p31, p32, p33 };
+        //AccommodationDetailes det3 = new AccommodationDetailes
+        //{
+        //    Floor = 2,
+        //    Balcony = true,
+        //    Terrace = false
+        //};
+        //RealEstateObject obj3 = new RealEstateObject
+        //{
+        //    Description = "Description 3",
+        //    Address = "Kyiv, Address 3",
+        //    Area = 66,
+        //    Lat = 50.450750,
+        //    Lng = 30.525068,
+        //    PropertyType = PropertyType.Appartment,
+        //    RealEstateDetailes = det3,
+        //    CreateDate = DateTime.Now,
+        //    UpdateDate = DateTime.Now,
+        //    IsAlive = true
+        //};
+        //RealEstatePhoto p31 = new RealEstatePhoto { Url = "../../img/flat/noImage.jpg", RealEstateId = obj3.Id };
+        //RealEstatePhoto p32 = new RealEstatePhoto { Url = "../../img/flat/noImage.jpg", RealEstateId = obj3.Id };
+        //RealEstatePhoto p33 = new RealEstatePhoto { Url = "../../img/flat/noImage.jpg", RealEstateId = obj3.Id };
+        //obj3.Photos = new List<RealEstatePhoto> { p31, p32, p33 };
 
-            //RealEstateOffer offer3 = new RealEstateOffer
-            //{
-            //    Price = 1800,
-            //    ServiceType = ServiceType.OfferSale,
-            //    RealEstateObject = obj3,
-            //    CreateDate = DateTime.Now,
-            //    UpdateDate = DateTime.Now,
-            //    IsAlive = true
-            //};
-            //_offerManager.Create(offer3);
+        //RealEstateOffer offer3 = new RealEstateOffer
+        //{
+        //    Price = 1800,
+        //    ServiceType = ServiceType.OfferSale,
+        //    RealEstateObject = obj3,
+        //    CreateDate = DateTime.Now,
+        //    UpdateDate = DateTime.Now,
+        //    IsAlive = true
+        //};
+        //_offerManager.Create(offer3);
 
-            //return Ok(null);
+        //return Ok(null);
         //}
     }
 }

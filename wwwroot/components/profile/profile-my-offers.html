@@ -3,11 +3,11 @@
 <a class="btn btn-block btn-success" href="/new-offer">ADD OFFER</a>
 <br />
 <div class="row">
-    <div class="col-md-3" ng-repeat="item in myLocations">
+    <div class="col-md-3" ng-repeat="item in myOffers">
         <div class="card h-100">
             <button class="close-icon" ng-click="deleteOffer(item.id)"></button>
             <a href="/flatdetails/{{item.id}}/address-{{item.address}}/price-{{item.price}}">
-                <img class="w-100" ng-src="{{item.photoURL || '../../img/flat/noImage.jpg'}}">
+                <img class="w-100" ng-src="{{item.propertyPhotos[0].url || '../../img/flat/noImage.jpg'}}">
             </a>
             <div class="card-body">
                 <h5 class="card-title">

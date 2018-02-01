@@ -1,8 +1,8 @@
 
 angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 'base64', 'utilities'])
     .controller('profileCtrl',
-    ['$rootScope', '$scope', 'UserService', 'AuthenticationService', 'toastr', '$timeout', 'AnchorSmoothScrollService', '$base64', 'ProfileService', 'GuidUtility', 'HubUtility',
-        function ($rootScope, $scope, UserService, AuthenticationService, toastr, $timeout, AnchorSmoothScrollService, $base64, ProfileService, GuidUtility, HubUtility) {
+    ['$rootScope', '$scope', 'UserService', 'AuthenticationService', 'toastr', '$timeout', 'AnchorSmoothScrollService', '$base64', 'ProfileService', 'GuidUtility', 'HubUtility', 'OfferService',
+        function ($rootScope, $scope, UserService, AuthenticationService, toastr, $timeout, AnchorSmoothScrollService, $base64, ProfileService, GuidUtility, HubUtility, OfferService) {
 
             $scope.user = angular.copy($rootScope.globals.currentUser);
 
@@ -13,6 +13,7 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
             });
 
             HubUtility.OnlineStatusUpdated(function (msg) {
+                debugger;
                 $scope.chatUsers.forEach(function (user) {
                     user.lastOnlineDateTime = msg[user.id.toString()] || user.lastOnlineDateTime;
                 });
@@ -129,21 +130,18 @@ angular.module('myApp.profile', ['ngRoute', 'ngMaterial', 'services', 'toastr', 
                 $scope.dataLoading = false;
             }
 
-            $scope.myLocations = [
-                { id: 11, address: 'Rusakovskaya Naberezhnaya 1', description: "Description", price: 500, photoURL: '../../img/flat/noImage.jpg' },
-                { id: 12, address: 'Rusakovskaya Naberezhnaya 2', description: "Description", price: 500, photoURL: '../../img/flat/noImage.jpg' },
-                { id: 13, address: 'Rusakovskaya Naberezhnaya 3', description: "Description", price: 500, photoURL: '../../img/flat/noImage.jpg' },
-                { id: 14, address: 'Rusakovskaya Naberezhnaya 4', description: "Description", price: 500, photoURL: '../../img/flat/noImage.jpg' },
-            ]
+            OfferService.GetByUserId($rootScope.globals.currentUser.id, function (response) {
+                $scope.myOffers = response.data;
+            });
 
             $scope.deleteOffer = function (id) {
-                alert("delete "+id)
+                alert("delete " + id)
             }
 
             $scope.editOffer = function (id) {
                 alert("edit " + id)
             }
-            
+
         }])
 
 

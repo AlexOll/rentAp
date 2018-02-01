@@ -9,8 +9,8 @@ namespace RentApp.Models.RequestModels
 {
     public class CreateOfferRequest : IOffer
     {
-
         public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid UserId { get; set; }
         public OfferType OfferType { get; set; }
         public PropertyType PropertyType { get; set; }
         public string Address { get; set; }
@@ -43,11 +43,12 @@ namespace RentApp.Models.RequestModels
                     PhotoURLs.ForEach(f =>
                     {
                         var id = (imageUtility.UpdateImageId(null, f));
-
                         _propertyPhotos.Add(new PropertyPhoto()
                         {
                             Id = id.Value,
                             OfferId = Id,
+                            Base64 = f,
+                            Url = imageUtility.GetUploadedImageUrl(id.Value),
                             OrderNumber = ++orderNumber
                         });
                     });
@@ -64,6 +65,7 @@ namespace RentApp.Models.RequestModels
         {
             var model = new Offer();
             model.Id = request.Id;
+            model.UserId = request.UserId;
             model.OfferType = request.OfferType;
             model.PropertyType = request.PropertyType;
             model.Address = request.Address;

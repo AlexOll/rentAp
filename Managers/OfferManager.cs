@@ -6,6 +6,7 @@ using RentApp.Models.RequestModels;
 using RentApp.Models.ResponseModels;
 using RentApp.Models.Structs;
 using RentApp.Repositories;
+using RentApp.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace RentApp.Managers
         internal IEnumerable<OfferFilterResponse> GetByFilter(OfferFilterRequest filter)
         {
             double coordDelta = 0.3;
-            
+
             var offers = OfferCache.CachedItems.Values
                 .Where(o => o.OfferType == filter.OfferType
                      && Math.Abs(o.Lat - filter.Lat) <= coordDelta
@@ -58,9 +59,25 @@ namespace RentApp.Managers
             return offers.Select(o => (OfferFilterResponse)o);
         }
 
-        internal BaseResponse Create(IOffer item)
+        internal List<string> CheckImageExist(List<string> imgSource)
+        {
+            var cachedImgList =  OfferCache.CachedItems.Values
+                .SelectMany(s => s.PropertyPhotos.Select(s1 => s1.Base64))
+                .ToList();
+
+            var existingImages = ImageUtility.ReturnDublicateImages(cachedImgList, imgSource);
+            return existingImages;
+        }
+
+        internal List<IOffer> GetByUserId(Guid id)
+        {
+            return OfferCache.CachedItems.Values.Where(s => s.UserId == id).ToList();
+        }
+
+        internal BaseResponse Create(CreateOfferRequest item)
         {
             var offer = (Offer)item;
+            offer.IsAlive = true;
             _offerRepository.Create(offer);
 
             return new BaseResponse();

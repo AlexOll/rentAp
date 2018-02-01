@@ -1,6 +1,6 @@
 angular.module('myApp.newoffer', [])
-    .controller('newOfferCtrl', ['$rootScope', '$scope', 'toastr', 'MapUtility', 'CookieUtility', 'DictionaryService', 'AnchorSmoothScrollService', '$timeout', 'OfferService', '$location',
-        function ($rootScope, $scope, toastr, MapUtility, CookieUtility, DictionaryService, AnchorSmoothScrollService, $timeout, OfferService, $location) {
+    .controller('newOfferCtrl', ['$rootScope', '$scope', 'toastr', 'MapUtility', 'CookieUtility', 'DictionaryService', 'AnchorSmoothScrollService', '$timeout', 'OfferService', '$location', 'LockerUtility',
+        function ($rootScope, $scope, toastr, MapUtility, CookieUtility, DictionaryService, AnchorSmoothScrollService, $timeout, OfferService, $location, LockerUtility) {
 
             $scope.offerType = {};
             $scope.offerType.availableOptions = [];
@@ -31,11 +31,20 @@ angular.module('myApp.newoffer', [])
 
             $scope.uploadedImages = [];
             $scope.$watch('newImage', function (scope) {
-                if ($scope.newImage)
+
+                if ($scope.newImage) {
                     if ($scope.uploadedImages.length >= $rootScope.photoUploadLimit)
                         toastr.info('Not more than ' + $rootScope.photoUploadLimit + ' photos', 'Photo limit');
-                    else
-                        $scope.uploadedImages.push($scope.newImage);
+                    else {
+                        var isExist = true;
+                        $scope.uploadedImages.forEach(function (image) {
+                            if (image.dataURL === $scope.newImage.dataURL)
+                                isExist = false;
+                        })
+                        if (isExist)
+                            $scope.uploadedImages.push($scope.newImage);
+                    }
+                }
             })
 
             $scope.deletePhoto = function (image) {
@@ -82,9 +91,45 @@ angular.module('myApp.newoffer', [])
                 }
             })
 
+
+            function CheckDublicateImages() {
+
+                let imgSources = [];
+
+                $scope.uploadedImages.forEach(function (image) {
+
+                    var isChecked = dublicateImages.indexOf(image.dataURL);
+                    if (isChecked === -1)
+                        imgSources.push(image.dataURL);
+                })
+                if (imgSources.length > 0)
+                    OfferService.CheckIfImgsExist(imgSources, function (response) {
+
+                        if (response.data.length) {
+                            $scope.uploadedImages.forEach(function (image) {
+                                debugger;
+                                var index = response.data.indexOf(image.dataURL);
+                                if (index !== -1) {
+                                    toastr.warning('Image was allready uploaded!', 'Warning!');
+                                    $scope.uploadedImages.splice(index, 1);
+                                }
+                            })
+
+                        }
+                    });
+            }
+            
+         
+            var dublicateImages = [];
+            $scope.$watchCollection('uploadedImages', function (image) {
+
+                LockerUtility.runLockedFunc(CheckDublicateImages)
+            })
+
             $scope.addOffer = function () {
 
                 let offer = {};
+                offer.userId = $rootScope.globals.currentUser.id
                 offer.offerType = $scope.offerType.model;
                 offer.address = $scope.city;
                 offer.lat = $scope.geoResult.lat || $scope.geoResult.geometry.location.lat();

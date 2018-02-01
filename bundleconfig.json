@@ -10,6 +10,7 @@
       "wwwroot/utilities/Image.utility.js",
       "wwwroot/utilities/Map.utility.js",
       "wwwroot/utilities/Cookie.utility.js",
+      "wwwroot/utilities/Locker.utility.js",
 
       "wwwroot/directives/_directives.module.js",
       "wwwroot/directives/ngAutocomplete.directive.js",

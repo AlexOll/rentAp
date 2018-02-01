@@ -9,6 +9,7 @@ namespace RentApp.Models.Interfaces
     public interface IOffer
     {
         Guid Id { get; set; }
+        Guid UserId { get; set; }
         OfferType OfferType { get; set; }
         PropertyType PropertyType { get; set; }
         string Address { get; set; }
