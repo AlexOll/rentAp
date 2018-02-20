@@ -2,7 +2,7 @@
 
 namespace RentApp.Models.Structs
 {
-    public enum PropertyType
+    public enum RealEstateType
     {
         [Description("Appartment")]
         Appartment = 1,
@@ -14,9 +14,7 @@ namespace RentApp.Models.Structs
         Garage,
         [Description("Office")]
         Office,
-        [Description("CommercialSpace")]
-        CommercialSpace,
-        [Description("Other")]
-        Other
+        [Description("Commercial space")]
+        CommercialSpace
     }
 }

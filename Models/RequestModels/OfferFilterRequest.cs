@@ -6,8 +6,8 @@ namespace RentApp.Models.RequestModels
 {
     public class OfferFilterRequest
     {
-        public ServiceType ServiceType { get; set; }
-        public List<PropertyType> PropertyTypeList { get; set; } = new List<PropertyType>();
+        public OfferType ServiceType { get; set; }
+        public List<RealEstateType> PropertyTypeList { get; set; } = new List<RealEstateType>();
         public double Lat { get; set; }
         public double Lng { get; set; }
         public int? PriceFrom { get; set; }

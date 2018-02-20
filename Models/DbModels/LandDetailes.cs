@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace RentApp.Models.DbModels
 {
-    public class GarageDetailes : IRealEstateDetails
+    public class LandDetailes : IRealEstateDetails
     {
-        // placeholder fields
         public Guid Id { get; set; } = Guid.NewGuid();
-        public string TypeOfGarage { get; set; }
+        public string Purpose { get; set; }
     }
 }

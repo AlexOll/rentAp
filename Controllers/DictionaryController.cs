@@ -12,13 +12,13 @@ namespace RentApp.Controllers
         [HttpGet, Route("propertytypes")]
         public IActionResult GetPropertyTypes()
         {
-            return Ok(EnumUtility.GetDictionaryFromEnum<PropertyType>());
+            return Ok(EnumUtility.GetDictionaryFromEnum<RealEstateType>());
         }
 
         [HttpGet, Route("serviceTypes")]
         public IActionResult GetServiceTypes()
         {
-            return Ok(EnumUtility.GetDictionaryFromEnum<ServiceType>());
+            return Ok(EnumUtility.GetDictionaryFromEnum<OfferType>());
         }
     }
 }

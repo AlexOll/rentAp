@@ -3,16 +3,16 @@ using System.ComponentModel;
 
 namespace RentApp.Models.Structs
 {
-    public enum ServiceType
+    public enum OfferType
     {
         [Description("Offer sale")]
-        OfferSale = 1,
+        Sale = 1,
         [Description("Long-time rental offer")]
-        LTOfferRental,
+        LongTermRent,
         [Description("Short-time rental offer")]
-        STOfferRental,
+        ShortTermRent,
         [Description("Offer rommate")]
-        OfferRoommate,
+        Roommate,
         //[Description("Sales demand")]
         //DemandSale
         //[Description("Demand rental")]

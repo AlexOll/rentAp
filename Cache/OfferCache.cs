@@ -6,11 +6,11 @@ using System.Linq;
 
 namespace RentApp.Cache
 {
-    public class RealEstateOfferCache
+    public class OfferCache
     {
-        private static Dictionary<Guid, RealEstateOffer> _aliveOffers;
+        private static Dictionary<Guid, Offer> _aliveOffers;
 
-        public static Dictionary<Guid, RealEstateOffer> CachedItems
+        public static Dictionary<Guid, Offer> CachedItems
         {
             get
             {
@@ -18,12 +18,12 @@ namespace RentApp.Cache
             }
         }
 
-        public RealEstateOfferCache(RealEstateOfferRepository offerRepository)
+        public OfferCache(OfferRepository offerRepository)
         {
             _aliveOffers = offerRepository.GetAll().ToDictionary(x => x.Id, x => x);
         }
 
-        public static void AddOrUpdate(RealEstateOffer realEstateOffer)
+        public static void AddOrUpdate(Offer realEstateOffer)
         {
             if (_aliveOffers.ContainsKey(realEstateOffer.Id))
             {

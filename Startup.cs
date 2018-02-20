@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
 using RentApp.Cache;
+using RentApp.Converters;
 using RentApp.Hubs;
 using RentApp.Models;
 using System;
@@ -27,7 +29,11 @@ namespace RentApp
 
             services.AddDbContext<DataContext>(opt => opt.UseSqlServer(connection),ServiceLifetime.Transient);
 
-            services.AddMvc();
+            services
+                .AddMvc()
+                .AddJsonOptions(opt => {
+                    opt.SerializerSettings.Converters.Insert(0, new OfferConverter());
+                });
             services.AddSignalR();
 
             var builder = new ContainerBuilder();

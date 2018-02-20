@@ -21,7 +21,8 @@ namespace RentApp.Repositories
         {
             using (_context)
             {
-                return _context.Users.Where(w => w.IsAlive).ToList();
+                //return _context.Users.Where(w => w.IsAlive).ToList();
+                return new List<User>();
             }
         }
 

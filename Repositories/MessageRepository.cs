@@ -20,7 +20,8 @@ namespace RentApp.Repositories
         {
             using (_context)
             {
-                return _context.Messages.Where(w => w.IsAlive).ToList();
+                //return _context.Messages.Where(w => w.IsAlive).ToList();
+                return new List<Message>();
             }
         }
 
