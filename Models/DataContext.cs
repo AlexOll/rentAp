@@ -17,9 +17,14 @@ namespace RentApp.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<GarageDetailes>().ToTable("GarageDetailes");
-            modelBuilder.Entity<AccommodationDetailes>().ToTable("AccommodationDetailes");
-            modelBuilder.Entity<LandDetailes>().ToTable("LandDetails");
+            modelBuilder.Entity<AccommodationDetailes>();
+            modelBuilder.Entity<GarageDetailes>();
+            modelBuilder.Entity<LandDetailes>();
+
+            modelBuilder.Entity<SaleOfferDetailes>();
+            modelBuilder.Entity<LTRentOfferDetailes>();
+            modelBuilder.Entity<STRentOfferDetailes>();
+            modelBuilder.Entity<RoommateOfferDetailes>();
         }
     }
 }

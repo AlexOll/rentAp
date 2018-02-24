@@ -11,6 +11,26 @@ namespace RentApp.Converters
 {
     public class OfferConverter : JsonConverter
     {
+        private readonly Dictionary<RealEstateType, JsonConverter> _realEstateDetailesMap =
+            new Dictionary<RealEstateType, JsonConverter>
+                {
+                    {RealEstateType.Appartment,      new RealEstateDetailesConverter<AccommodationDetailes>()},
+                    {RealEstateType.CommercialSpace, new RealEstateDetailesConverter<AccommodationDetailes>()},
+                    {RealEstateType.House,           new RealEstateDetailesConverter<AccommodationDetailes>()},
+                    {RealEstateType.Office,          new RealEstateDetailesConverter<AccommodationDetailes>()},
+                    {RealEstateType.Garage,          new RealEstateDetailesConverter<GarageDetailes>()},
+                    {RealEstateType.Land,            new RealEstateDetailesConverter<LandDetailes>()}
+                };
+
+        private readonly Dictionary<OfferType, JsonConverter> _offerDetailesMap =
+            new Dictionary<OfferType, JsonConverter>
+                {
+                    {OfferType.Sale,          new OfferDetailesConverter<SaleOfferDetailes>()},
+                    {OfferType.LongTermRent,  new OfferDetailesConverter<LTRentOfferDetailes>()},
+                    {OfferType.ShortTermRent, new OfferDetailesConverter<STRentOfferDetailes>()},
+                    {OfferType.Roommate,      new OfferDetailesConverter<RoommateOfferDetailes>()}
+                };
+
         public override bool CanWrite { get; } = false;
         public override bool CanRead { get; } = true;
 
@@ -27,12 +47,20 @@ namespace RentApp.Converters
             }
 
             JObject jObject = JObject.Load(reader);
-            // if realEstateType exist
-            RealEstateType realEstateType = (RealEstateType)jObject.Value<int>("realEstateType");
-            // if realEstateType = 0, or Enum.tryParse = false, or check it inside GetRealEstateConverter
 
-            var realEstateConverter = GetRealEstateConverter(realEstateType);
-            serializer.Converters.Insert(0, realEstateConverter);
+            RealEstateType realEstateType = (RealEstateType)jObject.Value<int>("realEstateType");
+
+            var realEstateDetailesConverter = GetRealEstateDetailesConverter(realEstateType);
+            serializer.Converters.Insert(0, realEstateDetailesConverter);
+
+            OfferType offerType = (OfferType)jObject.Value<int>("offerType");
+
+            var offerDetailesConverter = GetOfferDetailesConverter(offerType);
+            serializer.Converters.Insert(1, offerDetailesConverter);
+
+            var detailsSerializer = new JsonSerializer();
+            detailsSerializer.Converters.Add(realEstateDetailesConverter);
+            detailsSerializer.Converters.Add(offerDetailesConverter);
 
             var obj = new Offer();
             serializer.Populate(jObject.CreateReader(), obj);
@@ -44,27 +72,24 @@ namespace RentApp.Converters
         {
         }
 
-        private JsonConverter GetRealEstateConverter(RealEstateType realEstateType)
+        private JsonConverter GetRealEstateDetailesConverter(RealEstateType realEstateType)
         {
-            if (realEstateType == RealEstateType.Appartment
-                || realEstateType == RealEstateType.CommercialSpace
-                || realEstateType == RealEstateType.House
-                || realEstateType == RealEstateType.Office) // remove this condition to else
+            if (!_realEstateDetailesMap.ContainsKey(realEstateType))
             {
-                return new RealEstateDetailsConverter<AccommodationDetailes>();
+                throw new ArgumentException(String.Format("Unknown real estate type: {0}.", realEstateType));
             }
-            else if (realEstateType == RealEstateType.Garage)
+
+            return _realEstateDetailesMap[realEstateType];
+        }
+
+        private JsonConverter GetOfferDetailesConverter(OfferType offerType)
+        {
+            if (!_offerDetailesMap.ContainsKey(offerType))
             {
-                return new RealEstateDetailsConverter<GarageDetailes>();
+                throw new ArgumentException(String.Format("Unknown offer type {0}.", offerType));
             }
-            else if (realEstateType == RealEstateType.Land)
-            {
-                return new RealEstateDetailsConverter<LandDetailes>();
-            }
-            else
-            {
-                throw new ArgumentException("Unknown real estate type.");
-            }
+
+            return _offerDetailesMap[offerType];
         }
     }
 }

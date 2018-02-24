@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace RentApp.Models.DbModels
 {
-    public class LandDetailes : BaseRealEstateDetailes
+    public class RoommateOfferDetailes : BaseOfferDetailes
     {
-        public string Purpose { get; set; }
+        public String RommateRules { get; set; }
     }
 }

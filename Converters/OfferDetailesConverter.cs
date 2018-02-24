@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace RentApp.Converters
 {
-    public class RealEstateDetailesConverter<T> : CustomCreationConverter<BaseRealEstateDetailes> where T : BaseRealEstateDetailes, new()
+    public class OfferDetailesConverter<T> : CustomCreationConverter<BaseOfferDetailes> where T: BaseOfferDetailes, new()
     {
-        public override BaseRealEstateDetailes Create(Type objectType)
+        public override BaseOfferDetailes Create(Type objectType)
         {
             return new T();
         }

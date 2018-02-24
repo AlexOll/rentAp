@@ -1,15 +1,13 @@
-﻿using RentApp.Models.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace RentApp.Models.DbModels
 {
-    public class AccommodationDetailes : IRealEstateDetails
+    public class AccommodationDetailes : BaseRealEstateDetailes
     {
         // placeholder fields
-        public Guid Id { get; set; } = Guid.NewGuid();
         //public TypesOfBuilding TypeOfBuilding { get; set; }
         //public Equipment Equipment { get; set; }
         public int Floor { get; set; }
