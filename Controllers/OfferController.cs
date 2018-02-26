@@ -52,12 +52,14 @@ namespace RentApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Offer item)
+        public async Task<IActionResult> Create([FromBody] CreateOfferRequest item)
         {
             if (item == null)
             {
                 return BadRequest();
             }
+
+            var offer = (Offer)item;
 
             //var result = await Task.Factory.StartNew(() => _offerManager.Create(item));
             //return Ok(result);
