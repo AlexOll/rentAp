@@ -58,10 +58,6 @@ namespace RentApp.Converters
             var offerDetailesConverter = GetOfferDetailesConverter(offerType);
             serializer.Converters.Insert(1, offerDetailesConverter);
 
-            var detailsSerializer = new JsonSerializer();
-            detailsSerializer.Converters.Add(realEstateDetailesConverter);
-            detailsSerializer.Converters.Add(offerDetailesConverter);
-
             var obj = new Offer();
             serializer.Populate(jObject.CreateReader(), obj);
 
