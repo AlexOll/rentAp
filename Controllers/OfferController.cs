@@ -59,11 +59,8 @@ namespace RentApp.Controllers
                 return BadRequest();
             }
 
-            var offer = (Offer)item;
-
-            //var result = await Task.Factory.StartNew(() => _offerManager.Create(item));
-            //return Ok(result);
-            return Ok();
+            var result = await Task.Factory.StartNew(() => _offerManager.Create(item));
+            return Ok(result);
         }
 
         [HttpPut]

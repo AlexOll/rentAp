@@ -21,13 +21,12 @@ namespace RentApp.Repositories
         {
             using (_context)
             {
-                //return _context.Offers
-                //    .Where(o => o.IsAlive)
-                //    .Include(o => o.RealEstateObject)
-                //    .Include(o => o.RealEstateObject.RealEstateDetailes)
-                //    .Include(o => o.RealEstateObject.Photos)
-                //    .ToList();
-                return new List<Offer>();
+                return _context.Offers
+                    .Where(o => o.IsAlive)
+                    .Include(o => o.RealEstateDetailes)
+                    .Include(o => o.OfferDetailes)
+                    .Include(o => o.Photos)
+                    .ToList();
             }
         }
 
@@ -36,23 +35,22 @@ namespace RentApp.Repositories
             using (_context)
             {
                 return _context.Offers
-                    //.Where(o => o.IsAlive)
-                    //.Include(o => o.RealEstateObject)
-                    //.Include(o => o.RealEstateObject.RealEstateDetailes)
-                    //.Include(o => o.RealEstateObject.Photos)
+                    .Where(o => o.IsAlive)
+                    .Include(o => o.RealEstateDetailes)
+                    .Include(o => o.OfferDetailes)
+                    .Include(o => o.Photos)
                     .FirstOrDefault(o => o.Id == id);
             }
         }
 
         public void Create(Offer item)
         {
-            //using (_context)
-            //{
-            //    _context.RealEstateObjects.Attach(item.RealEstateObject);
-            //    _context.RealEstateOffers.Add(item);
-            //    _context.SaveChanges();
-            //}
-            //OfferCache.AddOrUpdate(item);
+            using (_context)
+            {
+                _context.Offers.Add(item);
+                _context.SaveChanges();
+            }
+            OfferCache.AddOrUpdate(item);
         }
 
         public void Remove(Guid id)

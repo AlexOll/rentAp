@@ -60,10 +60,12 @@ namespace RentApp.Managers
 
         internal BaseResponse Create(Offer item)
         {
-            //item.CreateDate = DateTime.Now;
-            //item.UpdateDate = DateTime.Now;
+            item.Id = new Guid();
+            item.CreateDate = DateTime.Now;
+            item.UpdateDate = DateTime.Now;
+            item.IsAlive = true;
 
-            //_offerRepository.Create(item);
+            _offerRepository.Create(item);
 
             return new BaseResponse();
         }
