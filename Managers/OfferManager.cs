@@ -1,11 +1,11 @@
-﻿using RentApp.Cache;
+﻿using Microsoft.AspNetCore.Http;
+using RentApp.Cache;
 using RentApp.Models.DbModels;
 using RentApp.Models.RequestModels;
 using RentApp.Models.ResponseModels;
 using RentApp.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace RentApp.Managers
 {
@@ -60,6 +60,7 @@ namespace RentApp.Managers
 
         internal BaseResponse Create(Offer item)
         {
+            // for doublecheck
             item.Id = new Guid();
             item.CreateDate = DateTime.Now;
             item.UpdateDate = DateTime.Now;
@@ -72,14 +73,42 @@ namespace RentApp.Managers
 
         internal BaseResponse Update(Offer item)
         {
-            _offerRepository.Update(item);
-            return new BaseResponse();
+            if (OfferCache.CachedItems.ContainsKey(item.Id))
+            {
+                // to attach sub-objects to correct entities in database
+                Offer cachedItem = OfferCache.CachedItems[item.Id];
+                item.OfferDetailes.Id = cachedItem.OfferDetailes.Id;
+                item.RealEstateDetailes.Id = cachedItem.RealEstateDetailes.Id;
+
+                _offerRepository.Update(item);
+                return new BaseResponse();
+            }
+            else
+            {
+                return new BaseResponse
+                {
+                    Message = "Offer not exists",
+                    ResponseCode = StatusCodes.Status406NotAcceptable
+                };
+            }
         }
 
-        internal BaseResponse Remove(Guid id)
+        internal BaseResponse SoftRemove(Guid id)
         {
-            _offerRepository.Remove(id);
-            return new BaseResponse();
+            if (OfferCache.CachedItems.ContainsKey(id))
+            {
+                Offer item = OfferCache.CachedItems[id];
+                _offerRepository.SoftRemove(item);
+                return new BaseResponse();
+            }
+            else
+            {
+                return new BaseResponse
+                {
+                    Message = "Offer not exists",
+                    ResponseCode = StatusCodes.Status406NotAcceptable
+                };
+            }
         }
     }
 }

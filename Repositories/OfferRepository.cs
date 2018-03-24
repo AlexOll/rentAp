@@ -53,29 +53,35 @@ namespace RentApp.Repositories
             OfferCache.AddOrUpdate(item);
         }
 
-        public void Remove(Guid id)
+        public void Update(Offer item)
         {
-            //RealEstateOffer item = GetById(id); ;
-            //using (_context)
-            //{
-            //    item.IsAlive = false;
-            //    _context.RealEstateOffers.Attach(item);
-            //    _context.Entry(item).State = EntityState.Modified;
-            //    _context.SaveChanges();
-            //}
-            //OfferCache.AddOrUpdate(item);
+            using (_context)
+            {
+                item.UpdateDate = DateTime.Now;
+                _context.Offers.Attach(item);
+                _context.Entry(item).State = EntityState.Modified;
+
+                _context.RealEstateDetailes.Attach(item.RealEstateDetailes);
+                _context.Entry(item.RealEstateDetailes).State = EntityState.Modified;
+
+                _context.OfferDetailes.Attach(item.OfferDetailes);
+                _context.Entry(item.OfferDetailes).State = EntityState.Modified;
+
+                _context.SaveChanges();
+            }
+            OfferCache.AddOrUpdate(item);
         }
 
-        internal void Update(Offer item)
+        public void SoftRemove(Offer item)
         {
-            //using (_context)
-            //{
-            //    item.UpdateDate = DateTime.Now;
-            //    _context.RealEstateOffers.Attach(item);
-            //    _context.Entry(item).State = EntityState.Modified;
-            //    _context.SaveChanges();
-            //}
-            //OfferCache.AddOrUpdate(item);
+            using (_context)
+            {
+                item.IsAlive = false;
+                _context.Offers.Attach(item);
+                _context.Entry(item).State = EntityState.Modified;
+                _context.SaveChanges();
+            }
+            OfferCache.AddOrUpdate(item);
         }
     }
 }

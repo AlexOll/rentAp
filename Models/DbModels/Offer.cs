@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace RentApp.Models.DbModels
 {
@@ -11,9 +9,9 @@ namespace RentApp.Models.DbModels
     {
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
-        public DateTime CreateDate { get; set; }
-        public DateTime UpdateDate { get; set; }
-        public bool IsAlive { get; set; }
+        public DateTime CreateDate { get; set; } = DateTime.Now;
+        public DateTime UpdateDate { get; set; } = DateTime.Now;
+        public bool IsAlive { get; set; } = true;
 
         public RealEstateType RealEstateType { get; set; }
         public BaseRealEstateDetailes RealEstateDetailes { get; set; }

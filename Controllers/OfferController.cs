@@ -2,7 +2,6 @@
 using RentApp.Managers;
 using RentApp.Models.DbModels;
 using RentApp.Models.RequestModels;
-using RentApp.Models.Structs;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -71,21 +70,19 @@ namespace RentApp.Controllers
                 return BadRequest();
             }
 
-            //var result = await Task.Factory.StartNew(() => _offerManager.Update(item));
-            //return Ok(result);
-            return Ok();
+            var result = await Task.Factory.StartNew(() => _offerManager.Update(item));
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var item = _offerManager.GetById(id);
-            if (item == null)
+            if (id == null)
             {
                 return BadRequest();
             }
 
-            var result = await Task.Factory.StartNew(() => _offerManager.Remove(id));
+            var result = await Task.Factory.StartNew(() => _offerManager.SoftRemove(id));
             return Ok(result);
         }
 

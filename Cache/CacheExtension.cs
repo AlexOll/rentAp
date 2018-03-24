@@ -15,10 +15,7 @@ namespace RentApp.Cache
             {
                 app.ApplicationServices.GetRequiredService<UserCache>();
                 app.ApplicationServices.GetRequiredService<MessageCache>();
-                //app.ApplicationServices.GetRequiredService<FlatCache>();
-                //app.ApplicationServices.GetRequiredService<RealEstateCache>();
                 app.ApplicationServices.GetRequiredService<OfferCache>();
-
 
                 Task.Factory.StartNew(() => UpdateDb(app));
             }
