@@ -25,12 +25,6 @@
     <Compile Remove="Hubs\OnlineStatusHub.cs" />
     <Compile Remove="Managers\FlatFilterManager.cs" />
     <Compile Remove="Managers\FlatManager.cs" />
-    <Compile Remove="Migrations\20180109150342_2.cs" />
-    <Compile Remove="Migrations\20180109150342_2.Designer.cs" />
-    <Compile Remove="Migrations\20180109155100_3.cs" />
-    <Compile Remove="Migrations\20180109155100_3.Designer.cs" />
-    <Compile Remove="Migrations\20180109155259_3.cs" />
-    <Compile Remove="Migrations\20180109155259_3.Designer.cs" />
     <Compile Remove="Models\DbModels\IDbModel.cs" />
     <Compile Remove="Models\RequestModels\FlatRequest.cs" />
     <Compile Remove="Repositories\FlatRepository.cs" />
