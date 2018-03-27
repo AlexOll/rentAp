@@ -6,6 +6,7 @@ using RentApp.Models.ResponseModels;
 using RentApp.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RentApp.Managers
 {
@@ -100,6 +101,56 @@ namespace RentApp.Managers
                 Offer item = OfferCache.CachedItems[id];
                 _offerRepository.SoftRemove(item);
                 return new BaseResponse();
+            }
+            else
+            {
+                return new BaseResponse
+                {
+                    Message = "Offer not exists",
+                    ResponseCode = StatusCodes.Status406NotAcceptable
+                };
+            }
+        }
+
+        internal BaseResponse AddPhoto(OfferPhoto photo)
+        {
+            if (OfferCache.CachedItems.ContainsKey(photo.OfferId))
+            {
+                Offer offer = OfferCache.CachedItems[photo.OfferId];
+                offer.Photos.Add(photo);
+                _offerRepository.Update(offer);
+                return new BaseResponse();
+            }
+            else
+            {
+                return new BaseResponse
+                {
+                    Message = "Offer not exists",
+                    ResponseCode = StatusCodes.Status406NotAcceptable
+                };
+            }
+        }
+
+        internal BaseResponse RemovePhoto(OfferPhoto photo)
+        {
+            if (OfferCache.CachedItems.ContainsKey(photo.OfferId))
+            {
+                Offer offer = OfferCache.CachedItems[photo.OfferId];
+                OfferPhoto photoToRemove = offer.Photos.Single(p => p.Id == photo.Id);
+                if (photoToRemove != null)
+                {
+                    offer.Photos.Remove(photoToRemove);
+                    _offerRepository.RemovePhoto(photoToRemove);
+                    return new BaseResponse();
+                }
+                else
+                {
+                    return new BaseResponse
+                    {
+                        Message = "Photo not exists",
+                        ResponseCode = StatusCodes.Status406NotAcceptable
+                    };
+                }
             }
             else
             {

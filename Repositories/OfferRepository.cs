@@ -83,5 +83,15 @@ namespace RentApp.Repositories
             }
             OfferCache.AddOrUpdate(item);
         }
+
+        public void RemovePhoto(OfferPhoto item)
+        {
+            using (_context)
+            {
+                _context.OfferPhotos.Remove(item);
+                _context.SaveChanges();
+            }
+        }
+
     }
 }

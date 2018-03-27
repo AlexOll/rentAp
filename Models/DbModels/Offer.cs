@@ -22,7 +22,7 @@ namespace RentApp.Models.DbModels
         public double Area { get; set; }
         public double Lat { get; set; }
         public double Lng { get; set; }
-        public List<RealEstatePhoto> Photos { get; set; }
+        public List<OfferPhoto> Photos { get; set; } = new List<OfferPhoto>();
 
         public double Price { get; set; }
     }
